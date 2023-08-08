@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 import 'package:chat_bloc/chat/data/model/chat_message_model.dart';
-import 'package:chat_bloc/chat/data/model/user_mode.dart';
+import 'package:chat_bloc/chat/data/model/user_model.dart';
 
 class ConversationModel {
   final String conversationID;
