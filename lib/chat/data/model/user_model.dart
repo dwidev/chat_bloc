@@ -15,7 +15,7 @@ class UserModel {
   String get lastWatch {
     final dateNow = DateTime.now();
     final statusDate = DateTime.parse(this.statusDate).toLocal();
-    if (dateNow.isAfter(statusDate)) {
+    if (dateNow.day != statusDate.day) {
       final lastWatch = DateFormat("dd/MM/yyyy HH:mm").format(statusDate);
       return lastWatch;
     }

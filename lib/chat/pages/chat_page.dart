@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:chat_bloc/chat/bloc/conversations_bloc/conversations_bloc.dart';
-import 'package:chat_bloc/chat/data/model/user_mode.dart';
+import 'package:chat_bloc/chat/data/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -71,21 +71,32 @@ class _ChatPageState extends State<ChatPage>
     super.dispose();
   }
 
+  bool listenWhenUserOffline(
+          ConversationsState prev, ConversationsState current) =>
+      current.conversations
+          .where((e) =>
+              widget.conversationModel.conversationID == e.conversationID)
+          .firstOrNull
+          ?.user
+          .offline ??
+      false;
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
     return BlocListener<ConversationsBloc, ConversationsState>(
-      listenWhen: (previous, current) => previous != current,
+      listenWhen: listenWhenUserOffline,
       listener: (context, state) {
+        animationController.reset();
         setState(() {
           showLastWacth = false;
         });
-        animationController.reset();
-        Future.delayed(
-          const Duration(seconds: 2),
-          () => animationController.forward(),
-        );
+        Future.delayed(const Duration(seconds: 2), () {
+          animationController
+            ..stop()
+            ..forward();
+        });
       },
       child: WillPopScope(
         onWillPop: () async {
