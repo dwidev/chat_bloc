@@ -71,32 +71,23 @@ class _ChatPageState extends State<ChatPage>
     super.dispose();
   }
 
-  bool listenWhenUserOffline(
-          ConversationsState prev, ConversationsState current) =>
-      current.conversations
-          .where((e) =>
-              widget.conversationModel.conversationID == e.conversationID)
-          .firstOrNull
-          ?.user
-          .offline ??
-      false;
-
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
     return BlocListener<ConversationsBloc, ConversationsState>(
-      listenWhen: listenWhenUserOffline,
       listener: (context, state) {
-        animationController.reset();
-        setState(() {
-          showLastWacth = false;
-        });
-        Future.delayed(const Duration(seconds: 2), () {
-          animationController
-            ..stop()
-            ..forward();
-        });
+        if (state is ConversationsOfflineUserState) {
+          animationController.reset();
+          setState(() {
+            showLastWacth = false;
+          });
+          Future.delayed(const Duration(seconds: 2), () {
+            animationController
+              ..stop()
+              ..forward();
+          });
+        }
       },
       child: WillPopScope(
         onWillPop: () async {
@@ -139,7 +130,7 @@ class _ChatPageState extends State<ChatPage>
                       child: isOnline
                           ? Text(
                               key: ValueKey<bool>(isOnline),
-                              "online",
+                              user?.status ?? "",
                               style: textTheme.bodySmall,
                             )
                           : SlideTransition(

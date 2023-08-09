@@ -3,14 +3,17 @@ import 'dart:convert';
 
 import 'package:intl/intl.dart';
 
+const onlineState = "online";
+const offlineState = "offline";
+
 class UserModel {
   final String id;
   final String name;
   final String status;
   final String statusDate;
 
-  bool get online => status == "online";
-  bool get offline => status == "offline";
+  bool get online => status == onlineState;
+  bool get offline => status == offlineState;
 
   String get lastWatch {
     final dateNow = DateTime.now();

@@ -32,6 +32,13 @@ class ConversationsState extends Equatable {
   bool get stringify => true;
 }
 
+class ConversationsOfflineUserState extends ConversationsState {
+  const ConversationsOfflineUserState({
+    required super.userRoomInfo,
+    required super.conversations,
+  });
+}
+
 @immutable
 class UserRoomInfo extends Equatable {
   final bool standByAtroom;

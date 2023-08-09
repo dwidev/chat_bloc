@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:chat_bloc/chat/data/model/user_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,12 +57,20 @@ class ConversationsBloc extends Bloc<ConversationsEvent, ConversationsState> {
           final conv = conversations[indexCon];
           final newConv = conv.copyWith(
             user: conv.user.copyWith(
-              status: isOnline ? "online" : "offline",
+              status: isOnline ? onlineState : offlineState,
               statusDate: socketEvent.message.messageDate.toString(),
             ),
           );
           conversations[indexCon] = newConv;
-          return state.copyWith(conversations: conversations);
+
+          if (isOnline) {
+            return state.copyWith(conversations: conversations);
+          }
+
+          return ConversationsOfflineUserState(
+            userRoomInfo: state.userRoomInfo,
+            conversations: conversations,
+          );
         }
 
         return state;
