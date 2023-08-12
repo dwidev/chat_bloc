@@ -171,9 +171,11 @@ class _ChatPageState extends State<ChatPage>
                             children: [
                               Container(
                                 margin: const EdgeInsets.only(bottom: 10),
-                                padding: const EdgeInsets.all(5),
+                                padding: const EdgeInsets.all(6),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey.shade200,
+                                  color: chat.senderID != widget.me
+                                      ? Colors.deepPurple.shade100
+                                      : Colors.grey.shade200,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Row(

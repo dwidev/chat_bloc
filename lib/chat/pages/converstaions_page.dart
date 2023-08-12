@@ -165,7 +165,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              conversation.lastMessage?.date ?? '',
+                              conversation.lastMessage?.dateConv ?? '',
                               style: textTheme.bodySmall?.copyWith(
                                 color: Colors.grey,
                                 fontSize: 10,

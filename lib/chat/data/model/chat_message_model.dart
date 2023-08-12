@@ -21,6 +21,17 @@ class ChatMessageModel {
     return date;
   }
 
+  String get dateConv {
+    final dateNow = DateTime.now();
+    if (dateNow.day != messageDate.day) {
+      final lastWatch = DateFormat("dd/MM/yyyy HH:mm").format(messageDate);
+      return lastWatch;
+    }
+
+    final lastWatch = DateFormat("HH:mm").format(messageDate);
+    return lastWatch;
+  }
+
   ChatMessageModel({
     required this.messageId,
     required this.conversationID,
