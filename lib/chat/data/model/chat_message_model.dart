@@ -24,11 +24,13 @@ class ChatMessageModel {
   String get dateConv {
     final dateNow = DateTime.now();
     if (dateNow.day != messageDate.day) {
-      final lastWatch = DateFormat("dd/MM/yyyy HH:mm").format(messageDate);
+      final lastWatch = DateFormat("dd/MM/yyyy HH:mm").format(
+        messageDate.toLocal(),
+      );
       return lastWatch;
     }
 
-    final lastWatch = DateFormat("HH:mm").format(messageDate);
+    final lastWatch = DateFormat("HH:mm").format(messageDate.toLocal());
     return lastWatch;
   }
 
