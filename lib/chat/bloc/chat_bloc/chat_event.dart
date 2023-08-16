@@ -49,3 +49,12 @@ final class JoinRoomChat extends JoinOrLeaveRoomEvent {
 final class LeaveRoomChat extends JoinOrLeaveRoomEvent {
   const LeaveRoomChat(super.conversationID, super.senderID, super.receiverID);
 }
+
+final class ChatTyping extends ChatEvent {
+  final bool isStart;
+  const ChatTyping(this.isStart);
+}
+
+final class SubscribeUserTyping extends ChatEvent {
+  const SubscribeUserTyping();
+}

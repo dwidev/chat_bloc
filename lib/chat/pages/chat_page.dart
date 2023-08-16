@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:async';
+
 import 'package:chat_bloc/chat/bloc/conversations_bloc/conversations_bloc.dart';
 import 'package:chat_bloc/chat/data/model/user_model.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +33,7 @@ class _ChatPageState extends State<ChatPage>
 
   late AnimationController animationController;
   late Animation<Offset> offsetAnimation;
+  Timer? typingDelay;
 
   @override
   void initState() {
@@ -59,15 +62,31 @@ class _ChatPageState extends State<ChatPage>
     controller = TextEditingController();
     final cId = widget.conversationModel.conversationID;
     context.read<ChatBloc>()
+      ..add(const SubscribeUserTyping())
       ..add(GetMessageByConversationID(cId))
       ..add(ChatSubscribeMessage(cId))
       ..add(JoinRoomChat(cId, widget.me, widget.receiver.id));
     super.initState();
   }
 
+  void _onChangeChat(String value) {
+    final chatBloc = context.read<ChatBloc>();
+    if (typingDelay?.isActive ?? false) typingDelay?.cancel();
+
+    typingDelay = Timer(const Duration(seconds: 1), () {
+      chatBloc.add(const ChatTyping(false));
+      return;
+    });
+
+    if (!chatBloc.state.startTyping) {
+      chatBloc.add(const ChatTyping(true));
+    }
+  }
+
   @override
   void dispose() {
     animationController.dispose();
+    typingDelay?.cancel();
     super.dispose();
   }
 
@@ -104,47 +123,61 @@ class _ChatPageState extends State<ChatPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(widget.receiver.name),
-                BlocBuilder<ConversationsBloc, ConversationsState>(
+                BlocSelector<ChatBloc, ChatState, bool>(
+                  selector: (state) => state.receiverIsTyping,
                   builder: (context, state) {
-                    final user = state.conversations
-                        .where((element) =>
-                            element.conversationID ==
-                            widget.conversationModel.conversationID)
-                        .firstOrNull
-                        ?.user;
-                    final isOnline = user?.online ?? false;
+                    if (state) {
+                      return Text(
+                        "mengetik...",
+                        style: textTheme.bodySmall?.copyWith(
+                          color: Colors.purpleAccent.shade100,
+                        ),
+                      );
+                    } else {
+                      return BlocBuilder<ConversationsBloc, ConversationsState>(
+                        builder: (context, state) {
+                          final user = state.conversations
+                              .where((element) =>
+                                  element.conversationID ==
+                                  widget.conversationModel.conversationID)
+                              .firstOrNull
+                              ?.user;
+                          final isOnline = user?.online ?? false;
 
-                    return AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      transitionBuilder:
-                          (Widget child, Animation<double> animation) {
-                        return SizeTransition(
-                          sizeFactor: animation,
-                          child: ScaleTransition(
-                            scale: animation,
-                            alignment: Alignment.centerLeft,
-                            child: child,
-                          ),
-                        );
-                      },
-                      child: isOnline
-                          ? Text(
-                              key: ValueKey<bool>(isOnline),
-                              user?.status ?? "",
-                              style: textTheme.bodySmall,
-                            )
-                          : SlideTransition(
-                              position: offsetAnimation,
-                              child: Text(
-                                key: ValueKey<bool>(isOnline),
-                                showLastWacth
-                                    ? user?.lastWatch ?? ''
-                                    : user?.lastSeen ?? '',
-                                style: textTheme.bodySmall
-                                    ?.copyWith(color: Colors.grey),
-                              ),
-                            ),
-                    );
+                          return AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            transitionBuilder:
+                                (Widget child, Animation<double> animation) {
+                              return SizeTransition(
+                                sizeFactor: animation,
+                                child: ScaleTransition(
+                                  scale: animation,
+                                  alignment: Alignment.centerLeft,
+                                  child: child,
+                                ),
+                              );
+                            },
+                            child: isOnline
+                                ? Text(
+                                    key: ValueKey<bool>(isOnline),
+                                    user?.status ?? "",
+                                    style: textTheme.bodySmall,
+                                  )
+                                : SlideTransition(
+                                    position: offsetAnimation,
+                                    child: Text(
+                                      key: ValueKey<bool>(isOnline),
+                                      showLastWacth
+                                          ? user?.lastWatch ?? ''
+                                          : user?.lastSeen ?? '',
+                                      style: textTheme.bodySmall
+                                          ?.copyWith(color: Colors.grey),
+                                    ),
+                                  ),
+                          );
+                        },
+                      );
+                    }
                   },
                 ),
               ],
@@ -212,6 +245,7 @@ class _ChatPageState extends State<ChatPage>
                           decoration: const InputDecoration(
                             hintText: "Masukan pesan",
                           ),
+                          onChanged: _onChangeChat,
                         ),
                       ),
                       IconButton(
