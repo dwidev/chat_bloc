@@ -34,6 +34,10 @@ class ChatRepository {
           .where((event) => event == WSConnectionStatus.disconnected)
           .delay(reconnectDelayDuration);
 
+  Stream<SocketEventModel> get userTypingStream =>
+      webSocketDataSource.socketStream
+          .where((event) => event.type == SocketEvent.userTyping);
+
   Future<List<ConversationModel>> getConversations(String userID) async {
     return await httpDataSource.getConversations(userID);
   }
@@ -46,6 +50,10 @@ class ChatRepository {
 
   void sendMessage(ChatMessageModel messageModel) {
     webSocketDataSource.sendMessage(messageModel: messageModel);
+  }
+
+  void sendUserTyping(ChatMessageModel messageModel) {
+    webSocketDataSource.sendUserTyping(messageModel: messageModel);
   }
 
   void joinRoom({

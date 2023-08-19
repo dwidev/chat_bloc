@@ -44,16 +44,27 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _onChangeChat(String value) {
-    final chatBloc = context.read<ChatBloc>();
+    final chatBloc = context.watch<ChatBloc>();
+    final cId = widget.conversationModel.conversationID;
     if (typingDelay?.isActive ?? false) typingDelay?.cancel();
 
-    typingDelay = Timer(const Duration(seconds: 1), () {
-      chatBloc.add(const ChatTyping(false));
+    typingDelay = Timer(const Duration(seconds: 3), () {
+      chatBloc.add(ChatTyping(
+        isStart: false,
+        conversationID: cId,
+        senderID: widget.me,
+        receiverID: widget.receiver.id,
+      ));
       return;
     });
 
     if (!chatBloc.state.startTyping) {
-      chatBloc.add(const ChatTyping(true));
+      chatBloc.add(ChatTyping(
+        isStart: true,
+        conversationID: cId,
+        senderID: widget.me,
+        receiverID: widget.receiver.id,
+      ));
     }
   }
 

@@ -20,7 +20,7 @@ enum WSConnectionStatus {
   errorListener,
 }
 
-const host = "localhost";
+const host = "192.168.43.104";
 
 class WebSocketDataSource {
   late WebSocketChannel webSocketChannel;
@@ -72,7 +72,7 @@ class WebSocketDataSource {
 
     ws.map((event) => SocketEventModel.fromJson(event)).listen((socketEvent) {
       socketEventController.add(socketEvent);
-      // debugPrint("socketEvent :$socketEvent");
+      debugPrint("socketEvent :$socketEvent");
     }, onDone: () {
       debugPrint("DONE WS LISTENER");
       wsConnectionController.add(WSConnectionStatus.disconnected);
@@ -142,6 +142,15 @@ class WebSocketDataSource {
         sender: sender,
         receiver: receiver,
       ),
+    );
+
+    webSocketChannel.sink.add(event.toJson());
+  }
+
+  void sendUserTyping({required ChatMessageModel messageModel}) {
+    final event = SocketEventModel(
+      type: SocketEvent.userTyping,
+      message: messageModel,
     );
 
     webSocketChannel.sink.add(event.toJson());

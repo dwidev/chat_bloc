@@ -9,6 +9,7 @@ enum SocketEvent {
   leaveRoom,
   sendMessage,
   pingPong,
+  userTyping,
   unknown;
 
   String toName() {
@@ -23,6 +24,8 @@ enum SocketEvent {
         return "send_message";
       case pingPong:
         return "ping_pong";
+      case userTyping:
+        return "user_typing";
       default:
         return "noname";
     }
@@ -42,6 +45,8 @@ extension StringSocketEventExt on String {
         return SocketEvent.sendMessage;
       case "ping_pong":
         return SocketEvent.pingPong;
+      case "user_typing":
+        return SocketEvent.userTyping;
       default:
         return SocketEvent.unknown;
     }

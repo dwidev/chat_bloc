@@ -52,5 +52,14 @@ final class LeaveRoomChat extends JoinOrLeaveRoomEvent {
 
 final class ChatTyping extends ChatEvent {
   final bool isStart;
-  const ChatTyping(this.isStart);
+  final String conversationID;
+  final String senderID;
+  final String receiverID;
+
+  const ChatTyping({
+    required this.isStart,
+    required this.conversationID,
+    required this.senderID,
+    required this.receiverID,
+  });
 }

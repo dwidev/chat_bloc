@@ -1,3 +1,4 @@
+import 'package:chat_bloc/chat/data/model/socket_event_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +25,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) async {
     final stream = chatRepository.socketStream
+        .where((s) => s.type == SocketEvent.sendMessage)
         .where((s) => s.message.conversationID == event.conversationID);
 
     await emit.forEach(stream, onData: (socketEvent) {
@@ -51,7 +53,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
       messageId: '',
       conversationID: event.conversationID,
       content: event.content,
-      messageType: "send_message",
+      messageType: "send_message", // TODO : change to enum
       senderID: event.senderID,
       receiverID: event.receiverID,
       messageDate: DateTime.now(),
@@ -77,6 +79,16 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void _onTyping(ChatTyping event, Emitter<ChatState> emit) {
+    final messageModel = ChatMessageModel(
+      messageId: '',
+      conversationID: event.conversationID,
+      content: event.isStart.toString(),
+      messageType: "send_message", // TODO : change to enum
+      senderID: event.senderID,
+      receiverID: event.receiverID,
+      messageDate: DateTime.now(),
+    );
+    chatRepository.sendUserTyping(messageModel);
     emit(state.copyWith(startTyping: event.isStart));
   }
 }

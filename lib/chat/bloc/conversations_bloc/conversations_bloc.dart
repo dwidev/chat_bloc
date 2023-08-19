@@ -60,6 +60,7 @@ class ConversationsBloc extends Bloc<ConversationsEvent, ConversationsState> {
             user: conv.user.copyWith(
               status: isOnline ? onlineState : offlineState,
               statusDate: socketEvent.message.messageDate.toString(),
+              typing: !isOnline ? false : conv.user.typing,
             ),
           );
           conversations[indexCon] = newConv;
@@ -112,18 +113,17 @@ class ConversationsBloc extends Bloc<ConversationsEvent, ConversationsState> {
     ConversationSubscribeUserTyping event,
     Emitter<ConversationsState> emit,
   ) async {
-    // dummy listen event typing
-    final stream = Stream.periodic(const Duration(seconds: 5));
-
     await emit.forEach(
-      stream,
-      onData: (data) {
+      chatRepository.userTypingStream,
+      onData: (socketEvent) {
         final conversations = [...state.conversations];
         final indexCon = conversations.indexWhere(
-          (c) => c.conversationID == "64a3f6550b4bb21d970ea880",
+          (c) => c.conversationID == socketEvent.message.conversationID,
         );
         final conv = conversations[indexCon];
-        final newUser = conv.user.copyWith(typing: !conv.user.typing);
+        final newUser = conv.user.copyWith(
+          typing: socketEvent.message.content == "start",
+        );
         final newConv = conv.copyWith(user: newUser);
         conversations[indexCon] = newConv;
         return state.copyWith(conversations: conversations);
