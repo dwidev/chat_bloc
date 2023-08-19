@@ -54,7 +54,3 @@ final class ChatTyping extends ChatEvent {
   final bool isStart;
   const ChatTyping(this.isStart);
 }
-
-final class SubscribeUserTyping extends ChatEvent {
-  const SubscribeUserTyping();
-}

@@ -17,12 +17,13 @@ class ConversationsBloc extends Bloc<ConversationsEvent, ConversationsState> {
   ConversationsBloc({required this.chatRepository})
       : super(const ConversationsState.initial()) {
     on<GetConversations>(_onGetConversations);
-    on<SubscribeMessage>(_onSubscribeMessage);
-    on<ReadMessage>(_onReadMessage);
+    on<ConversationSubscribeMessage>(_onSubscribeMessage);
+    on<ConversationReadMessage>(_onReadMessage);
+    on<ConversationSubscribeUserTyping>(_onSubscribeUserTyping);
   }
 
   void _onSubscribeMessage(
-    SubscribeMessage event,
+    ConversationSubscribeMessage event,
     Emitter<ConversationsState> emit,
   ) async {
     await emit.forEach(
@@ -91,7 +92,7 @@ class ConversationsBloc extends Bloc<ConversationsEvent, ConversationsState> {
   }
 
   void _onReadMessage(
-    ReadMessage event,
+    ConversationReadMessage event,
     Emitter<ConversationsState> emit,
   ) {
     final conversations = [...state.conversations];
@@ -105,5 +106,28 @@ class ConversationsBloc extends Bloc<ConversationsEvent, ConversationsState> {
     );
     conversations[indexCon] = newConv;
     emit(state.copyWith(conversations: conversations));
+  }
+
+  Future<void> _onSubscribeUserTyping(
+    ConversationSubscribeUserTyping event,
+    Emitter<ConversationsState> emit,
+  ) async {
+    // dummy listen event typing
+    final stream = Stream.periodic(const Duration(seconds: 5));
+
+    await emit.forEach(
+      stream,
+      onData: (data) {
+        final conversations = [...state.conversations];
+        final indexCon = conversations.indexWhere(
+          (c) => c.conversationID == "64a3f6550b4bb21d970ea880",
+        );
+        final conv = conversations[indexCon];
+        final newUser = conv.user.copyWith(typing: !conv.user.typing);
+        final newConv = conv.copyWith(user: newUser);
+        conversations[indexCon] = newConv;
+        return state.copyWith(conversations: conversations);
+      },
+    );
   }
 }

@@ -11,6 +11,7 @@ class UserModel {
   final String name;
   final String status;
   final String statusDate;
+  final bool typing;
 
   bool get online => status == onlineState;
   bool get offline => status == offlineState;
@@ -62,6 +63,7 @@ class UserModel {
     required this.name,
     required this.status,
     required this.statusDate,
+    this.typing = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -97,12 +99,14 @@ class UserModel {
     String? name,
     String? status,
     String? statusDate,
+    bool? typing,
   }) {
     return UserModel(
       id: id ?? this.id,
       name: name ?? this.name,
       status: status ?? this.status,
       statusDate: statusDate ?? this.statusDate,
+      typing: typing ?? this.typing,
     );
   }
 }

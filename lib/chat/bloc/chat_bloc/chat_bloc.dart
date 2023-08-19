@@ -17,7 +17,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<JoinRoomChat>(_joinRoomChat);
     on<LeaveRoomChat>(_leaveRoomChat);
     on<ChatTyping>(_onTyping);
-    on<SubscribeUserTyping>(_onSubscribeUserTyping);
   }
 
   Future<void> _subscribeMessage(
@@ -79,20 +78,5 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
   void _onTyping(ChatTyping event, Emitter<ChatState> emit) {
     emit(state.copyWith(startTyping: event.isStart));
-  }
-
-  Future<void> _onSubscribeUserTyping(
-    SubscribeUserTyping event,
-    Emitter<ChatState> emit,
-  ) async {
-    // dummy listen event typing
-    final stream = Stream.periodic(const Duration(seconds: 5));
-
-    await emit.forEach(
-      stream,
-      onData: (data) {
-        return state.copyWith(receiverIsTyping: !state.receiverIsTyping);
-      },
-    );
   }
 }

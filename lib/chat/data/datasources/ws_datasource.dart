@@ -72,7 +72,7 @@ class WebSocketDataSource {
 
     ws.map((event) => SocketEventModel.fromJson(event)).listen((socketEvent) {
       socketEventController.add(socketEvent);
-      debugPrint("socketEvent :$socketEvent");
+      // debugPrint("socketEvent :$socketEvent");
     }, onDone: () {
       debugPrint("DONE WS LISTENER");
       wsConnectionController.add(WSConnectionStatus.disconnected);

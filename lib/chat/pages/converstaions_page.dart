@@ -1,10 +1,9 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:chat_bloc/chat/bloc/conversations_bloc/conversations_bloc.dart';
-import 'package:chat_bloc/chat/bloc/ws_connection_bloc/ws_connection_bloc.dart';
-import 'package:chat_bloc/chat/data/datasources/ws_datasource.dart';
-import 'package:chat_bloc/chat/data/model/conversation_model.dart';
-import 'package:chat_bloc/chat/data/repository/chat_repository.dart';
-import 'package:chat_bloc/chat/pages/chat_page.dart';
+import '../bloc/conversations_bloc/conversations_bloc.dart';
+import '../bloc/ws_connection_bloc/ws_connection_bloc.dart';
+import '../data/datasources/ws_datasource.dart';
+import '../data/model/conversation_model.dart';
+import '../data/repository/chat_repository.dart';
+import 'chat_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,7 +26,8 @@ class _ConversationsPageState extends State<ConversationsPage> {
     context.read<WsConnectionBloc>().add(ConnectToWs(token: widget.me));
     context.read<ConversationsBloc>()
       ..add(GetConversations(widget.me))
-      ..add(const SubscribeMessage());
+      ..add(const ConversationSubscribeMessage())
+      ..add(const ConversationSubscribeUserTyping());
     super.initState();
   }
 
@@ -35,7 +35,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
     final repo = context.read<ChatRepository>();
     final convBloc = context.read<ConversationsBloc>();
 
-    convBloc.add(ReadMessage(conversation));
+    convBloc.add(ConversationReadMessage(conversation));
 
     Navigator.push(
       context,
@@ -72,7 +72,6 @@ class _ConversationsPageState extends State<ConversationsPage> {
         children: [
           BlocBuilder<WsConnectionBloc, WsConnectionState>(
             builder: (context, state) {
-              print(state);
               if (state.connecionStatus == WSConnectionStatus.disconnected) {
                 return Container(
                   width: double.infinity,
@@ -205,16 +204,25 @@ class _ConversationsPageState extends State<ConversationsPage> {
                           ],
                         ),
                         title: Text(sender.name),
-                        subtitle: Text(
-                          conversation.lastMessage?.content ??
-                              "Belum ada percakapan",
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontWeight: conversation.unread(widget.me)
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
-                                  ),
-                        ),
+                        subtitle: conversation.user.typing
+                            ? Text(
+                                "mengetik...",
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: Colors.purpleAccent.shade100,
+                                ),
+                              )
+                            : Text(
+                                conversation.lastMessage?.content ??
+                                    "Belum ada percakapan",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.copyWith(
+                                      fontWeight: conversation.unread(widget.me)
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                    ),
+                              ),
                       ),
                     );
                   },

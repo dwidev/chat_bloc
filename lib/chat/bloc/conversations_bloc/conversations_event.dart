@@ -10,11 +10,15 @@ final class GetConversations extends ConversationsEvent {
   const GetConversations(this.userID);
 }
 
-final class SubscribeMessage extends ConversationsEvent {
-  const SubscribeMessage();
+final class ConversationSubscribeMessage extends ConversationsEvent {
+  const ConversationSubscribeMessage();
 }
 
-final class ReadMessage extends ConversationsEvent {
+final class ConversationReadMessage extends ConversationsEvent {
   final ConversationModel conversation;
-  const ReadMessage(this.conversation);
+  const ConversationReadMessage(this.conversation);
+}
+
+final class ConversationSubscribeUserTyping extends ConversationsEvent {
+  const ConversationSubscribeUserTyping();
 }
