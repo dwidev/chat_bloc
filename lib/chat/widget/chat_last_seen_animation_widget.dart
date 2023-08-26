@@ -23,6 +23,7 @@ class _ChatLastSeenAnimationWidgetState
   bool showLastWacth = false;
   late AnimationController animationController;
   late Animation<Offset> offsetAnimation;
+
   @override
   void initState() {
     animationController = AnimationController(
@@ -43,6 +44,7 @@ class _ChatLastSeenAnimationWidgetState
       parent: animationController,
       curve: Curves.decelerate,
     ));
+
     Future.delayed(const Duration(seconds: 1), () {
       animationController.forward();
     });
@@ -81,38 +83,60 @@ class _ChatLastSeenAnimationWidgetState
             .firstOrNull
             ?.user,
         builder: (context, state) {
-          print("BUILD BlocSelector<ConversationsBloc");
           final user = state;
           final isOnline = user?.online ?? false;
 
-          return AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return SizeTransition(
-                sizeFactor: animation,
-                child: ScaleTransition(
-                  scale: animation,
-                  alignment: Alignment.centerLeft,
-                  child: child,
-                ),
-              );
+          return BlocSelector<ConversationsBloc, ConversationsState, bool>(
+            selector: (state) {
+              final user = state.conversations
+                  .firstWhere((e) => e.conversationID == widget.conversationID)
+                  .user;
+              print(user);
+              return user.typing;
             },
-            child: isOnline
-                ? Text(
-                    key: ValueKey<bool>(isOnline),
-                    user?.status ?? "",
-                    style: textTheme.bodySmall,
-                  )
-                : SlideTransition(
-                    position: offsetAnimation,
-                    child: Text(
-                      key: ValueKey<bool>(isOnline),
-                      showLastWacth
-                          ? user?.lastWatch ?? ''
-                          : user?.lastSeen ?? '',
-                      style: textTheme.bodySmall?.copyWith(color: Colors.grey),
-                    ),
+            builder: (context, state) {
+              print(state);
+              if (state) {
+                return Text(
+                  "mengetik...",
+                  style: textTheme.bodySmall?.copyWith(
+                    color: Colors.purple,
                   ),
+                );
+              } else {
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                    return SizeTransition(
+                      sizeFactor: animation,
+                      child: ScaleTransition(
+                        scale: animation,
+                        alignment: Alignment.centerLeft,
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: isOnline
+                      ? Text(
+                          key: ValueKey<bool>(isOnline),
+                          user?.status ?? "",
+                          style: textTheme.bodySmall,
+                        )
+                      : SlideTransition(
+                          position: offsetAnimation,
+                          child: Text(
+                            key: ValueKey<bool>(isOnline),
+                            showLastWacth
+                                ? user?.lastWatch ?? ''
+                                : user?.lastSeen ?? '',
+                            style: textTheme.bodySmall
+                                ?.copyWith(color: Colors.grey),
+                          ),
+                        ),
+                );
+              }
+            },
           );
         },
       ),

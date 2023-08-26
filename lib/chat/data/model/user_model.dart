@@ -91,7 +91,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, status: $status, statusDate: $statusDate)';
+    return 'UserModel(id: $id, name: $name, status: $status, statusDate: $statusDate, typing: $typing)';
   }
 
   UserModel copyWith({

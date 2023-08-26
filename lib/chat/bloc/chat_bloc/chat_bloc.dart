@@ -82,7 +82,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     final messageModel = ChatMessageModel(
       messageId: '',
       conversationID: event.conversationID,
-      content: event.isStart.toString(),
+      content: event.isStart ? "start" : "end",
       messageType: "send_message", // TODO : change to enum
       senderID: event.senderID,
       receiverID: event.receiverID,

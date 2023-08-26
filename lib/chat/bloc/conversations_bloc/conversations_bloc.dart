@@ -42,6 +42,7 @@ class ConversationsBloc extends Bloc<ConversationsEvent, ConversationsState> {
             lastMessage: message,
             unreadCount:
                 socketEvent.message.unread ? conv.unreadCount + 1 : null,
+            user: conv.user.copyWith(typing: false),
           );
           conversations
             ..insert(0, newConv)

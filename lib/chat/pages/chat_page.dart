@@ -1,12 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
-import 'package:chat_bloc/chat/bloc/conversations_bloc/conversations_bloc.dart';
-import 'package:chat_bloc/chat/data/model/user_model.dart';
+import '../data/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:chat_bloc/chat/data/model/conversation_model.dart';
+import '../data/model/conversation_model.dart';
 
 import '../bloc/chat_bloc/chat_bloc.dart';
 import '../widget/chat_last_seen_animation_widget.dart';
@@ -44,11 +42,13 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _onChangeChat(String value) {
-    final chatBloc = context.watch<ChatBloc>();
+    final chatBloc = context.read<ChatBloc>();
     final cId = widget.conversationModel.conversationID;
     if (typingDelay?.isActive ?? false) typingDelay?.cancel();
+    print(chatBloc.state.startTyping);
 
     typingDelay = Timer(const Duration(seconds: 3), () {
+      print("KESINI GA SIH");
       chatBloc.add(ChatTyping(
         isStart: false,
         conversationID: cId,
@@ -70,6 +70,7 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   void dispose() {
+    controller.dispose();
     typingDelay?.cancel();
     super.dispose();
   }
@@ -94,27 +95,8 @@ class _ChatPageState extends State<ChatPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(widget.receiver.name),
-              BlocSelector<ConversationsBloc, ConversationsState, bool>(
-                selector: (state) => state.conversations
-                    .firstWhere((e) =>
-                        e.conversationID ==
-                        widget.conversationModel.conversationID)
-                    .user
-                    .typing,
-                builder: (context, state) {
-                  if (state) {
-                    return Text(
-                      "mengetik...",
-                      style: textTheme.bodySmall?.copyWith(
-                        color: Colors.purple,
-                      ),
-                    );
-                  } else {
-                    return ChatLastSeenAnimationWidget(
-                      conversationID: widget.conversationModel.conversationID,
-                    );
-                  }
-                },
+              ChatLastSeenAnimationWidget(
+                conversationID: widget.conversationModel.conversationID,
               ),
             ],
           ),
@@ -151,7 +133,12 @@ class _ChatPageState extends State<ChatPage> {
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text(chat.content),
+                                  Flexible(
+                                    child: Text(
+                                      chat.content,
+                                      overflow: TextOverflow.clip,
+                                    ),
+                                  ),
                                   const SizedBox(width: 5),
                                   Text(
                                     chat.date,
