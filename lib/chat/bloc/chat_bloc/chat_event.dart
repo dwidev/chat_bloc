@@ -63,3 +63,9 @@ final class ChatTyping extends ChatEvent {
     required this.receiverID,
   });
 }
+
+final class ReplyChat extends ChatEvent {
+  final ChatMessageModel? chatMessageModel;
+
+  const ReplyChat(this.chatMessageModel);
+}

@@ -8,6 +8,7 @@ import '../data/model/conversation_model.dart';
 import '../data/model/user_model.dart';
 import '../widget/chat_last_seen_animation_widget.dart';
 import '../widget/chat_tile_widget.dart';
+import '../widget/reply_chat_widget.dart';
 
 class ChatPage extends StatefulWidget {
   final ConversationModel conversationModel;
@@ -27,7 +28,6 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   late TextEditingController controller;
-
   Timer? typingDelay;
 
   @override
@@ -38,6 +38,7 @@ class _ChatPageState extends State<ChatPage> {
       ..add(GetMessageByConversationID(cId))
       ..add(ChatSubscribeMessage(cId))
       ..add(JoinRoomChat(cId, widget.me, widget.receiver.id));
+
     super.initState();
   }
 
@@ -96,70 +97,70 @@ class _ChatPageState extends State<ChatPage> {
             ],
           ),
         ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: BlocBuilder<ChatBloc, ChatState>(
-                builder: (context, state) {
-                  return ListView.builder(
-                    reverse: true,
-                    itemCount: state.chats.length,
-                    itemBuilder: (context, index) {
-                      final chat = state.chats.reversed.toList()[index];
-                      return ChatTile(
-                        chat: chat,
-                        isMe: chat.senderID != widget.me,
-                      );
-                    },
-                  );
-                },
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                child: BlocBuilder<ChatBloc, ChatState>(
+                  builder: (context, state) {
+                    return ListView.builder(
+                      reverse: true,
+                      itemCount: state.chats.length,
+                      itemBuilder: (context, index) {
+                        final chat = state.chats.reversed.toList()[index];
+                        return ChatTile(
+                          chat: chat,
+                          isMe: chat.senderID != widget.me,
+                          onReplyChat: () {
+                            context.read<ChatBloc>().add(ReplyChat(chat));
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            ),
-            Stack(
-              textDirection: TextDirection.rtl,
-              children: [
-                Positioned(
-                  bottom: 100,
-                  child: Container(
-                    color: Colors.grey.shade200,
-                    height: 80,
-                  ),
+              const ReplyChatWidget(),
+              Container(
+                color: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 15,
+                  vertical: 10,
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  width: double.infinity,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          controller: controller,
-                          decoration: const InputDecoration(
-                            hintText: "Masukan pesan",
-                          ),
-                          onChanged: _onChangeChat,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: controller,
+                        decoration: const InputDecoration(
+                          hintText: "Masukan pesan",
                         ),
+                        onChanged: _onChangeChat,
                       ),
-                      IconButton(
-                        onPressed: () {
-                          final sendMessage = SendMessage(
-                            conversationID:
-                                widget.conversationModel.conversationID,
-                            senderID: widget.me,
-                            receiverID: widget.receiver.id,
-                            content: controller.text,
-                          );
-                          context.read<ChatBloc>().add(sendMessage);
-                          controller.clear();
-                        },
-                        icon: const Icon(Icons.send),
-                      )
-                    ],
-                  ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        if (controller.text.isEmpty) return;
+
+                        final sendMessage = SendMessage(
+                          conversationID:
+                              widget.conversationModel.conversationID,
+                          senderID: widget.me,
+                          receiverID: widget.receiver.id,
+                          content: controller.text,
+                        );
+                        context.read<ChatBloc>().add(sendMessage);
+                        controller.clear();
+                      },
+                      icon: const Icon(Icons.send),
+                    )
+                  ],
                 ),
-              ],
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

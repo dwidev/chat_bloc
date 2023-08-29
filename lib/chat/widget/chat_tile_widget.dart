@@ -8,10 +8,12 @@ class ChatTile extends StatefulWidget {
     super.key,
     required this.chat,
     required this.isMe,
+    required this.onReplyChat,
   });
 
   final ChatMessageModel chat;
   final bool isMe;
+  final VoidCallback onReplyChat;
 
   @override
   State<ChatTile> createState() => _ChatTileState();
@@ -45,10 +47,9 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
   }
 
   void onHorizontalDragUpdate(Offset offset) {
-    print(offset.dx);
     setState(() {
       this.offset = offset;
-      if (offset.dx > 30 && leftIconOpacity <= 1) {
+      if (offset.dx > 25 && leftIconOpacity <= 1) {
         leftIconOpacity = 1;
       }
     });
@@ -100,8 +101,8 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
             onHorizontalDragUpdate(offset + details.delta * 0.5);
           },
           onHorizontalDragEnd: (details) {
-            print("RESET");
             reset();
+            widget.onReplyChat();
           },
           child: Container(
             color: Colors.transparent,

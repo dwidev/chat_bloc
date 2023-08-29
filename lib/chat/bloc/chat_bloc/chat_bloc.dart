@@ -18,6 +18,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<JoinRoomChat>(_joinRoomChat);
     on<LeaveRoomChat>(_leaveRoomChat);
     on<ChatTyping>(_onTyping);
+    on<ReplyChat>(_onReplyChat);
   }
 
   Future<void> _subscribeMessage(
@@ -60,6 +61,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     );
 
     chatRepository.sendMessage(messageModel);
+    add(const ReplyChat(null));
   }
 
   void _joinRoomChat(JoinRoomChat evet, Emitter<ChatState> emit) {
@@ -90,5 +92,18 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     );
     chatRepository.sendUserTyping(messageModel);
     emit(state.copyWith(startTyping: event.isStart));
+  }
+
+  void _onReplyChat(ReplyChat event, Emitter<ChatState> emit) {
+    if (event.chatMessageModel == null) {
+      emit(ChatState(
+        chats: state.chats,
+        startTyping: state.startTyping,
+        replayChat: null,
+      ));
+      return;
+    }
+
+    emit(state.copyWith(replayChat: event.chatMessageModel));
   }
 }
