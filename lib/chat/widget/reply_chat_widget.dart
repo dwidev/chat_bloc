@@ -52,7 +52,6 @@ class _ReplyChatWidgetState extends State<ReplyChatWidget>
       listenWhen: (previous, current) =>
           previous.replayChat != current.replayChat,
       listener: (context, state) {
-        print("REBUILD");
         if (state.replayChat != null) {
           animationController.forward();
         } else {

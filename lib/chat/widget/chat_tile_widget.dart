@@ -23,8 +23,12 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
   final Tween<Offset> _tween = Tween<Offset>();
   late final AnimationController _controller = AnimationController(
       vsync: this, duration: const Duration(milliseconds: 150));
-  late Animation<Offset> _animation = _tween
-      .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
+  late final Animation<Offset> _animation =
+      _tween.animate(CurvedAnimation(parent: _controller, curve: Curves.ease));
+
+  late final Animation<double> _animationOpacity = Tween(begin: 1.0, end: 0.0)
+      .animate(CurvedAnimation(parent: _controller, curve: Curves.ease));
 
   Offset offset = Offset.zero;
   double leftIconOpacity = 0.0;
@@ -32,10 +36,10 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
   @override
   void initState() {
     _controller.addListener(() {
-      onHorizontalDragUpdate(_animation.value);
-      setState(() {
-        leftIconOpacity = 0.0;
-      });
+      onHorizontalDragUpdate(
+        offset: _animation.value,
+        opacityHide: _animationOpacity.value,
+      );
     });
     super.initState();
   }
@@ -46,18 +50,34 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  void onHorizontalDragUpdate(Offset offset) {
+  void onHorizontalDragUpdate({required Offset offset, double? opacityHide}) {
+    final valueOpacity = double.parse(((offset / 100).dx).toStringAsFixed(1));
+    final leftIconOpacityShow = leftIconOpacity + valueOpacity;
+    final leftIconOpacityHide = leftIconOpacity - valueOpacity;
+
     setState(() {
-      this.offset = offset;
-      if (offset.dx > 25 && leftIconOpacity <= 1) {
-        leftIconOpacity = 1;
+      if (offset.dx > 40 &&
+          this.offset.dx < offset.dx &&
+          leftIconOpacityShow <= 1 &&
+          leftIconOpacity <= 0.9) {
+        leftIconOpacity = leftIconOpacityShow;
       }
+
+      if (opacityHide == null &&
+          this.offset.dx > offset.dx &&
+          leftIconOpacity >= 0.1) {
+        leftIconOpacity -= leftIconOpacityHide;
+      }
+
+      if (opacityHide != null) {
+        leftIconOpacity = opacityHide;
+      }
+
+      this.offset = offset;
     });
   }
 
   void reset() {
-    _animation = _tween
-        .animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _tween.begin = offset;
     _tween.end = Offset.zero;
     _controller.reset();
@@ -75,14 +95,13 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
         Positioned(
           left: 15,
           child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.decelerate,
-            opacity: leftIconOpacity.roundToDouble(),
+            duration: const Duration(milliseconds: 150),
+            opacity: double.parse(leftIconOpacity.toStringAsFixed(1)),
             child: Transform.scale(
               scale: 0.8,
               child: CircleAvatar(
                 radius: 20,
-                backgroundColor: Colors.grey.withOpacity(0.2),
+                backgroundColor: Colors.grey.shade300,
                 child: const Icon(
                   CupertinoIcons.reply,
                   size: 20,
@@ -98,9 +117,13 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
               return;
             }
 
-            onHorizontalDragUpdate(offset + details.delta * 0.5);
+            onHorizontalDragUpdate(offset: offset + details.delta * 0.3);
           },
           onHorizontalDragEnd: (details) {
+            if (offset.dx <= 0) {
+              return;
+            }
+
             reset();
             widget.onReplyChat();
           },

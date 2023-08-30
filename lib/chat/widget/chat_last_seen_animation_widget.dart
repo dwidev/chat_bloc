@@ -60,7 +60,6 @@ class _ChatLastSeenAnimationWidgetState
 
   @override
   Widget build(BuildContext context) {
-    print("REBUILD ChatLastSeenAnimationWidget");
     final textTheme = Theme.of(context).textTheme;
 
     return BlocListener<ConversationsBloc, ConversationsState>(
@@ -91,11 +90,9 @@ class _ChatLastSeenAnimationWidgetState
               final user = state.conversations
                   .firstWhere((e) => e.conversationID == widget.conversationID)
                   .user;
-              print(user);
               return user.typing;
             },
             builder: (context, state) {
-              print(state);
               if (state) {
                 return Text(
                   "mengetik...",
