@@ -15,7 +15,7 @@ class ChatState extends Equatable {
   });
 
   factory ChatState.resetReplyChat() {
-    return ChatState(
+    return const ChatState(
       replayChat: null,
     );
   }
