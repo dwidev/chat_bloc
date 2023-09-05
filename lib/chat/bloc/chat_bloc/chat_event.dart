@@ -69,3 +69,10 @@ final class ReplyChat extends ChatEvent {
 
   const ReplyChat(this.chatMessageModel);
 }
+
+final class ReactChat extends ChatEvent {
+  final ChatMessageModel chatMessageModel;
+  final String emoticon;
+
+  const ReactChat(this.emoticon, this.chatMessageModel);
+}

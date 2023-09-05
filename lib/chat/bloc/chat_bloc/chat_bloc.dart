@@ -19,6 +19,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<LeaveRoomChat>(_leaveRoomChat);
     on<ChatTyping>(_onTyping);
     on<ReplyChat>(_onReplyChat);
+    on<ReactChat>(_reactChat);
   }
 
   Future<void> _subscribeMessage(
@@ -105,5 +106,21 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     }
 
     emit(state.copyWith(replayChat: event.chatMessageModel));
+  }
+
+  void _reactChat(ReactChat event, Emitter<ChatState> emit) {
+    final msgID = event.chatMessageModel.messageId;
+    final chats = state.chats.toList();
+    final indexChat = state.chats.indexWhere((c) => c.messageId == msgID);
+    var chatUpdate = chats.firstWhere((c) => c.messageId == msgID);
+    chatUpdate = chatUpdate.copyWith(
+      emoticons: [
+        ...chatUpdate.emoticons,
+        ...[event.emoticon]
+      ],
+      emoticonState: EmoticonState.start,
+    );
+    chats.replaceRange(indexChat, indexChat + 1, [chatUpdate]);
+    emit(ChatStateStartEmoticonAnimation(chats: chats));
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../cubit/react_animation_cubit.dart';
 import '../data/model/chat_message_model.dart';
 
 class ChatTile extends StatefulWidget {
@@ -9,10 +11,14 @@ class ChatTile extends StatefulWidget {
     required this.chat,
     required this.isMe,
     required this.onReplyChat,
-    required this.onLongPress,
-    required this.dummyReaction,
-    required this.emot,
+    required this.startAnimation,
   });
+
+  final ChatMessageModel chat;
+  final bool isMe;
+  final VoidCallback? onReplyChat;
+
+  final bool startAnimation;
 
   factory ChatTile.overlay({
     required ChatMessageModel chat,
@@ -22,17 +28,9 @@ class ChatTile extends StatefulWidget {
       chat: chat,
       isMe: isMe,
       onReplyChat: null,
-      onLongPress: null,
-      dummyReaction: '',
-      emot: '',
+      startAnimation: false,
     );
   }
-
-  final ChatMessageModel chat;
-  final bool isMe;
-  final VoidCallback? onReplyChat;
-  final Function(Offset offset, ChatMessageModel msg)? onLongPress;
-  final String dummyReaction, emot;
 
   @override
   State<ChatTile> createState() => _ChatTileState();
@@ -40,23 +38,18 @@ class ChatTile extends StatefulWidget {
 
 class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
   final _key = GlobalKey();
+  late ReactAnimationCubit reactAnimate;
 
+  /// SWIPE ANIMATION
   final Tween<Offset> _tween = Tween<Offset>();
-  late final AnimationController _controller = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 150));
-
-  late final AnimationController _controllerReact = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 700));
-
-  late final Animation<Offset> _animationReact =
-      Tween(begin: const Offset(0, -50), end: const Offset(0, 0)).animate(
-          CurvedAnimation(parent: _controllerReact, curve: Curves.bounceOut));
-
-  late final Animation<Offset> _animation =
-      _tween.animate(CurvedAnimation(parent: _controller, curve: Curves.ease));
-
+  late final AnimationController _swipeAnimationController =
+      AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 100));
+  late final Animation<Offset> _animation = _tween.animate(
+      CurvedAnimation(parent: _swipeAnimationController, curve: Curves.ease));
   late final Animation<double> _animationOpacity = Tween(begin: 1.0, end: 0.0)
-      .animate(CurvedAnimation(parent: _controller, curve: Curves.ease));
+      .animate(CurvedAnimation(
+          parent: _swipeAnimationController, curve: Curves.ease));
 
   Offset offset = Offset.zero;
   double leftIconOpacity = 0.0;
@@ -65,20 +58,25 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    _controller.addListener(() {
-      onHorizontalDragUpdate(
-        offset: _animation.value,
-        opacityHide: _animationOpacity.value,
-      );
-    });
+    reactAnimate = context.read<ReactAnimationCubit>();
+    // reactAnimate.initAnimationForEmoticon(vsync: this, isSender: widget.isMe);
+    _swipeAnimationController.addListener(onListenSwipeController);
 
     super.initState();
   }
 
+  void onListenSwipeController() {
+    onHorizontalDragUpdate(
+      offset: _animation.value,
+      opacityHide: _animationOpacity.value,
+    );
+  }
+
   @override
   void dispose() {
-    _controllerReact.dispose();
-    _controller.dispose();
+    _swipeAnimationController.removeListener(onListenSwipeController);
+    _swipeAnimationController.dispose();
+
     super.dispose();
   }
 
@@ -112,32 +110,26 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
   void reset() {
     _tween.begin = offset;
     _tween.end = Offset.zero;
-    _controller.reset();
-    _controller.forward();
+    _swipeAnimationController.reset();
+    _swipeAnimationController.forward();
   }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    // final size = MediaQuery.of(context).size;
-    if (widget.emot.isNotEmpty && widget.dummyReaction == widget.chat.content) {
-      _controllerReact.forward();
-    } else {
-      _controllerReact.reset();
-    }
+    final size = MediaQuery.of(context).size;
 
     return GestureDetector(
       key: _key,
       onLongPress: () {
-        if (widget.onLongPress != null) {
-          final renderBox =
-              _key.currentContext!.findRenderObject() as RenderBox;
-          Offset offset = renderBox.localToGlobal(Offset.zero);
-          widget.onLongPress?.call(offset, widget.chat);
-          setState(() {
-            isReact = true;
-          });
-        }
+        final renderBox = _key.currentContext!.findRenderObject() as RenderBox;
+        Offset offset = renderBox.localToGlobal(Offset.zero);
+        reactAnimate.showChatReactOverlay(
+          vsync: this,
+          offset: offset,
+          selectedChat: widget.chat,
+          isSender: widget.isMe,
+        );
       },
       child: Stack(
         alignment: Alignment.center,
@@ -196,69 +188,147 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
                           ? CrossAxisAlignment.start
                           : CrossAxisAlignment.end,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: widget.isMe
-                                ? Colors.deepPurple.shade100
-                                : Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(10),
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: size.width / 1.2,
                           ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  widget.chat.content,
-                                  overflow: TextOverflow.clip,
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              color: widget.isMe
+                                  ? Colors.deepPurple.shade100
+                                  : Colors.pinkAccent.shade100,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    widget.chat.content,
+                                    overflow: TextOverflow.clip,
+                                    style: textTheme.bodyLarge,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                widget.chat.date,
-                                style: textTheme.bodySmall?.copyWith(
-                                  color: Colors.grey,
-                                  fontSize: 8,
+                                const SizedBox(width: 5),
+                                Text(
+                                  widget.chat.date,
+                                  style: textTheme.bodySmall?.copyWith(
+                                    color: Colors.grey,
+                                    fontSize: 8,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
+                        if (widget.startAnimation) ...[
+                          Visibility(
+                            visible: widget.chat.emoticons.isNotEmpty,
+                            child: AnimatedBuilder(
+                              animation:
+                                  reactAnimate.emoticonAnimationController,
+                              builder: (context, c) {
+                                return Transform.translate(
+                                  offset: const Offset(0, -5),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          AnimatedContainer(
+                                            alignment: Alignment.centerLeft,
+                                            duration: const Duration(
+                                              milliseconds: 150,
+                                            ),
+                                            width: 25,
+                                            height: 20,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade300,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 2),
+                                            ),
+                                          ),
+                                          // shadow react
+                                          Container(
+                                            width: reactAnimate
+                                                    .emoticonshadowAnimation
+                                                    .value +
+                                                2,
+                                            height: reactAnimate
+                                                .emoticonshadowAnimation.value,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade600
+                                                  .withOpacity(0.4),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      if (widget.chat.emoticons.contains(
+                                          reactAnimate.state.selectedEmoticon))
+                                        Transform.rotate(
+                                          // angle: reactAnimate
+                                          //     .emoticonRotateAnimation.value,
+                                          angle: 0,
+                                          child: Transform.translate(
+                                            offset: reactAnimate
+                                                .emoticonOffsetAnimation.value,
+                                            child: Transform.scale(
+                                              scale: reactAnimate
+                                                  .emoticonScaleAnimation.value,
+                                              child: Text(reactAnimate
+                                                  .state.selectedEmoticon),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ] else ...[
+                          if (widget.chat.emoticons.isNotEmpty)
+                            Transform.translate(
+                              offset: const Offset(0, -5),
+                              child: AnimatedContainer(
+                                alignment: Alignment.centerLeft,
+                                duration: const Duration(
+                                  milliseconds: 150,
+                                ),
+                                width: 25,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade300,
+                                  borderRadius: BorderRadius.circular(10),
+                                  border:
+                                      Border.all(color: Colors.white, width: 2),
+                                ),
+                                child: Transform.translate(
+                                  offset: Offset(2, -2),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: widget.chat.emoticons
+                                        .map((e) => Transform.scale(
+                                            scale: 1, child: Text(e)))
+                                        .toList(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ]
                       ],
                     ),
                   ),
                 ),
-                if (widget.emot.isNotEmpty &&
-                    widget.dummyReaction == widget.chat.content)
-                  Positioned(
-                    left: !widget.isMe ? null : 10,
-                    right: !widget.isMe ? 10 : null,
-                    bottom: 0,
-                    child: AnimatedBuilder(
-                      animation: _animationReact,
-                      builder: (context, _) {
-                        return Transform.translate(
-                          offset: _animationReact.value,
-                          child: Container(
-                            padding: const EdgeInsets.all(1),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: Colors.grey.shade500.withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Text(
-                              widget.emot,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall
-                                  ?.copyWith(fontSize: 9),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  )
+                //   )
               ],
             ),
           ),

@@ -1,3 +1,5 @@
+import 'package:chat_bloc/chat/cubit/react_animation_cubit.dart';
+
 import '../bloc/conversations_bloc/conversations_bloc.dart';
 import '../bloc/ws_connection_bloc/ws_connection_bloc.dart';
 import '../data/datasources/ws_datasource.dart';
@@ -45,6 +47,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
           child: MultiBlocProvider(
             providers: [
               BlocProvider.value(value: convBloc),
+              BlocProvider(create: (context) => ReactAnimationCubit()),
               BlocProvider(
                 create: (context) => ChatBloc(
                   chatRepository: context.read<ChatRepository>(),

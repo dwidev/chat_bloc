@@ -39,6 +39,14 @@ class ChatState extends Equatable {
   bool get stringify => true;
 }
 
+class ChatStateStartEmoticonAnimation extends ChatState {
+  const ChatStateStartEmoticonAnimation({required List<ChatMessageModel> chats})
+      : super(chats: chats);
+
+  @override
+  List<Object?> get props => [chats];
+}
+
 class ChatInitial extends ChatState {
   const ChatInitial();
 }

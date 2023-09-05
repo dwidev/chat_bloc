@@ -20,7 +20,9 @@ enum WSConnectionStatus {
   errorListener,
 }
 
+// const host = "localhost";
 const host = "192.168.43.104";
+// const host = "192.168.10.145";
 
 class WebSocketDataSource {
   late WebSocketChannel webSocketChannel;
