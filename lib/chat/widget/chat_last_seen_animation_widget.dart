@@ -45,7 +45,7 @@ class _ChatLastSeenAnimationWidgetState
       curve: Curves.decelerate,
     ));
 
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       animationController.forward();
     });
 
@@ -62,80 +62,90 @@ class _ChatLastSeenAnimationWidgetState
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return BlocListener<ConversationsBloc, ConversationsState>(
-      listener: (context, state) {
-        if (state is ConversationsOfflineUserState) {
-          animationController.reset();
-          setState(() {
-            showLastWacth = false;
-          });
-          Future.delayed(const Duration(seconds: 2), () {
-            animationController
-              ..stop()
-              ..forward();
-          });
-        }
+    return WillPopScope(
+      onWillPop: () async {
+        animationController
+          ..reset()
+          ..stop(canceled: true);
+        return true;
       },
-      child: BlocSelector<ConversationsBloc, ConversationsState, UserModel?>(
-        selector: (state) => state.conversations
-            .where((element) => element.conversationID == widget.conversationID)
-            .firstOrNull
-            ?.user,
-        builder: (context, state) {
-          final user = state;
-          final isOnline = user?.online ?? false;
-
-          return BlocSelector<ConversationsBloc, ConversationsState, bool>(
-            selector: (state) {
-              final user = state.conversations
-                  .firstWhere((e) => e.conversationID == widget.conversationID)
-                  .user;
-              return user.typing;
-            },
-            builder: (context, state) {
-              if (state) {
-                return Text(
-                  "mengetik...",
-                  style: textTheme.bodySmall?.copyWith(
-                    color: Colors.purple,
-                  ),
-                );
-              } else {
-                return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  transitionBuilder:
-                      (Widget child, Animation<double> animation) {
-                    return SizeTransition(
-                      sizeFactor: animation,
-                      child: ScaleTransition(
-                        scale: animation,
-                        alignment: Alignment.centerLeft,
-                        child: child,
-                      ),
-                    );
-                  },
-                  child: isOnline
-                      ? Text(
-                          key: ValueKey<bool>(isOnline),
-                          user?.status ?? "",
-                          style: textTheme.bodySmall,
-                        )
-                      : SlideTransition(
-                          position: offsetAnimation,
-                          child: Text(
-                            key: ValueKey<bool>(isOnline),
-                            showLastWacth
-                                ? user?.lastWatch ?? ''
-                                : user?.lastSeen ?? '',
-                            style: textTheme.bodySmall
-                                ?.copyWith(color: Colors.grey),
-                          ),
-                        ),
-                );
-              }
-            },
-          );
+      child: BlocListener<ConversationsBloc, ConversationsState>(
+        listener: (context, state) {
+          if (state is ConversationsOfflineUserState) {
+            animationController.reset();
+            setState(() {
+              showLastWacth = false;
+            });
+            Future.delayed(const Duration(seconds: 2), () {
+              animationController
+                ..stop()
+                ..forward();
+            });
+          }
         },
+        child: BlocSelector<ConversationsBloc, ConversationsState, UserModel?>(
+          selector: (state) => state.conversations
+              .where(
+                  (element) => element.conversationID == widget.conversationID)
+              .firstOrNull
+              ?.user,
+          builder: (context, state) {
+            final user = state;
+            final isOnline = user?.online ?? false;
+
+            return BlocSelector<ConversationsBloc, ConversationsState, bool>(
+              selector: (state) {
+                final user = state.conversations
+                    .firstWhere(
+                        (e) => e.conversationID == widget.conversationID)
+                    .user;
+                return user.typing;
+              },
+              builder: (context, state) {
+                if (state) {
+                  return Text(
+                    "mengetik...",
+                    style: textTheme.bodySmall?.copyWith(
+                      color: Colors.purple,
+                    ),
+                  );
+                } else {
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    transitionBuilder:
+                        (Widget child, Animation<double> animation) {
+                      return SizeTransition(
+                        sizeFactor: animation,
+                        child: ScaleTransition(
+                          scale: animation,
+                          alignment: Alignment.centerLeft,
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: isOnline
+                        ? Text(
+                            key: ValueKey<bool>(isOnline),
+                            user?.status ?? "",
+                            style: textTheme.bodySmall,
+                          )
+                        : SlideTransition(
+                            position: offsetAnimation,
+                            child: Text(
+                              key: ValueKey<bool>(isOnline),
+                              showLastWacth
+                                  ? user?.lastWatch ?? ''
+                                  : user?.lastSeen ?? '',
+                              style: textTheme.bodySmall
+                                  ?.copyWith(color: Colors.grey),
+                            ),
+                          ),
+                  );
+                }
+              },
+            );
+          },
+        ),
       ),
     );
   }
