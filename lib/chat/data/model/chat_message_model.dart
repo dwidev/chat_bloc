@@ -2,10 +2,38 @@
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
+import 'package:collection/collection.dart';
 
-enum EmoticonState {
-  initial,
-  start,
+class EmoticonModel {
+  final String senderID;
+  final String emot;
+
+  EmoticonModel({
+    required this.senderID,
+    required this.emot,
+  });
+
+  @override
+  String toString() => 'EmoticonModel(senderID: $senderID, emot: $emot)';
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'senderID': senderID,
+      'emot': emot,
+    };
+  }
+
+  factory EmoticonModel.fromMap(Map<String, dynamic> map) {
+    return EmoticonModel(
+      senderID: map['senderID'] as String,
+      emot: map['emot'] as String,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory EmoticonModel.fromJson(String source) =>
+      EmoticonModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class ChatMessageModel {
@@ -17,8 +45,13 @@ class ChatMessageModel {
   final String receiverID;
   final DateTime messageDate;
   final String messageStatus;
-  final List<String> emoticons;
-  final EmoticonState emoticonState;
+  final List<EmoticonModel> emoticons;
+
+  String get myEmoticon =>
+      emoticons.firstWhereOrNull((e) => e.senderID == senderID)?.emot ?? "";
+
+  String get senderEmoticon =>
+      emoticons.firstWhereOrNull((e) => e.senderID != senderID)?.emot ?? "";
 
   bool get read => messageStatus == "read";
   bool get unread => messageStatus == "unread";
@@ -51,7 +84,6 @@ class ChatMessageModel {
     required this.messageDate,
     this.messageStatus = "",
     this.emoticons = const [],
-    this.emoticonState = EmoticonState.initial,
   });
 
   factory ChatMessageModel.initial() {
@@ -121,7 +153,7 @@ class ChatMessageModel {
 
   @override
   String toString() {
-    return 'ChatMessageModel(messageId: $messageId, conversationID: $conversationID, content: $content, messageType: $messageType, senderID: $senderID, receiverID: $receiverID, messageDate: $messageDate, messageStatus: $messageStatus, emoticons: $emoticons, emoticonState: $emoticonState)';
+    return 'ChatMessageModel(messageId: $messageId, conversationID: $conversationID, content: $content, messageType: $messageType, senderID: $senderID, receiverID: $receiverID, messageDate: $messageDate, messageStatus: $messageStatus, emoticons: $emoticons)';
   }
 
   ChatMessageModel copyWith({
@@ -133,8 +165,7 @@ class ChatMessageModel {
     String? receiverID,
     DateTime? messageDate,
     String? messageStatus,
-    List<String>? emoticons,
-    EmoticonState? emoticonState,
+    List<EmoticonModel>? emoticons,
   }) {
     return ChatMessageModel(
       messageId: messageId ?? this.messageId,
@@ -146,7 +177,6 @@ class ChatMessageModel {
       messageDate: messageDate ?? this.messageDate,
       messageStatus: messageStatus ?? this.messageStatus,
       emoticons: emoticons ?? this.emoticons,
-      emoticonState: emoticonState ?? this.emoticonState,
     );
   }
 }

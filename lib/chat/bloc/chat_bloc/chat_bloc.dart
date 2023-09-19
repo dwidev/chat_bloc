@@ -45,7 +45,49 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     final res = await chatRepository.getMessageByConversationID(
       event.conversationID,
     );
-    emit(state.copyWith(chats: res));
+    List<ChatMessageModel> chats = [];
+    for (var chat in res) {
+      if (chat.content == "test") {
+        chats.add(chat.copyWith(emoticons: [
+          EmoticonModel(
+            senderID: chat.senderID,
+            emot: '😂',
+          )
+        ]));
+        continue;
+      }
+
+      if (chat.content == "testanimasi") {
+        chats.add(chat.copyWith(emoticons: [
+          // EmoticonModel(
+          //   senderID: chat.senderID,
+          //   emot: '😂',
+          // ),
+          EmoticonModel(
+            senderID: chat.receiverID,
+            emot: '❤️',
+          )
+        ]));
+        continue;
+      }
+
+      if (chat.content == "asgh") {
+        chats.add(chat.copyWith(emoticons: [
+          EmoticonModel(
+            senderID: chat.receiverID,
+            emot: '😡',
+          ),
+          // EmoticonModel(
+          //   senderID: chat.senderID,
+          //   emot: '😂',
+          // )
+        ]));
+        continue;
+      }
+
+      chats.add(chat);
+    }
+    emit(state.copyWith(chats: chats));
   }
 
   void _onSendMessage(SendMessage event, Emitter<ChatState> emit) {
@@ -109,18 +151,18 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   }
 
   void _reactChat(ReactChat event, Emitter<ChatState> emit) {
-    final msgID = event.chatMessageModel.messageId;
-    final chats = state.chats.toList();
-    final indexChat = state.chats.indexWhere((c) => c.messageId == msgID);
-    var chatUpdate = chats.firstWhere((c) => c.messageId == msgID);
-    chatUpdate = chatUpdate.copyWith(
-      emoticons: [
-        ...chatUpdate.emoticons,
-        ...[event.emoticon]
-      ],
-      emoticonState: EmoticonState.start,
-    );
-    chats.replaceRange(indexChat, indexChat + 1, [chatUpdate]);
-    emit(ChatStateStartEmoticonAnimation(chats: chats));
+    // final msgID = event.chatMessageModel.messageId;
+    // final chats = state.chats.toList();
+    // final indexChat = state.chats.indexWhere((c) => c.messageId == msgID);
+    // var chatUpdate = chats.firstWhere((c) => c.messageId == msgID);
+    // chatUpdate = chatUpdate.copyWith(
+    //   emoticons: [
+    //     ...chatUpdate.emoticons,
+    //     ...[]
+    //   ],
+    //   emoticonState: EmoticonState.start,
+    // );
+    // chats.replaceRange(indexChat, indexChat + 1, [chatUpdate]);
+    // // emit(ChatStateStartEmoticonAnimation(chats: chats));
   }
 }

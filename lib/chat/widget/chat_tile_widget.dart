@@ -11,26 +11,11 @@ class ChatTile extends StatefulWidget {
     required this.chat,
     required this.isMe,
     required this.onReplyChat,
-    required this.startAnimation,
   });
 
   final ChatMessageModel chat;
   final bool isMe;
   final VoidCallback? onReplyChat;
-
-  final bool startAnimation;
-
-  factory ChatTile.overlay({
-    required ChatMessageModel chat,
-    required bool isMe,
-  }) {
-    return ChatTile(
-      chat: chat,
-      isMe: isMe,
-      onReplyChat: null,
-      startAnimation: false,
-    );
-  }
 
   @override
   State<ChatTile> createState() => _ChatTileState();
@@ -51,6 +36,28 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
       .animate(CurvedAnimation(
           parent: _swipeAnimationController, curve: Curves.ease));
 
+  final emoticonAnimationDuration = const Duration(milliseconds: 1000);
+  late final AnimationController emoticonAnimationController;
+  late CurvedAnimation curvedEmoticonAnimation;
+
+  late TweenSequence<Offset> tweenOffsetEmoticon;
+  late Animation<Offset> emoticonOffsetAnimation;
+
+  late Tween<double> tweenShadowEmoticon;
+  late Animation<double> emoticonshadowAnimation;
+
+  late Tween<double> tweenOpacityEmoticon;
+  late Animation<double> emoticonOpcityAnimation;
+
+  late TweenSequence<double> tweenScaleEmoticon;
+  late Animation<double> emoticonScaleAnimation;
+
+  late AnimationController emoticonBackgroundController;
+  late Tween<double> tweenEmotBgWidth;
+  late Animation<double> emotBgWidthAnimation;
+  late Tween<double> tweenEmotBgHeight;
+  late Animation<double> emotBgHeightAnimation;
+
   Offset offset = Offset.zero;
   double leftIconOpacity = 0.0;
 
@@ -58,11 +65,120 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    // emot.addAll(widget.chat.emoticons);
     reactAnimate = context.read<ReactAnimationCubit>();
-    // reactAnimate.initAnimationForEmoticon(vsync: this, isSender: widget.isMe);
+    // initAnimationForEmoticon(vsync: this, isSender: widget.isMe);
     _swipeAnimationController.addListener(onListenSwipeController);
 
+    initAnimationForBackgroundEmoticon(vsync: this);
+    initAnimationForEmoticon(vsync: this);
+
+    final readyMyEmot = widget.chat.myEmoticon.isNotEmpty;
+    if (readyMyEmot) {
+      reactAnimate.initEmoticonValues(
+        selectedChat: widget.chat,
+        emoticonAnimationController: emoticonAnimationController,
+        emoticonBackgroundController: emoticonBackgroundController,
+        selectedEmoticon: widget.chat.myEmoticon,
+        tweenEmotBgWidth: tweenEmotBgWidth,
+      );
+    }
+
     super.initState();
+  }
+
+  void initAnimationForBackgroundEmoticon({
+    required TickerProvider vsync,
+  }) {
+    final readyEmot = widget.chat.emoticons.isNotEmpty;
+    final isTwoEmot = widget.chat.emoticons.length == 2;
+
+    emoticonBackgroundController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 100),
+    );
+
+    final curved = CurvedAnimation(
+      parent: emoticonBackgroundController,
+      curve: Curves.easeIn,
+    );
+
+    tweenEmotBgWidth = Tween(begin: 10, end: isTwoEmot ? 25 * 2 : 25);
+    emotBgWidthAnimation = tweenEmotBgWidth.animate(curved);
+    tweenEmotBgHeight = Tween(begin: 20, end: 20);
+    emotBgHeightAnimation = tweenEmotBgHeight.animate(curved);
+
+    if (readyEmot) {
+      emoticonBackgroundController.value = 1.0;
+    }
+  }
+
+  void initAnimationForEmoticon({
+    required TickerProvider vsync,
+  }) {
+    final readyEmot = widget.chat.emoticons.isNotEmpty;
+
+    emoticonAnimationController = AnimationController(
+      vsync: vsync,
+      duration: emoticonAnimationDuration,
+    );
+
+    curvedEmoticonAnimation = CurvedAnimation(
+      parent: emoticonAnimationController,
+      curve: Curves.easeInOutCubicEmphasized,
+    );
+
+    // set offset animation
+    tweenOffsetEmoticon = TweenSequence([
+      TweenSequenceItem(
+        tween: Tween(
+          begin: const Offset(0, -30),
+          end: const Offset(0, 0),
+        ).chain(CurveTween(curve: Curves.fastLinearToSlowEaseIn)),
+        weight: 0.5,
+      ),
+    ]);
+    emoticonOffsetAnimation = tweenOffsetEmoticon.animate(
+      curvedEmoticonAnimation,
+    );
+
+    // set shadow of emoticon
+    tweenShadowEmoticon = Tween<double>(begin: 10, end: 0.0);
+    emoticonshadowAnimation = tweenShadowEmoticon.animate(
+      curvedEmoticonAnimation,
+    );
+
+    // set opacity emoticon
+    tweenOpacityEmoticon = Tween(begin: 0.2, end: 1.0);
+    emoticonOpcityAnimation = tweenOpacityEmoticon.animate(
+      curvedEmoticonAnimation,
+    );
+
+    // set scale emoticon
+    tweenScaleEmoticon = TweenSequence([
+      TweenSequenceItem(
+        tween: Tween(begin: 2.5, end: 0.8),
+        weight: 0.5,
+      ),
+      TweenSequenceItem(
+        tween: Tween(begin: 0.8, end: 2.0)
+            .chain(CurveTween(curve: Curves.fastOutSlowIn)),
+        weight: 1,
+      ),
+      TweenSequenceItem(
+        tween: Tween(begin: 2.5, end: 1.0)
+            .chain(CurveTween(curve: Curves.bounceInOut)),
+        weight: 1,
+      ),
+    ]);
+
+    emoticonScaleAnimation = tweenScaleEmoticon.animate(
+      curvedEmoticonAnimation,
+    );
+
+    if (readyEmot) {
+      emoticonAnimationController.value = 1.0;
+    }
   }
 
   void onListenSwipeController() {
@@ -74,6 +190,7 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    reactAnimate.state.disponseAnimationController(widget.chat.messageId);
     _swipeAnimationController.removeListener(onListenSwipeController);
     _swipeAnimationController.dispose();
 
@@ -116,19 +233,28 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    final size = MediaQuery.of(context).size;
+    final senderEmot = widget.chat.senderEmoticon.isEmpty;
+
+    // final textTheme = Theme.of(context).textTheme;
+    // final size = MediaQuery.of(context).size;
 
     return GestureDetector(
       key: _key,
       onLongPress: () {
         final renderBox = _key.currentContext!.findRenderObject() as RenderBox;
         Offset offset = renderBox.localToGlobal(Offset.zero);
+
+        reactAnimate.initEmoticonValues(
+          selectedChat: widget.chat,
+          emoticonAnimationController: emoticonAnimationController,
+          emoticonBackgroundController: emoticonBackgroundController,
+          tweenEmotBgWidth: tweenEmotBgWidth,
+          selectedEmoticon: '',
+        );
+
         reactAnimate.showChatReactOverlay(
-          vsync: this,
           offset: offset,
           selectedChat: widget.chat,
-          isSender: widget.isMe,
         );
       },
       child: Stack(
@@ -174,165 +300,266 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
               reset();
               widget.onReplyChat?.call();
             },
-            child: Stack(
-              fit: StackFit.passthrough,
-              children: [
-                Container(
-                  color: Colors.transparent,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                  child: Transform.translate(
-                    offset: offset,
-                    child: Column(
-                      crossAxisAlignment: widget.isMe
-                          ? CrossAxisAlignment.start
-                          : CrossAxisAlignment.end,
-                      children: [
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: size.width / 1.2,
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: widget.isMe
-                                  ? Colors.deepPurple.shade100
-                                  : Colors.pinkAccent.shade100,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    widget.chat.content,
-                                    overflow: TextOverflow.clip,
-                                    style: textTheme.bodyLarge,
-                                  ),
-                                ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  widget.chat.date,
-                                  style: textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey,
-                                    fontSize: 8,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        if (widget.startAnimation) ...[
-                          Visibility(
-                            visible: widget.chat.emoticons.isNotEmpty,
-                            child: AnimatedBuilder(
-                              animation:
-                                  reactAnimate.emoticonAnimationController,
-                              builder: (context, c) {
-                                return Transform.translate(
-                                  offset: const Offset(0, -5),
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          AnimatedContainer(
-                                            alignment: Alignment.centerLeft,
-                                            duration: const Duration(
-                                              milliseconds: 150,
-                                            ),
-                                            width: 25,
-                                            height: 20,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade300,
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              border: Border.all(
-                                                  color: Colors.white,
-                                                  width: 2),
-                                            ),
-                                          ),
-                                          // shadow react
-                                          Container(
-                                            width: reactAnimate
-                                                    .emoticonshadowAnimation
-                                                    .value +
-                                                2,
-                                            height: reactAnimate
-                                                .emoticonshadowAnimation.value,
-                                            decoration: BoxDecoration(
-                                              color: Colors.grey.shade600
-                                                  .withOpacity(0.4),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                          )
-                                        ],
+            child: Container(
+              color: Colors.transparent,
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              child: Transform.translate(
+                offset: offset,
+                child: Column(
+                  crossAxisAlignment: widget.isMe
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.start,
+                  children: [
+                    ChatBubleWidget(chat: widget.chat, isMe: widget.isMe),
+                    BlocBuilder<ReactAnimationCubit, ReactAnimationState>(
+                      builder: (context, state) {
+                        final myEmoticon = state.getEmoticon(
+                          widget.chat.messageId,
+                        );
+
+                        // print("KESINI EMG YA : $state");
+                        if (widget.chat.emoticons.isNotEmpty ||
+                            myEmoticon.isNotEmpty) {
+                          return AnimatedBuilder(
+                            animation: Listenable.merge([
+                              emoticonAnimationController,
+                              emoticonBackgroundController
+                            ]),
+                            builder: (context, _) {
+                              return Transform.translate(
+                                offset: const Offset(0, -5),
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    // Container of background emot
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 5,
+                                        vertical: 2,
                                       ),
-                                      if (widget.chat.emoticons.contains(
-                                          reactAnimate.state.selectedEmoticon))
-                                        Transform.rotate(
-                                          // angle: reactAnimate
-                                          //     .emoticonRotateAnimation.value,
-                                          angle: 0,
-                                          child: Transform.translate(
-                                            offset: reactAnimate
-                                                .emoticonOffsetAnimation.value,
-                                            child: Transform.scale(
-                                              scale: reactAnimate
-                                                  .emoticonScaleAnimation.value,
-                                              child: Text(reactAnimate
-                                                  .state.selectedEmoticon),
+                                      width: emotBgWidthAnimation.value,
+                                      height: emotBgHeightAnimation.value,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey.shade300,
+                                        borderRadius: BorderRadius.circular(50),
+                                        border: Border.all(
+                                          color: Colors.white,
+                                          width: 1,
+                                        ),
+                                      ),
+                                    ),
+                                    // Container of shadow emot animation
+                                    Positioned(
+                                      right: !senderEmot ? 10 : null,
+                                      child: Container(
+                                        width:
+                                            emoticonshadowAnimation.value + 2,
+                                        height: emoticonshadowAnimation.value,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade600
+                                              .withOpacity(0.4),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                    ),
+                                    // Emoticon for animation
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(widget.chat.senderEmoticon),
+                                        Transform.translate(
+                                          offset: emoticonOffsetAnimation.value,
+                                          child: Transform.scale(
+                                            scale: emoticonScaleAnimation.value,
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 2,
+                                              ),
+                                              child: Text(myEmoticon),
                                             ),
                                           ),
                                         ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ] else ...[
-                          if (widget.chat.emoticons.isNotEmpty)
-                            Transform.translate(
-                              offset: const Offset(0, -5),
-                              child: AnimatedContainer(
-                                alignment: Alignment.centerLeft,
-                                duration: const Duration(
-                                  milliseconds: 150,
+                                      ],
+                                    )
+                                  ],
                                 ),
-                                width: 25,
-                                height: 20,
-                                decoration: BoxDecoration(
-                                  color: Colors.grey.shade300,
-                                  borderRadius: BorderRadius.circular(10),
-                                  border:
-                                      Border.all(color: Colors.white, width: 2),
-                                ),
-                                child: Transform.translate(
-                                  offset: Offset(2, -2),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: widget.chat.emoticons
-                                        .map((e) => Transform.scale(
-                                            scale: 1, child: Text(e)))
-                                        .toList(),
-                                  ),
-                                ),
-                              ),
-                            ),
-                        ]
-                      ],
-                    ),
-                  ),
+                              );
+                            },
+                          );
+                        }
+
+                        return const Offstage();
+                      },
+                    )
+                    // AnimatedSwitcher(
+                    //   duration: const Duration(milliseconds: 300),
+                    //   child: widget.startAnimation
+                    //       ? Visibility(
+                    //           visible: widget.chat.emoticons.isNotEmpty,
+                    //           child: AnimatedBuilder(
+                    //             animation:
+                    //                 emoticonAnimationController,
+                    //             builder: (context, _) {
+                    //               return Transform.translate(
+                    //                 offset: const Offset(0, -5),
+                    //                 child: Stack(
+                    //                   alignment: Alignment.center,
+                    //                   children: [
+                    //                     AnimatedContainer(
+                    //                       padding: const EdgeInsets.symmetric(
+                    //                         horizontal: 5,
+                    //                         vertical: 2,
+                    //                       ),
+                    //                       duration: const Duration(
+                    //                         milliseconds: 1500,
+                    //                       ),
+                    //                       decoration: BoxDecoration(
+                    //                         color: Colors.grey.shade300,
+                    //                         borderRadius:
+                    //                             BorderRadius.circular(50),
+                    //                         border: Border.all(
+                    //                           color: Colors.white,
+                    //                           width: 1,
+                    //                         ),
+                    //                       ),
+                    //                       child: Transform.translate(
+                    //                         offset: reactAnimate
+                    //                             .emoticonOffsetAnimation.value,
+                    //                         child: Transform.scale(
+                    //                           scale: reactAnimate
+                    //                               .emoticonScaleAnimation.value,
+                    //                           child: Container(
+                    //                             padding:
+                    //                                 const EdgeInsets.symmetric(
+                    //                               horizontal: 2,
+                    //                             ),
+                    //                             child: Text(reactAnimate
+                    //                                 .state.selectedEmoticon),
+                    //                           ),
+                    //                         ),
+                    //                       ),
+                    //                     ),
+                    //                     // shadow react
+                    //                     Container(
+                    //                       width: reactAnimate
+                    //                               .emoticonshadowAnimation
+                    //                               .value +
+                    //                           2,
+                    //                       height: reactAnimate
+                    //                           .emoticonshadowAnimation.value,
+                    //                       decoration: BoxDecoration(
+                    //                         color: Colors.grey.shade600
+                    //                             .withOpacity(0.4),
+                    //                         borderRadius:
+                    //                             BorderRadius.circular(10),
+                    //                       ),
+                    //                     )
+                    //                   ],
+                    //                 ),
+                    //               );
+                    //             },
+                    //           ),
+                    //         )
+                    //       : widget.chat.emoticons.isNotEmpty
+                    //           ? Transform.translate(
+                    //               offset: const Offset(0, -5),
+                    //               child: AnimatedContainer(
+                    //                 padding: const EdgeInsets.symmetric(
+                    //                   horizontal: 5,
+                    //                   vertical: 2,
+                    //                 ),
+                    //                 duration: const Duration(
+                    //                   milliseconds: 1500,
+                    //                 ),
+                    //                 decoration: BoxDecoration(
+                    //                   color: Colors.grey.shade300,
+                    //                   borderRadius: BorderRadius.circular(50),
+                    //                   border: Border.all(
+                    //                     color: Colors.white,
+                    //                     width: 1,
+                    //                   ),
+                    //                 ),
+                    //                 child: Row(
+                    //                   crossAxisAlignment:
+                    //                       CrossAxisAlignment.center,
+                    //                   mainAxisSize: MainAxisSize.min,
+                    //                   children: widget.chat.emoticons
+                    //                       .map(
+                    //                         (e) => Container(
+                    //                           padding:
+                    //                               const EdgeInsets.symmetric(
+                    //                             horizontal: 2,
+                    //                           ),
+                    //                           child: Text(e),
+                    //                         ),
+                    //                       )
+                    //                       .toList(),
+                    //                 ),
+                    //               ),
+                    //             )
+                    //           : const Offstage(),
+                    // )
+                  ],
                 ),
-                //   )
-              ],
+              ),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ChatBubleWidget extends StatelessWidget {
+  const ChatBubleWidget({
+    super.key,
+    required this.chat,
+    required this.isMe,
+  });
+
+  final ChatMessageModel chat;
+  final bool isMe;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final size = MediaQuery.of(context).size;
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: size.width / 1.2,
+      ),
+      child: Container(
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          color: !isMe ? Colors.grey.shade100 : Colors.pinkAccent.shade100,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Flexible(
+              child: Text(
+                chat.content,
+                overflow: TextOverflow.clip,
+                style: textTheme.bodyLarge?.copyWith(
+                  color: !isMe ? Colors.black : Colors.white,
+                ),
+              ),
+            ),
+            const SizedBox(width: 5),
+            Text(
+              chat.date,
+              style: textTheme.bodySmall?.copyWith(
+                color: Colors.grey,
+                fontSize: 8,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
