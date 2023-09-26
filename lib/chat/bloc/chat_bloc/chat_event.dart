@@ -76,3 +76,7 @@ final class ReactChat extends ChatEvent {
 
   const ReactChat(this.emoticon, this.chatMessageModel);
 }
+
+final class SubscribeEmot extends ChatEvent {
+  const SubscribeEmot();
+}

@@ -23,8 +23,7 @@ class MyApp extends StatelessWidget {
     return RepositoryProvider(
       create: (context) => chatRepository,
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Flutter Demo',
+        title: 'Flutter Chating App animation with Bloc',
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.pinkAccent),
           useMaterial3: true,

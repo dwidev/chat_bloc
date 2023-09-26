@@ -20,6 +20,41 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     on<ChatTyping>(_onTyping);
     on<ReplyChat>(_onReplyChat);
     on<ReactChat>(_reactChat);
+    on<SubscribeEmot>(_onSubscribeEmot);
+  }
+
+  Future<void> _onSubscribeEmot(
+    SubscribeEmot event,
+    Emitter<ChatState> emit,
+  ) async {
+    final stream = Stream.periodic(
+      const Duration(seconds: 3),
+      (computationCount) => computationCount,
+    ).take(3);
+
+    await emit.forEach(stream, onData: (socketEvent) {
+      List<ChatMessageModel> chats = [];
+      for (var chat in state.chats) {
+        if (chat.content == "asgh") {
+          chats.add(chat.copyWith(emoticons: [
+            EmoticonModel(
+              senderID: chat.receiverID,
+              emot: '😡',
+            ),
+            // EmoticonModel(
+            //   senderID: chat.senderID,
+            //   emot: '😂',
+            // )
+          ]));
+          continue;
+        }
+
+        chats.add(chat);
+      }
+      return state.copyWith(chats: chats);
+    }, onError: (error, stackTrace) {
+      return state;
+    });
   }
 
   Future<void> _subscribeMessage(
@@ -67,20 +102,6 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
             senderID: chat.receiverID,
             emot: '❤️',
           )
-        ]));
-        continue;
-      }
-
-      if (chat.content == "asgh") {
-        chats.add(chat.copyWith(emoticons: [
-          EmoticonModel(
-            senderID: chat.receiverID,
-            emot: '😡',
-          ),
-          // EmoticonModel(
-          //   senderID: chat.senderID,
-          //   emot: '😂',
-          // )
         ]));
         continue;
       }

@@ -44,6 +44,7 @@ class _ChatPageState extends State<ChatPage>
     context.read<ChatBloc>()
       ..add(GetMessageByConversationID(cId))
       ..add(ChatSubscribeMessage(cId))
+      ..add(const SubscribeEmot())
       ..add(JoinRoomChat(cId, widget.me, widget.receiver.id));
 
     reactAnimate.initAnimationForOnPressChat(vsync: this);
