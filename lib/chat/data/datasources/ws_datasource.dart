@@ -21,7 +21,7 @@ enum WSConnectionStatus {
 }
 
 // const host = "localhost";
-const host = "192.168.43.104";
+const host = "172.20.10.4";
 // const host = "192.168.10.145";
 
 class WebSocketDataSource {

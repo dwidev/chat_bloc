@@ -30,28 +30,25 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     final stream = Stream.periodic(
       const Duration(seconds: 3),
       (computationCount) => computationCount,
-    ).take(3);
+    ).take(1);
 
     await emit.forEach(stream, onData: (socketEvent) {
       List<ChatMessageModel> chats = [];
+      List<ChatMessageModel> chatsReceiveEmot = [];
       for (var chat in state.chats) {
-        if (chat.content == "asgh") {
-          chats.add(chat.copyWith(emoticons: [
-            EmoticonModel(
-              senderID: chat.receiverID,
-              emot: '😡',
-            ),
-            // EmoticonModel(
-            //   senderID: chat.senderID,
-            //   emot: '😂',
-            // )
-          ]));
+        if (chat.content == "Napa ini") {
+          chat.emoticons.add(EmoticonModel(
+            senderID: chat.receiverID,
+            emot: '😡',
+          ));
+          chats.add(chat.copyWith(emoticons: chat.emoticons));
+          chatsReceiveEmot.add(chat.copyWith(emoticons: chat.emoticons));
           continue;
         }
 
         chats.add(chat);
       }
-      return state.copyWith(chats: chats);
+      return ChatReceiveEmot(chatsReceiveEmot: chatsReceiveEmot, chats: chats);
     }, onError: (error, stackTrace) {
       return state;
     });
@@ -82,7 +79,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     );
     List<ChatMessageModel> chats = [];
     for (var chat in res) {
-      if (chat.content == "test") {
+      if (chat.content == "test" || chat.content == "Napa ini") {
         chats.add(chat.copyWith(emoticons: [
           EmoticonModel(
             senderID: chat.senderID,
