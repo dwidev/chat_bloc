@@ -246,6 +246,9 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
               .where((e) => e.messageId == widget.chat.messageId)
               .firstOrNull;
           if (chat != null) {
+            final renderBox =
+                _key.currentContext!.findRenderObject() as RenderBox;
+            Offset offset = renderBox.localToGlobal(Offset.zero);
             final isTwoEmot = chat.emoticons.length > 1;
             final curved = CurvedAnimation(
               parent: emoticonBackgroundController,
@@ -257,11 +260,11 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
             emoticonBackgroundController
               ..reset()
               ..forward();
-
-            // tweenEmotBgWidth = Tween(begin: 10, end: isTwoEmot ? 25 * 2 : 25);
-            // emotBgWidthAnimation = tweenEmotBgWidth.animate(curved);
-            // tweenEmotBgHeight = Tween(begin: 20, end: 20);
-            // emotBgHeightAnimation = tweenEmotBgHeight.animate(curved);
+            reactAnimate.doStartFloatingAnimation(
+              selectedEmoticon: chat.senderEmoticon,
+              selectedChat: chat,
+              offset: offset,
+            );
           }
         }
       },

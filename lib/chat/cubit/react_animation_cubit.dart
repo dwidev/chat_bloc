@@ -172,6 +172,19 @@ class ReactAnimationCubit extends Cubit<ReactAnimationState> {
     // ));
   }
 
+  void doStartFloatingAnimation({
+    required String selectedEmoticon,
+    required ChatMessageModel selectedChat,
+    required Offset offset,
+  }) {
+    emit(state.copyWith(
+      startFloatingAnimation: true,
+      chatReactEmoticonValues: state.chatReactEmoticonValues,
+      selectedChat: selectedChat,
+      offsetBubleChat: offset,
+    ));
+  }
+
   // void initAnimationForEmoticon({
   //   required TickerProvider vsync,
   //   // required bool isSender,
