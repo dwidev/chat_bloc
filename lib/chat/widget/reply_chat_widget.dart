@@ -45,7 +45,6 @@ class _ReplyChatWidgetState extends State<ReplyChatWidget>
 
   @override
   Widget build(BuildContext context) {
-    print("_ReplyChatWidgetState");
     final textTheme = Theme.of(context).textTheme;
 
     return BlocConsumer<ChatBloc, ChatState>(

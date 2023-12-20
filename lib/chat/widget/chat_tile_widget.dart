@@ -270,10 +270,13 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
       },
       child: GestureDetector(
         key: _key,
-        onLongPress: () {
+        onLongPress: () async {
+          FocusManager.instance.primaryFocus?.unfocus();
+          await Future.delayed(const Duration(milliseconds: 100));
+
           final renderBox =
-              _key.currentContext!.findRenderObject() as RenderBox;
-          Offset offset = renderBox.localToGlobal(Offset.zero);
+              _key.currentContext?.findRenderObject() as RenderBox?;
+          final offset = renderBox?.localToGlobal(Offset.zero) ?? Offset.zero;
 
           reactAnimate.initEmoticonValues(
             selectedChat: widget.chat,

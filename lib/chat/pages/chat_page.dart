@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -87,6 +88,7 @@ class _ChatPageState extends State<ChatPage>
   @override
   Widget build(BuildContext context) {
     // final mq = MediaQuery.of(context);
+    final textTheme = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
     final appBar = AppBar(
       centerTitle: false,
@@ -204,7 +206,7 @@ class _ChatPageState extends State<ChatPage>
                             alignment: !isMe
                                 ? Alignment.centerLeft
                                 : Alignment.centerRight,
-                            color: Colors.white.withOpacity(0.3),
+                            color: Colors.grey.shade100.withOpacity(0.9),
                             width: size.width,
                             height: size.height,
                             child: Transform.translate(
@@ -230,6 +232,85 @@ class _ChatPageState extends State<ChatPage>
               },
             ),
             BlocBuilder<ReactAnimationCubit, ReactAnimationState>(
+              builder: (context, state) {
+                if (state.isShowReactOverlay) {
+                  return Positioned(
+                    bottom: 30,
+                    right: 10,
+                    left: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 30,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 237, 237, 237),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      width: double.infinity,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          [CupertinoIcons.reply, 'Balas'],
+                          [
+                            CupertinoIcons.rectangle_on_rectangle_angled,
+                            'Salin'
+                          ],
+                          [CupertinoIcons.exclamationmark_shield, 'Laporkan'],
+                          [CupertinoIcons.delete_solid, 'Hapus']
+                        ]
+                            .map(
+                              (e) => Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      reactAnimate.closeChatReactOverlay(
+                                        selectedEmoticon: '',
+                                      );
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(50),
+                                        color: Colors.white,
+                                      ),
+                                      child: Icon(
+                                        (e as List)[0],
+                                        size: 20,
+                                        color: (e as List)[1] == 'Hapus' ||
+                                                (e as List)[1] == 'Laporkan'
+                                            ? Colors.red
+                                            : Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    (e as List)[1],
+                                    style: textTheme.bodySmall?.copyWith(
+                                      fontSize: 13,
+                                      color: (e as List)[1] == 'Hapus' ||
+                                              (e as List)[1] == 'Laporkan'
+                                          ? Colors.red
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                ],
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  );
+                }
+
+                return const Offstage();
+              },
+            ),
+            BlocBuilder<ReactAnimationCubit, ReactAnimationState>(
               // buildWhen: (previous, current) =>
               //     previous.selectedChat != current.selectedChat,
               builder: (context, state) {
@@ -247,13 +328,13 @@ class _ChatPageState extends State<ChatPage>
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(30),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade200,
-                                      blurRadius: 4,
-                                      spreadRadius: 2,
-                                    )
-                                  ],
+                                  // boxShadow: [
+                                  //   BoxShadow(
+                                  //     color: Colors.grey.shade200,
+                                  //     blurRadius: 4,
+                                  //     spreadRadius: 2,
+                                  //   )
+                                  // ],
                                 ),
                                 padding: const EdgeInsets.symmetric(
                                   horizontal: 10,

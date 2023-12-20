@@ -14,7 +14,7 @@ class LoginDummyPage extends StatefulWidget {
 }
 
 class _LoginDummyPageState extends State<LoginDummyPage> {
-  String me = "fahmi";
+  String me = "";
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +26,8 @@ class _LoginDummyPageState extends State<LoginDummyPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             TextField(
-              controller: TextEditingController(text: me),
-              decoration: const InputDecoration(hintText: "user"),
+              // controller: TextEditingController(text: me),
+              decoration: const InputDecoration(hintText: "username"),
               onChanged: (value) {
                 setState(() {
                   me = value;
