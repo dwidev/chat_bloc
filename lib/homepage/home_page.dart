@@ -152,7 +152,11 @@ class _HomePageState extends State<HomePage>
 
     menuAnimationController
       ..reset()
-      ..forward();
+      ..forward().whenComplete(() {
+        setState(() {
+          menuOpen = false;
+        });
+      });
   }
 
   void callback() {
@@ -311,17 +315,22 @@ class _HomePageState extends State<HomePage>
             builder: (context, child) {
               return GestureDetector(
                 onTap: () {
-                  print("ANJAY");
-                  onCloseMenu();
+                  if (menuOpen) {
+                    onCloseMenu();
+                  }
                 },
                 child: BackdropFilter(
                   filter: ImageFilter.blur(
                     sigmaX: animationBlur.value,
                     sigmaY: animationBlur.value,
                   ),
-                  child: SizedBox(
-                    width: size.width,
-                    height: size.height,
+                  child: Visibility(
+                    visible: menuOpen,
+                    child: Container(
+                      width: size.width,
+                      height: size.height,
+                      color: Colors.transparent,
+                    ),
                   ),
                 ),
               );
