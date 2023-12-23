@@ -403,7 +403,6 @@ class _LoversCardWidgetState extends State<LoversCardWidget>
           }
         },
         builder: (context, state) {
-          print("state.overlay :${state.overlay}");
           return Container(
             transform: Matrix4.identity()
               ..translate(state.position.dx, state.position.dy)

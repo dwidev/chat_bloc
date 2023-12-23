@@ -20,6 +20,7 @@ class ControlCardState extends Equatable {
   CardSwipeType get swipeOverlayType {
     const delta = 50;
     final x = position.dx;
+    final y = position.dy;
 
     if (x > delta) {
       return CardSwipeType.love;
@@ -27,6 +28,10 @@ class ControlCardState extends Equatable {
 
     if (x < -delta) {
       return CardSwipeType.skip;
+    }
+
+    if (y < -delta) {
+      return CardSwipeType.gift;
     }
 
     return CardSwipeType.initial;
@@ -35,6 +40,7 @@ class ControlCardState extends Equatable {
   CardSwipeType get swipeFinishType {
     const delta = 150;
     final x = position.dx;
+    final y = position.dy;
 
     if (x > delta) {
       return CardSwipeType.love;
@@ -42,6 +48,10 @@ class ControlCardState extends Equatable {
 
     if (x < -delta) {
       return CardSwipeType.skip;
+    }
+
+    if (y < -delta) {
+      return CardSwipeType.gift;
     }
 
     return CardSwipeType.initial;

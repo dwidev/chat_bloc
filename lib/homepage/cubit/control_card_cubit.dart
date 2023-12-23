@@ -11,15 +11,16 @@ enum CardSwipeType {
   initial,
   love,
   skip,
-  superlove;
+  gift;
 
   SwipeOverlay get swipeOverlay {
     switch (this) {
       case CardSwipeType.love:
         return SwipeOverlay.loved();
       case CardSwipeType.skip:
-        print("KESINI GA");
         return SwipeOverlay.skiped();
+      case CardSwipeType.gift:
+        return SwipeOverlay.gift();
       default:
         return SwipeOverlay.skiped();
     }
@@ -43,6 +44,12 @@ class SwipeOverlay {
         CupertinoIcons.clear,
         primaryColor,
         secondaryColor,
+      );
+
+  factory SwipeOverlay.gift() => SwipeOverlay(
+        CupertinoIcons.gift,
+        blackColor.withOpacity(0.2),
+        softyellowColor,
       );
 }
 
@@ -100,6 +107,9 @@ class ControlCardCubit extends Cubit<ControlCardState> {
     } else if (state.swipeOverlayType == CardSwipeType.skip) {
       var overlay = (-newPostion.dx - 50) / 100;
       newOverlay = overlay < 0.7 ? overlay : state.overlay;
+    } else if (state.swipeOverlayType == CardSwipeType.gift) {
+      var overlay = (-newPostion.dy - 50) / 100;
+      newOverlay = overlay < 0.7 ? overlay : state.overlay;
     }
 
     emit(state.copyWith(
@@ -116,6 +126,9 @@ class ControlCardCubit extends Cubit<ControlCardState> {
         break;
       case CardSwipeType.skip:
         skip(screnSize);
+        break;
+      case CardSwipeType.gift:
+        gift(screnSize);
         break;
       default:
         initial();
@@ -151,6 +164,20 @@ class ControlCardCubit extends Cubit<ControlCardState> {
   void skip(Size screnSize) {
     tweenPosition.begin = state.position;
     tweenPosition.end = Offset(-(2 * screnSize.width), 0);
+    tweenAngle.begin = state.angle;
+    tweenAngle.end = state.angle;
+    tweenOverlay.begin = state.overlay;
+    tweenOverlay.end = state.overlay;
+
+    swipeAnimationController.reset();
+    swipeAnimationController.forward().whenComplete(() {
+      emit(const ControlCardSkipedState());
+    });
+  }
+
+  void gift(Size screnSize) {
+    tweenPosition.begin = state.position;
+    tweenPosition.end = Offset(0, -(2 * screnSize.height));
     tweenAngle.begin = state.angle;
     tweenAngle.end = state.angle;
     tweenOverlay.begin = state.overlay;
