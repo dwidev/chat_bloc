@@ -70,7 +70,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Conversations")),
+      appBar: AppBar(title: const Text("Pesan kamu")),
       body: Column(
         children: [
           BlocBuilder<WsConnectionBloc, WsConnectionState>(
