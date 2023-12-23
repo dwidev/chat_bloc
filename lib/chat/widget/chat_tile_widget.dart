@@ -3,8 +3,130 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/theme/colors.dart';
 import '../cubit/react_animation_cubit.dart';
 import '../data/model/chat_message_model.dart';
+
+class SpecialChatBubbleOne extends CustomPainter {
+  final Color color;
+  final Alignment alignment;
+  final bool tail;
+
+  SpecialChatBubbleOne({
+    required this.color,
+    required this.alignment,
+    required this.tail,
+  });
+
+  double _radius = 10.0;
+  double _x = 0.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (alignment == Alignment.topRight) {
+      if (tail) {
+        canvas.drawRRect(
+          RRect.fromLTRBAndCorners(
+            0,
+            0,
+            size.width - _x,
+            size.height,
+            bottomLeft: Radius.circular(_radius),
+            topRight: Radius.circular(_radius),
+            topLeft: Radius.circular(_radius),
+          ),
+          Paint()
+            ..color = color
+            ..style = PaintingStyle.fill,
+        );
+        var path = Path();
+        path.moveTo(size.width - _x, 0);
+        path.lineTo(size.width - _x, 10);
+        path.lineTo(size.width, 0);
+        canvas.clipPath(path);
+        canvas.drawRRect(
+          RRect.fromLTRBAndCorners(
+            size.width - _x,
+            0.0,
+            size.width,
+            size.height,
+            topRight: const Radius.circular(3),
+          ),
+          Paint()
+            ..color = color
+            ..style = PaintingStyle.fill,
+        );
+      } else {
+        canvas.drawRRect(
+            RRect.fromLTRBAndCorners(
+              0,
+              0,
+              size.width - _x,
+              size.height,
+              bottomLeft: Radius.circular(_radius),
+              bottomRight: Radius.circular(_radius),
+              topLeft: Radius.circular(_radius),
+              topRight: Radius.circular(_radius),
+            ),
+            Paint()
+              ..color = color
+              ..style = PaintingStyle.fill);
+      }
+    } else {
+      if (tail) {
+        canvas.drawRRect(
+            RRect.fromLTRBAndCorners(
+              _x,
+              0,
+              size.width,
+              size.height,
+              bottomRight: Radius.circular(_radius),
+              topRight: Radius.circular(_radius),
+              bottomLeft: Radius.circular(_radius),
+            ),
+            Paint()
+              ..color = this.color
+              ..style = PaintingStyle.fill);
+        var path = new Path();
+        path.moveTo(_x, 0);
+        path.lineTo(_x, 10);
+        path.lineTo(0, 0);
+        canvas.clipPath(path);
+        canvas.drawRRect(
+            RRect.fromLTRBAndCorners(
+              0,
+              0.0,
+              _x,
+              size.height,
+              topLeft: Radius.circular(3),
+            ),
+            Paint()
+              ..color = this.color
+              ..style = PaintingStyle.fill);
+      } else {
+        canvas.drawRRect(
+            RRect.fromLTRBAndCorners(
+              _x,
+              0,
+              size.width,
+              size.height,
+              bottomRight: Radius.circular(_radius),
+              topRight: Radius.circular(_radius),
+              bottomLeft: Radius.circular(_radius),
+              topLeft: Radius.circular(_radius),
+            ),
+            Paint()
+              ..color = color
+              ..style = PaintingStyle.fill);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
+}
 
 class ChatTile extends StatefulWidget {
   const ChatTile({
@@ -379,7 +501,7 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
                                           borderRadius:
                                               BorderRadius.circular(50),
                                           border: Border.all(
-                                            color: Colors.white,
+                                            color: whiteColor,
                                             width: 1,
                                           ),
                                         ),
@@ -458,7 +580,7 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
                       //                         borderRadius:
                       //                             BorderRadius.circular(50),
                       //                         border: Border.all(
-                      //                           color: Colors.white,
+                      //                           color: whiteColor,
                       //                           width: 1,
                       //                         ),
                       //                       ),
@@ -515,7 +637,7 @@ class _ChatTileState extends State<ChatTile> with TickerProviderStateMixin {
                       //                   color: Colors.grey.shade300,
                       //                   borderRadius: BorderRadius.circular(50),
                       //                   border: Border.all(
-                      //                     color: Colors.white,
+                      //                     color: whiteColor,
                       //                     width: 1,
                       //                   ),
                       //                 ),
@@ -566,38 +688,45 @@ class ChatBubleWidget extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: size.width / 1.2,
+    return CustomPaint(
+      painter: SpecialChatBubbleOne(
+        color: !isMe ? Colors.grey.shade100 : Colors.pinkAccent.shade100,
+        alignment: isMe ? Alignment.topRight : Alignment.topLeft,
+        tail: true,
       ),
-      child: Container(
-        padding: const EdgeInsets.all(6),
-        decoration: BoxDecoration(
-          color: !isMe ? Colors.grey.shade100 : Colors.pinkAccent.shade100,
-          borderRadius: BorderRadius.circular(10),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: size.width / 1.2,
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Flexible(
-              child: Text(
-                chat.content,
-                overflow: TextOverflow.clip,
-                style: textTheme.bodyLarge?.copyWith(
-                  color: !isMe ? Colors.black : Colors.white,
+        child: Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: !isMe ? Colors.grey.shade100 : Colors.pinkAccent.shade100,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Flexible(
+                child: Text(
+                  chat.content,
+                  overflow: TextOverflow.clip,
+                  style: textTheme.bodyLarge?.copyWith(
+                    color: !isMe ? Colors.black : whiteColor,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 5),
-            Text(
-              chat.date,
-              style: textTheme.bodySmall?.copyWith(
-                color: Colors.grey,
-                fontSize: 8,
+              const SizedBox(width: 5),
+              Text(
+                chat.date,
+                style: textTheme.bodySmall?.copyWith(
+                  color: Colors.grey,
+                  fontSize: 8,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

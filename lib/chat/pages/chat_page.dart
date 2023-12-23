@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../core/theme/colors.dart';
 import '../bloc/chat_bloc/chat_bloc.dart';
 import '../cubit/react_animation_cubit.dart';
 import '../data/model/conversation_model.dart';
@@ -150,7 +151,7 @@ class _ChatPageState extends State<ChatPage>
                       children: [
                         const ReplyChatWidget(),
                         Container(
-                          color: Colors.white,
+                          color: whiteColor,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 15,
                             vertical: 10,
@@ -274,7 +275,7 @@ class _ChatPageState extends State<ChatPage>
                                       padding: const EdgeInsets.all(10),
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(50),
-                                        color: Colors.white,
+                                        color: whiteColor,
                                       ),
                                       child: Icon(
                                         (e as List)[0],
@@ -326,7 +327,7 @@ class _ChatPageState extends State<ChatPage>
                         child: state.isShowReactOverlay
                             ? Container(
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: whiteColor,
                                   borderRadius: BorderRadius.circular(30),
                                   // boxShadow: [
                                   //   BoxShadow(
