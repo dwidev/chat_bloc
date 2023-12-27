@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:ui';
 
+import 'package:chat_bloc/homepage/pages/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,11 +11,13 @@ class NearbyPeopleCardViewOptions {
   final double? imageWidth;
   final double? imageHeight;
   final bool isDetail;
+  final double radiusSize;
 
   NearbyPeopleCardViewOptions({
     this.imageWidth,
     this.imageHeight,
     this.isDetail = false,
+    this.radiusSize = 25,
   });
 }
 
@@ -33,20 +36,65 @@ class NearbyPeopleCardView extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
+    final top = MediaQuery.of(context).padding.top;
 
     return Stack(
       children: [
         Container(
           decoration: BoxDecoration(
-            color: secondaryColor,
-            borderRadius: BorderRadius.circular(25),
-            image: DecorationImage(
-              image: NetworkImage(imageUrl),
-              fit: options?.isDetail ?? false ? BoxFit.cover : BoxFit.cover,
+            color: secondaryColor.withOpacity(0.5),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(options?.radiusSize ?? 25),
+              topRight: Radius.circular(options?.radiusSize ?? 25),
+              bottomRight: Radius.circular(options?.radiusSize ?? 25),
+              bottomLeft: Radius.circular(options?.radiusSize ?? 25),
             ),
           ),
           width: options?.imageWidth ?? size.width / 1.2,
           height: options?.imageHeight ?? size.height / 1.5,
+          child: PageView(
+            children: dummyUsers
+                .map(
+                  (e) => Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(options?.radiusSize ?? 25),
+                        topRight: Radius.circular(options?.radiusSize ?? 25),
+                        bottomRight: Radius.circular(options?.radiusSize ?? 25),
+                        bottomLeft: Radius.circular(options?.radiusSize ?? 25),
+                      ),
+                      image: DecorationImage(
+                        image: NetworkImage(e),
+                        fit: options?.isDetail ?? false
+                            ? BoxFit.cover
+                            : BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+        Positioned(
+          top: options?.isDetail ?? false ? top : 10,
+          right: 10,
+          child: Row(
+            children: dummyUsers
+                .asMap()
+                .map((key, value) => MapEntry(
+                    key,
+                    Container(
+                      margin: const EdgeInsets.only(right: 10),
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      width: key == 0 ? 100 : 10,
+                      height: 2,
+                    )))
+                .values
+                .toList(),
+          ),
         ),
         Positioned(
           bottom: 15,

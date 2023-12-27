@@ -9,9 +9,13 @@ class DetailsCardCubit extends Cubit<DetailsCardState> {
 
   late AnimationController detailCardAnimationController;
 
-  // animation property for width and hight card
+  // animation property for card
   late Tween<double?> tweenCardWidth, tweenCardHeight;
+  late Tween<double> tweenRadiusCard;
+
   late Animation<double?> widthCardAnimation, heightCardAnimation;
+
+  late Animation<double> radiusCardAnimation;
 
   // animation property for appbar offset
   late Tween<Offset> tweenOffsetAppBar = Tween<Offset>(
@@ -39,7 +43,7 @@ class DetailsCardCubit extends Cubit<DetailsCardState> {
   }) {
     detailCardAnimationController = AnimationController(
       vsync: sync,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 200),
     );
     final parent = CurvedAnimation(
       parent: detailCardAnimationController,
@@ -50,6 +54,9 @@ class DetailsCardCubit extends Cubit<DetailsCardState> {
     tweenCardHeight = Tween<double?>(begin: null, end: null);
     widthCardAnimation = tweenCardWidth.animate(parent);
     heightCardAnimation = tweenCardHeight.animate(parent);
+    radiusCardAnimation = Tween<double>(begin: 25.0, end: 25.0).animate(
+      parent,
+    );
 
     offsetAppbarAnimation = tweenOffsetAppBar.animate(parent);
     topCardAnimation = tweenTopCard.animate(parent);
@@ -77,6 +84,8 @@ class DetailsCardCubit extends Cubit<DetailsCardState> {
 
     widthCardAnimation = tweenCardWidth.animate(curve);
     heightCardAnimation = tweenCardHeight.animate(curve);
+
+    radiusCardAnimation = Tween<double>(begin: 25.0, end: 0).animate(curve);
 
     offsetAppbarAnimation = Tween(
       begin: const Offset(0.0, 0.0),

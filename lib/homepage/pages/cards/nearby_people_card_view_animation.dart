@@ -87,7 +87,8 @@ class _NearbyPeopleCardViewAnimationState
                   options: NearbyPeopleCardViewOptions(
                     imageHeight: detailsCardCubit.heightCardAnimation.value,
                     imageWidth: detailsCardCubit.widthCardAnimation.value,
-                    isDetail: false,
+                    isDetail: isDetail,
+                    radiusSize: detailsCardCubit.radiusCardAnimation.value,
                   ),
                 ),
                 Visibility(
