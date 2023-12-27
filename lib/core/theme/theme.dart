@@ -14,5 +14,9 @@ ThemeData get lightTheme {
           ),
     ),
     textTheme: GoogleFonts.poppinsTextTheme(),
+    iconTheme: const IconThemeData(
+      color: blackColor,
+      size: 15,
+    ),
   );
 }

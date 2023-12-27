@@ -3,55 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../core/theme/colors.dart';
+import 'control_card_enum.dart';
 
 part 'control_card_state.dart';
-
-enum CardSwipeType {
-  initial,
-  love,
-  skip,
-  gift;
-
-  SwipeOverlay get swipeOverlay {
-    switch (this) {
-      case CardSwipeType.love:
-        return SwipeOverlay.loved();
-      case CardSwipeType.skip:
-        return SwipeOverlay.skiped();
-      case CardSwipeType.gift:
-        return SwipeOverlay.gift();
-      default:
-        return SwipeOverlay.skiped();
-    }
-  }
-}
-
-class SwipeOverlay {
-  final IconData icon;
-  final Color iconColor;
-  final Color overlayColor;
-
-  SwipeOverlay(this.icon, this.iconColor, this.overlayColor);
-
-  factory SwipeOverlay.loved() => SwipeOverlay(
-        CupertinoIcons.heart_fill,
-        secondaryColor,
-        primaryColor,
-      );
-
-  factory SwipeOverlay.skiped() => SwipeOverlay(
-        CupertinoIcons.clear,
-        primaryColor,
-        secondaryColor,
-      );
-
-  factory SwipeOverlay.gift() => SwipeOverlay(
-        CupertinoIcons.gift,
-        blackColor.withOpacity(0.2),
-        softyellowColor,
-      );
-}
 
 class ControlCardCubit extends Cubit<ControlCardState> {
   ControlCardCubit() : super(const ControlCardInitial());
@@ -189,8 +143,30 @@ class ControlCardCubit extends Cubit<ControlCardState> {
     });
   }
 
+  // void onClickCardToDetail({required bool isDetail, required Size screnSize}) {
+  //   print("GO TO DETAIL $isDetail");
+  //   if (!isDetail) {
+  //     print("CLOSE CARD");
+  //     emit(
+  //       state.copyWith(
+  //         isDetail: false,
+  //         cardWidth: () => null,
+  //         cardHeight: () => null,
+  //       ),
+  //     );
+  //     return;
+  //   }
+
+  //   emit(
+  //     state.copyWith(
+  //       isDetail: true,
+  //       cardWidth: () => screnSize.width,
+  //       cardHeight: () => screnSize.height / 2.5,
+  //     ),
+  //   );
+  // }
+
   dispose() {
-    print("DISPONSE");
     swipeAnimationController.dispose();
   }
 }

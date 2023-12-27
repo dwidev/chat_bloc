@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'control_card_cubit.dart';
 
 @immutable
@@ -57,16 +58,20 @@ class ControlCardState extends Equatable {
     return CardSwipeType.initial;
   }
 
-  ControlCardState copyWith(
-          {Offset? position, double? angle, double? overlay}) =>
-      ControlCardState(
-        position: position ?? this.position,
-        angle: angle ?? this.angle,
-        overlay: overlay ?? this.overlay,
-      );
+  ControlCardState copyWith({
+    double? angle,
+    Offset? position,
+    double? overlay,
+  }) {
+    return ControlCardState(
+      angle: angle ?? this.angle,
+      position: position ?? this.position,
+      overlay: overlay ?? this.overlay,
+    );
+  }
 
   @override
-  List<Object> get props => [position];
+  List<Object> get props => [angle, position, overlay];
 }
 
 final class ControlCardInitial extends ControlCardState {

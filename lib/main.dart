@@ -1,3 +1,4 @@
+import 'package:chat_bloc/homepage/cubit/details_card_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -5,7 +6,7 @@ import 'chat/data/datasources/http_datasource.dart';
 import 'chat/data/datasources/ws_datasource.dart';
 import 'chat/data/repository/chat_repository.dart';
 import 'core/theme/theme.dart';
-import 'homepage/home_page.dart';
+import 'homepage/pages/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -26,7 +27,12 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Dating App animation with Bloc',
         theme: lightTheme,
-        home: const HomePage(),
+        home: MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => DetailsCardCubit()),
+          ],
+          child: const HomePage(),
+        ),
       ),
     );
   }
