@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,12 +20,15 @@ class ControlCardCubit extends Cubit<ControlCardState> {
   late Tween<double> tweenOverlay;
   late Animation<double> overlayAnimation;
 
+  static const swipeAnimationDuration = Duration(milliseconds: 500);
+  static const swipeBackAnimationDuration = Duration(milliseconds: 1000);
+
   void initializeSwipeAnimation({
     required TickerProvider sync,
   }) {
     swipeAnimationController = AnimationController(
       vsync: sync,
-      duration: const Duration(milliseconds: 500),
+      duration: swipeAnimationDuration,
     );
     final curve = CurvedAnimation(
       parent: swipeAnimationController,
@@ -42,6 +47,25 @@ class ControlCardCubit extends Cubit<ControlCardState> {
   }
 
   void onListenSwipeController() {
+    // TODO(fahmi): change conditon for check card back not based CardSwipeType
+    if (state.swipeFinishType == CardSwipeType.initial ||
+        state.swipeFinishType == CardSwipeType.gift) {
+      swipeAnimationController.duration = swipeBackAnimationDuration;
+
+      emit(state.copyWith(
+        position: Offset.lerp(
+          tweenPosition.begin,
+          Offset.zero,
+          Curves.elasticOut.transform(swipeAnimationController.value),
+        ),
+        angle: _rotation(state.anchorBounds),
+        overlay: overlayAnimation.value,
+      ));
+
+      return;
+    }
+
+    swipeAnimationController.duration = swipeAnimationDuration;
     emit(state.copyWith(
       position: positionAnimation.value,
       angle: angleAnimation.value,
@@ -49,9 +73,31 @@ class ControlCardCubit extends Cubit<ControlCardState> {
     ));
   }
 
+  double _rotation(Rect dragBounds) {
+    final rotationCornerMultiplier =
+        state.positionStart.dy >= dragBounds.top + (dragBounds.height / 2)
+            ? 1
+            : -1;
+    return (pi / 8) *
+        (state.position.dx / dragBounds.width) *
+        rotationCornerMultiplier;
+  }
+
+  void onResetPosition() {
+    print("RESET");
+    swipeAnimationController.value = 1.0;
+    emit(state.copyWith(position: Offset.zero));
+  }
+
+  void onDragStart(DragStartDetails details) {
+    emit(state.copyWith(positionStart: details.globalPosition));
+  }
+
   void onDragCard(DragUpdateDetails details, Size screnSize) {
-    final angle = 30 * state.position.dx / screnSize.width;
-    final newPostion = state.position + details.delta;
+    // final angle = 30 * state.position.dx / screnSize.width;
+    final angle = _rotation(state.anchorBounds);
+    // final newPostion = state.position + details.delta;
+    final newPostion = details.globalPosition - state.positionStart;
 
     var newOverlay = 0.0;
 
@@ -97,13 +143,14 @@ class ControlCardCubit extends Cubit<ControlCardState> {
     tweenOverlay.begin = state.overlay;
     tweenOverlay.end = 0.0;
 
-    swipeAnimationController.reset();
-    swipeAnimationController.forward();
+    swipeAnimationController
+      ..reset()
+      ..forward(from: 0.0);
   }
 
   void love(Size screnSize) {
     tweenPosition.begin = state.position;
-    tweenPosition.end = Offset(2 * screnSize.width, 0);
+    tweenPosition.end = state.dragVector * (2 * screnSize.width);
     tweenAngle.begin = state.angle;
     tweenAngle.end = state.angle;
     tweenOverlay.begin = state.overlay;
@@ -117,7 +164,7 @@ class ControlCardCubit extends Cubit<ControlCardState> {
 
   void skip(Size screnSize) {
     tweenPosition.begin = state.position;
-    tweenPosition.end = Offset(-(2 * screnSize.width), 0);
+    tweenPosition.end = state.dragVector * (2 * screnSize.width);
     tweenAngle.begin = state.angle;
     tweenAngle.end = state.angle;
     tweenOverlay.begin = state.overlay;
@@ -131,7 +178,7 @@ class ControlCardCubit extends Cubit<ControlCardState> {
 
   void gift(Size screnSize) {
     tweenPosition.begin = state.position;
-    tweenPosition.end = Offset(0, -(2 * screnSize.height));
+    tweenPosition.end = state.dragVector * (2 * screnSize.height);
     tweenAngle.begin = state.angle;
     tweenAngle.end = state.angle;
     tweenOverlay.begin = state.overlay;
@@ -142,29 +189,6 @@ class ControlCardCubit extends Cubit<ControlCardState> {
       emit(const ControlCardSkipedState());
     });
   }
-
-  // void onClickCardToDetail({required bool isDetail, required Size screnSize}) {
-  //   print("GO TO DETAIL $isDetail");
-  //   if (!isDetail) {
-  //     print("CLOSE CARD");
-  //     emit(
-  //       state.copyWith(
-  //         isDetail: false,
-  //         cardWidth: () => null,
-  //         cardHeight: () => null,
-  //       ),
-  //     );
-  //     return;
-  //   }
-
-  //   emit(
-  //     state.copyWith(
-  //       isDetail: true,
-  //       cardWidth: () => screnSize.width,
-  //       cardHeight: () => screnSize.height / 2.5,
-  //     ),
-  //   );
-  // }
 
   dispose() {
     swipeAnimationController.dispose();

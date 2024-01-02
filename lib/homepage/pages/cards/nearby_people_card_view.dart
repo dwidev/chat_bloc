@@ -49,53 +49,57 @@ class NearbyPeopleCardView extends StatelessWidget {
               bottomRight: Radius.circular(options?.radiusSize ?? 25),
               bottomLeft: Radius.circular(options?.radiusSize ?? 25),
             ),
+            image: DecorationImage(
+              image: NetworkImage(imageUrl),
+              fit: options?.isDetail ?? false ? BoxFit.cover : BoxFit.cover,
+            ),
           ),
           width: options?.imageWidth ?? size.width / 1.2,
           height: options?.imageHeight ?? size.height / 1.5,
-          child: PageView(
-            children: dummyUsers
-                .map(
-                  (e) => Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(options?.radiusSize ?? 25),
-                        topRight: Radius.circular(options?.radiusSize ?? 25),
-                        bottomRight: Radius.circular(options?.radiusSize ?? 25),
-                        bottomLeft: Radius.circular(options?.radiusSize ?? 25),
-                      ),
-                      image: DecorationImage(
-                        image: NetworkImage(e),
-                        fit: options?.isDetail ?? false
-                            ? BoxFit.cover
-                            : BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
+          // child: PageView(
+          //   children: dummyUsers
+          //       .map(
+          //         (e) => Container(
+          //           decoration: BoxDecoration(
+          //             borderRadius: BorderRadius.only(
+          //               topLeft: Radius.circular(options?.radiusSize ?? 25),
+          //               topRight: Radius.circular(options?.radiusSize ?? 25),
+          //               bottomRight: Radius.circular(options?.radiusSize ?? 25),
+          //               bottomLeft: Radius.circular(options?.radiusSize ?? 25),
+          //             ),
+          //             image: DecorationImage(
+          //               image: NetworkImage(e),
+          //               fit: options?.isDetail ?? false
+          //                   ? BoxFit.cover
+          //                   : BoxFit.cover,
+          //             ),
+          //           ),
+          //         ),
+          //       )
+          //       .toList(),
+          // ),
         ),
-        Positioned(
-          top: options?.isDetail ?? false ? top : 10,
-          right: 10,
-          child: Row(
-            children: dummyUsers
-                .asMap()
-                .map((key, value) => MapEntry(
-                    key,
-                    Container(
-                      margin: const EdgeInsets.only(right: 10),
-                      decoration: BoxDecoration(
-                        color: whiteColor,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      width: key == 0 ? 100 : 10,
-                      height: 2,
-                    )))
-                .values
-                .toList(),
-          ),
-        ),
+        // Positioned(
+        //   top: options?.isDetail ?? false ? top : 10,
+        //   right: 10,
+        //   child: Row(
+        //     children: dummyUsers
+        //         .asMap()
+        //         .map((key, value) => MapEntry(
+        //             key,
+        //             Container(
+        //               margin: const EdgeInsets.only(right: 10),
+        //               decoration: BoxDecoration(
+        //                 color: whiteColor,
+        //                 borderRadius: BorderRadius.circular(10),
+        //               ),
+        //               width: key == 0 ? 100 : 10,
+        //               height: 2,
+        //             )))
+        //         .values
+        //         .toList(),
+        //   ),
+        // ),
         Positioned(
           bottom: 15,
           right: 20,

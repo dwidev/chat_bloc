@@ -1,12 +1,11 @@
-import 'dart:math';
-
-import 'package:chat_bloc/homepage/pages/cards/nearby_people_card_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cubit/control_card_cubit.dart';
 import '../../cubit/details_card_cubit.dart';
+import '../../cubit/match_engine_cubit.dart';
 import 'nearby_people_card_detail_view.dart';
+import 'nearby_people_card_view.dart';
 
 class NearbyPeopleCardViewAnimation extends StatefulWidget {
   const NearbyPeopleCardViewAnimation({
@@ -44,7 +43,6 @@ class _NearbyPeopleCardViewAnimationState
     super.dispose();
   }
 
-  double angle = 0;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -54,10 +52,18 @@ class _NearbyPeopleCardViewAnimationState
     final detailsCardCubit = context.read<DetailsCardCubit>();
 
     return GestureDetector(
-      behavior: HitTestBehavior.opaque,
       onTap: widget.onClickDetail,
+      onPanStart: (details) {
+        if (controlCardCubit.swipeAnimationController.isAnimating) {
+          controlCardCubit.onResetPosition();
+          return;
+        }
+
+        controlCardCubit.onDragStart(details);
+      },
       onPanUpdate: (details) {
-        if (isDetail) {
+        if (isDetail || controlCardCubit.swipeAnimationController.isAnimating) {
+          controlCardCubit.onResetPosition();
           return;
         }
 
@@ -70,14 +76,22 @@ class _NearbyPeopleCardViewAnimationState
         listener: (context, state) {
           if (state is ControlCardLovedState ||
               state is ControlCardSkipedState) {
+            context.read<MatchEngineCubit>().cycleCard();
             widget.callback();
           }
         },
         builder: (context, state) {
-          return Container(
-            transform: Matrix4.identity()
-              ..translate(state.position.dx, state.position.dy)
-              ..rotateZ(state.angle * pi / 180),
+          Offset rotationOrigin(Rect dragBounds) {
+            return state.positionStart - dragBounds.topLeft;
+          }
+
+          return Transform(
+            transform: Matrix4.translationValues(
+              state.position.dx,
+              state.position.dy,
+              0.0,
+            )..rotateZ(state.angle),
+            origin: rotationOrigin(state.anchorBounds),
             child: Stack(
               alignment: Alignment.topCenter,
               children: [
