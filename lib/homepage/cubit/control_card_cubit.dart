@@ -9,8 +9,14 @@ import 'control_card_enum.dart';
 
 part 'control_card_state.dart';
 
+abstract class ControlCardCubitDelegate {
+  void onSwipeUpdate(double distance);
+}
+
 class ControlCardCubit extends Cubit<ControlCardState> {
-  ControlCardCubit() : super(const ControlCardInitial());
+  ControlCardCubit(this.delegate) : super(const ControlCardInitial());
+
+  final ControlCardCubitDelegate delegate;
 
   late AnimationController swipeAnimationController;
   late Tween<Offset> tweenPosition;
@@ -43,13 +49,19 @@ class ControlCardCubit extends Cubit<ControlCardState> {
     tweenOverlay = Tween<double>();
     overlayAnimation = tweenOverlay.animate(curve);
 
-    swipeAnimationController.addListener(onListenSwipeController);
+    swipeAnimationController
+      ..addListener(onListenSwipeController)
+      ..addStatusListener(onListenStatusSwipeController);
+  }
+
+  void onListenStatusSwipeController(AnimationStatus status) {
+    if (status == AnimationStatus.completed) {
+      emit(state.copyWith(cardListenerType: CardListenerType.outCard));
+    }
   }
 
   void onListenSwipeController() {
-    // TODO(fahmi): change conditon for check card back not based CardSwipeType
-    if (state.swipeFinishType == CardSwipeType.initial ||
-        state.swipeFinishType == CardSwipeType.gift) {
+    if (state.cardListenerType == CardListenerType.backCard) {
       swipeAnimationController.duration = swipeBackAnimationDuration;
 
       emit(state.copyWith(
@@ -62,15 +74,18 @@ class ControlCardCubit extends Cubit<ControlCardState> {
         overlay: overlayAnimation.value,
       ));
 
+      delegate.onSwipeUpdate(state.position.distance);
       return;
     }
 
     swipeAnimationController.duration = swipeAnimationDuration;
+
     emit(state.copyWith(
       position: positionAnimation.value,
       angle: angleAnimation.value,
       overlay: overlayAnimation.value,
     ));
+    delegate.onSwipeUpdate(state.position.distance);
   }
 
   double _rotation(Rect dragBounds) {
@@ -83,8 +98,42 @@ class ControlCardCubit extends Cubit<ControlCardState> {
         rotationCornerMultiplier;
   }
 
+  void onActionSkip(Size screnSize) {
+    tweenPosition.begin = Offset.zero;
+    tweenPosition.end = Offset(-(2 * screnSize.width), 0.0);
+    tweenAngle.begin = 0.0;
+    tweenAngle.end = -0.2;
+    tweenOverlay.begin = 0.5;
+    tweenOverlay.end = 0.9;
+
+    swipeAnimationController
+      ..stop(canceled: true)
+      ..reset();
+    swipeAnimationController.forward(from: 0.0).whenComplete(() {
+      emit(const ControlCardSkipedState());
+    });
+  }
+
+  void onActionLove(Size screnSize) {
+    tweenPosition.begin = Offset.zero;
+    tweenPosition.end = Offset(2 * screnSize.width, 0.0);
+    tweenAngle.begin = 0.0;
+    tweenAngle.end = 0.5;
+    tweenOverlay.begin = 0.5;
+    tweenOverlay.end = 0.9;
+
+    swipeAnimationController
+      ..stop(canceled: true)
+      ..reset();
+    swipeAnimationController.forward(from: 0.0).whenComplete(() {
+      emit(const ControlCardSkipedState());
+    });
+  }
+
   void onResetPosition() {
-    print("RESET");
+    swipeAnimationController
+      ..reset()
+      ..stop();
     swipeAnimationController.value = 1.0;
     emit(state.copyWith(position: Offset.zero));
   }
@@ -111,6 +160,8 @@ class ControlCardCubit extends Cubit<ControlCardState> {
       var overlay = (-newPostion.dy - 50) / 100;
       newOverlay = overlay < 0.7 ? overlay : state.overlay;
     }
+
+    delegate.onSwipeUpdate(newPostion.distance);
 
     emit(state.copyWith(
       position: newPostion,
@@ -143,6 +194,7 @@ class ControlCardCubit extends Cubit<ControlCardState> {
     tweenOverlay.begin = state.overlay;
     tweenOverlay.end = 0.0;
 
+    emit(state.copyWith(cardListenerType: CardListenerType.backCard));
     swipeAnimationController
       ..reset()
       ..forward(from: 0.0);
@@ -157,7 +209,7 @@ class ControlCardCubit extends Cubit<ControlCardState> {
     tweenOverlay.end = state.overlay;
 
     swipeAnimationController.reset();
-    swipeAnimationController.forward().whenComplete(() {
+    swipeAnimationController.forward(from: 0.0).whenComplete(() {
       emit(const ControlCardLovedState());
     });
   }
@@ -171,7 +223,7 @@ class ControlCardCubit extends Cubit<ControlCardState> {
     tweenOverlay.end = state.overlay;
 
     swipeAnimationController.reset();
-    swipeAnimationController.forward().whenComplete(() {
+    swipeAnimationController.forward(from: 0.0).whenComplete(() {
       emit(const ControlCardSkipedState());
     });
   }
@@ -185,12 +237,13 @@ class ControlCardCubit extends Cubit<ControlCardState> {
     tweenOverlay.end = state.overlay;
 
     swipeAnimationController.reset();
-    swipeAnimationController.forward().whenComplete(() {
+    swipeAnimationController.forward(from: 0.0).whenComplete(() {
       emit(const ControlCardSkipedState());
     });
   }
 
   dispose() {
+    swipeAnimationController.removeListener(onListenSwipeController);
     swipeAnimationController.dispose();
   }
 }

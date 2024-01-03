@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'control_card_cubit.dart';
 
 @immutable
@@ -16,6 +15,8 @@ class ControlCardState extends Equatable {
   /// card overlay swipe type
   final double overlay;
 
+  final CardListenerType cardListenerType;
+
   const ControlCardState({
     required this.angle,
     required this.position,
@@ -29,6 +30,7 @@ class ControlCardState extends Equatable {
       725.3,
     ),
     required this.overlay,
+    this.cardListenerType = CardListenerType.outCard,
   });
 
   Offset get dragVector => position / position.distance;
@@ -79,6 +81,7 @@ class ControlCardState extends Equatable {
     Offset? positionStart,
     Rect? anchorBounds,
     double? overlay,
+    CardListenerType? cardListenerType,
   }) {
     return ControlCardState(
       angle: angle ?? this.angle,
@@ -86,11 +89,24 @@ class ControlCardState extends Equatable {
       positionStart: positionStart ?? this.positionStart,
       anchorBounds: anchorBounds ?? this.anchorBounds,
       overlay: overlay ?? this.overlay,
+      cardListenerType: cardListenerType ?? this.cardListenerType,
     );
   }
 
   @override
-  List<Object> get props => [angle, position, positionStart, overlay];
+  List<Object> get props {
+    return [
+      angle,
+      position,
+      positionStart,
+      anchorBounds,
+      overlay,
+      cardListenerType,
+    ];
+  }
+
+  @override
+  bool get stringify => true;
 }
 
 final class ControlCardInitial extends ControlCardState {

@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:chat_bloc/homepage/cubit/cards/control_card_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,15 +11,15 @@ import 'nearby_people_card_view.dart';
 
 class NearbyPeopleCardViewAnimation extends StatefulWidget {
   const NearbyPeopleCardViewAnimation({
-    super.key,
+    Key? key,
     required this.imageUrl,
-    required this.callback,
-    required this.onClickDetail,
-  });
+    required this.onTap,
+    this.onActionTapType,
+  }) : super(key: key);
 
   final String imageUrl;
-  final VoidCallback callback;
-  final VoidCallback onClickDetail;
+  final VoidCallback onTap;
+  final CardSwipeType? onActionTapType;
 
   @override
   State<NearbyPeopleCardViewAnimation> createState() =>
@@ -44,6 +46,26 @@ class _NearbyPeopleCardViewAnimationState
   }
 
   @override
+  void didUpdateWidget(covariant NearbyPeopleCardViewAnimation oldWidget) {
+    final size = MediaQuery.of(context).size;
+
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.onActionTapType == null && widget.onActionTapType != null) {
+      print("widget.onActionTapType ${widget.onActionTapType}");
+      switch (widget.onActionTapType) {
+        case CardSwipeType.skip:
+          controlCardCubit.onActionSkip(size);
+          break;
+        case CardSwipeType.love:
+          controlCardCubit.onActionLove(size);
+          break;
+        default:
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isDetail = context.select<DetailsCardCubit, bool>(
@@ -52,7 +74,7 @@ class _NearbyPeopleCardViewAnimationState
     final detailsCardCubit = context.read<DetailsCardCubit>();
 
     return GestureDetector(
-      onTap: widget.onClickDetail,
+      onTap: widget.onTap,
       onPanStart: (details) {
         if (controlCardCubit.swipeAnimationController.isAnimating) {
           controlCardCubit.onResetPosition();
@@ -77,7 +99,6 @@ class _NearbyPeopleCardViewAnimationState
           if (state is ControlCardLovedState ||
               state is ControlCardSkipedState) {
             context.read<MatchEngineCubit>().cycleCard();
-            widget.callback();
           }
         },
         builder: (context, state) {
