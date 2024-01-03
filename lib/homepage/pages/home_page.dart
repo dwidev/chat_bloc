@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:chat_bloc/homepage/pages/cards/swipe_cards_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,11 +10,7 @@ import '../../chat/bloc/ws_connection_bloc/ws_connection_bloc.dart';
 import '../../chat/data/repository/chat_repository.dart';
 import '../../chat/pages/converstaions_page.dart';
 import '../../core/theme/colors.dart';
-import '../cubit/control_card_cubit.dart';
 import '../cubit/details_card_cubit.dart';
-import '../cubit/match_engine_cubit.dart';
-import 'cards/nearby_people_card_view.dart';
-import 'cards/nearby_people_card_view_animation.dart';
 
 /// To navigate to next page (Scaffold)
 Future<void> push({
@@ -273,54 +270,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
               Transform.scale(
                 scale: animationScale.value,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Positioned(
-                      left: 0,
-                      right: 0,
-                      top: detailsCardCubit.topCardAnimation.value ??
-                          size.height / 7,
-                      child: BlocProvider(
-                        create: (context) =>
-                            MatchEngineCubit(swipeItems: dummyUsers),
-                        child: BlocBuilder<MatchEngineCubit, MatchEngineState>(
-                          builder: (context, state) {
-                            return Stack(
-                              alignment: Alignment.topCenter,
-                              children: [
-                                if (state.nextItem != null) ...{
-                                  NearbyPeopleCardView(
-                                    imageUrl: state.nextItem!,
-                                  )
-                                },
-                                if (state.currentItem != null) ...{
-                                  BlocProvider(
-                                    create: (context) => ControlCardCubit(),
-                                    child: NearbyPeopleCardViewAnimation(
-                                      imageUrl: state.currentItem ?? "",
-                                      callback: callback,
-                                      onClickDetail: () {
-                                        detailsCardCubit.onClickCardToDetail(
-                                          screnSize: size,
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                },
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: detailsCardCubit.bottomActionAnimation.value ??
-                          size.height / 11,
-                      child: const CardActionsWidget(),
-                    ),
-                  ],
-                ),
+                child: const SwipeCardsPage(),
               ),
               GestureDetector(
                 onTap: () {
@@ -356,8 +306,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
 class CardActionsWidget extends StatelessWidget {
   const CardActionsWidget({
-    super.key,
-  });
+    Key? key,
+    required this.onSkipPressed,
+    required this.onLovePressed,
+  }) : super(key: key);
+
+  final VoidCallback onSkipPressed;
+  final VoidCallback onLovePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -378,29 +333,35 @@ class CardActionsWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            color: secondaryColor,
-          ),
-          child: const Icon(
-            CupertinoIcons.clear,
-            color: primaryColor,
-            size: 40,
+        InkWell(
+          onTap: onSkipPressed,
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: secondaryColor,
+            ),
+            child: const Icon(
+              CupertinoIcons.clear,
+              color: primaryColor,
+              size: 40,
+            ),
           ),
         ),
         const SizedBox(width: 10),
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50),
-            color: primaryColor,
-          ),
-          child: const Icon(
-            CupertinoIcons.heart_fill,
-            color: whiteColor,
-            size: 40,
+        InkWell(
+          onTap: onLovePressed,
+          child: Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50),
+              color: primaryColor,
+            ),
+            child: const Icon(
+              CupertinoIcons.heart_fill,
+              color: whiteColor,
+              size: 40,
+            ),
           ),
         ),
         const SizedBox(width: 10),
@@ -507,9 +468,3 @@ class MainNavigationMenuWidget extends StatelessWidget {
     );
   }
 }
-//  TextButton(
-//             onPressed: () {
-//               push(context: context, page: const LoginDummyPage());
-//             },
-//             child: const Text("Go login"),
-//           )
