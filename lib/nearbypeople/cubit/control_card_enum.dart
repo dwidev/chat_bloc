@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../../core/theme/colors.dart';
+import '../../core/theme/colors.dart';
+
+enum CardListenerType { outCard, backCard }
 
 enum CardSwipeType {
   initial,

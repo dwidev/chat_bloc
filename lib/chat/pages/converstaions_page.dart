@@ -12,6 +12,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/chat_bloc/chat_bloc.dart';
 
 class ConversationsPage extends StatefulWidget {
+  static Widget build(String me) => MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => WsConnectionBloc(
+              chatRepository: context.read<ChatRepository>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => ConversationsBloc(
+              chatRepository: context.read<ChatRepository>(),
+            ),
+          ),
+        ],
+        child: ConversationsPage(me: me),
+      );
+
   final String me;
   const ConversationsPage({
     Key? key,
@@ -25,12 +41,19 @@ class ConversationsPage extends StatefulWidget {
 class _ConversationsPageState extends State<ConversationsPage> {
   @override
   void initState() {
+    print("INIT STATE CHAT PAGE");
     context.read<WsConnectionBloc>().add(ConnectToWs(token: widget.me));
     context.read<ConversationsBloc>()
       ..add(GetConversations(widget.me))
       ..add(const ConversationSubscribeMessage())
       ..add(const ConversationSubscribeUserTyping());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    print("DISPONSE CONVERSATIONS");
+    super.dispose();
   }
 
   void _detailChat(String sender, ConversationModel conversation) {

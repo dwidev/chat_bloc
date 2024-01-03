@@ -1,6 +1,3 @@
-import 'dart:ui';
-
-import 'package:chat_bloc/homepage/pages/cards/swipe_cards_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +7,8 @@ import '../../chat/bloc/ws_connection_bloc/ws_connection_bloc.dart';
 import '../../chat/data/repository/chat_repository.dart';
 import '../../chat/pages/converstaions_page.dart';
 import '../../core/theme/colors.dart';
-import '../cubit/details_card_cubit.dart';
+import '../../nearbypeople/pages/swipe_cards_page.dart';
+import '../cubit/bottom_navigation_menu/bottom_navigation_menu_cubit.dart';
 
 /// To navigate to next page (Scaffold)
 Future<void> push({
@@ -49,260 +47,345 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  List<String> users = [];
-
-  bool menuOpen = false;
-
-  late AnimationController menuAnimationController;
-  late Tween<double> tweenScaleCard = Tween<double>(begin: 1, end: 1);
-  late Animation<double> animationScale;
-
-  late Tween<double> tweenBlurCard = Tween<double>(
-    begin: 0.0,
-    end: 0.0,
-  );
-  late Animation<double> animationBlur;
-
-  late Tween<double> tweenShowMenu = Tween<double>(
-    begin: -100.0,
-    end: -100.0,
-  );
-  late Animation<double> animationShowMenu;
-
-  late DetailsCardCubit detailsCardCubit;
+class _HomePageState extends State<HomePage> {
+  late BottomNavigationMenuCubit provider;
 
   @override
   void initState() {
-    detailsCardCubit = context.read<DetailsCardCubit>();
-
-    detailsCardCubit.initializeDetailAnimations(sync: this);
-    menuAnimationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-    animationScale = tweenScaleCard.animate(
-      CurvedAnimation(
-        parent: menuAnimationController,
-        curve: Curves.easeInOutCubicEmphasized,
-      ),
-    );
-    animationBlur = tweenBlurCard.animate(
-      CurvedAnimation(
-        parent: menuAnimationController,
-        curve: Curves.easeInOutCubicEmphasized,
-      ),
-    );
-    animationShowMenu = tweenShowMenu.animate(
-      CurvedAnimation(
-        parent: menuAnimationController,
-        curve: Curves.easeInOutCubicEmphasized,
-      ),
-    );
-
-    users = dummyUsers;
+    provider = context.read<BottomNavigationMenuCubit>()..setPageController();
     super.initState();
-  }
-
-  void menuOnPressed() {
-    if (menuOpen == false) {
-      onOpenMenu();
-    } else {
-      onCloseMenu();
-    }
-
-    setState(() {
-      menuOpen = !menuOpen;
-    });
-  }
-
-  void onOpenMenu() {
-    final curve = CurvedAnimation(
-      parent: menuAnimationController,
-      curve: Curves.easeInOutCubicEmphasized,
-    );
-    tweenScaleCard = Tween(begin: 1.0, end: 0.85);
-    animationScale = tweenScaleCard.animate(curve);
-
-    tweenBlurCard = Tween(
-      begin: 0,
-      end: 5,
-    );
-    animationBlur = tweenBlurCard.animate(curve);
-
-    tweenShowMenu = Tween(begin: -100, end: 50);
-    animationShowMenu = tweenShowMenu.animate(
-      CurvedAnimation(
-        parent: menuAnimationController,
-        curve: Curves.fastEaseInToSlowEaseOut,
-      ),
-    );
-
-    menuAnimationController
-      ..reset()
-      ..forward();
-  }
-
-  void onCloseMenu() {
-    final curve = CurvedAnimation(
-      parent: menuAnimationController,
-      curve: Curves.easeInOutCubicEmphasized,
-    );
-    tweenScaleCard = Tween(
-      begin: 0.85,
-      end: 1.0,
-    );
-    animationScale = tweenScaleCard.animate(curve);
-    tweenBlurCard = Tween(
-      begin: 5,
-      end: 0,
-    );
-    animationBlur = tweenBlurCard.animate(curve);
-    tweenShowMenu = Tween(begin: 50, end: -100);
-    animationShowMenu = tweenShowMenu.animate(
-      CurvedAnimation(
-        parent: menuAnimationController,
-        curve: Curves.fastEaseInToSlowEaseOut,
-      ),
-    );
-
-    menuAnimationController
-      ..reset()
-      ..forward().whenComplete(() {
-        setState(() {
-          menuOpen = false;
-        });
-      });
-  }
-
-  Future<void> callback() async {
-    var users = this.users.toList();
-    users.removeLast();
-
-    if (users.isEmpty) {
-      users = dummyUsers.reversed.toList();
-      await Future.delayed(const Duration(seconds: 1)).whenComplete(() {
-        setState(() {
-          this.users = users;
-        });
-      });
-      return;
-    }
-
-    setState(() {
-      this.users = users;
-    });
   }
 
   @override
   void dispose() {
-    menuAnimationController.dispose();
-    detailsCardCubit.dispose();
+    provider.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
-    final detailsCardCubit = context.read<DetailsCardCubit>();
+    final bottom = MediaQuery.of(context).padding.bottom;
 
-    final appBar = AppBar(
-      backgroundColor: Colors.transparent,
-      titleTextStyle: textTheme.labelLarge,
-      title: const Text("Hallo Dear"),
-      centerTitle: true,
-      leading: IconButton(
-        onPressed: menuOnPressed,
-        icon: const Icon(
-          CupertinoIcons.rectangle_grid_2x2_fill,
-          color: secondaryColor,
-          size: 25,
-        ),
-      ),
-      actions: [
-        Stack(
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                CupertinoIcons.bell,
-                color: primaryColor,
-                size: 30,
-              ),
-            ),
-            Positioned(
-              top: 10,
-              right: 10,
-              child: Container(
-                padding: const EdgeInsets.all(2),
-                decoration: BoxDecoration(
-                  color: primaryColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  "9+",
-                  style: textTheme.bodySmall?.copyWith(
-                    color: whiteColor,
-                    fontSize: 8,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            )
-          ],
-        )
-      ],
-    );
-
-    return Scaffold(
-      body: AnimatedBuilder(
-        animation: Listenable.merge([
-          menuAnimationController,
-          detailsCardCubit.detailCardAnimationController
-        ]),
-        builder: (context, child) {
-          return Stack(
+    return BlocBuilder<BottomNavigationMenuCubit, BottomNavigationMenuState>(
+      builder: (context, state) {
+        return Scaffold(
+          body: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: provider.pageController,
             children: [
-              Transform.translate(
-                offset: detailsCardCubit.offsetAppbarAnimation.value,
-                child: appBar,
-              ),
-              Transform.scale(
-                scale: animationScale.value,
-                child: const SwipeCardsPage(),
-              ),
-              GestureDetector(
-                onTap: () {
-                  if (menuOpen) {
-                    onCloseMenu();
-                  }
-                },
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: animationBlur.value,
-                    sigmaY: animationBlur.value,
-                  ),
-                  child: Visibility(
-                    visible: menuOpen,
-                    child: Container(
-                      width: size.width,
-                      height: size.height,
-                      color: Colors.transparent,
-                    ),
-                  ),
-                ),
-              ),
-              MainNavigationMenuWidget(
-                bottom: animationShowMenu.value,
-              ),
+              const SwipeCardsPage(),
+              const SwipeCardsPage(),
+              ConversationsPage.build("dwi"),
+              const Text("Profile"),
             ],
-          );
-        },
-      ),
+          ),
+          bottomNavigationBar: Container(
+            padding: EdgeInsets.only(
+              top: 10,
+              bottom: bottom * 1.1,
+              right: 20,
+              left: 20,
+            ),
+            width: size.width,
+            // height: 100,
+            color: Colors.white,
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: BottomNavigationMenuType.values.map((e) {
+                  return IconButton(
+                    onPressed: () {
+                      provider.changeMenu(e);
+                    },
+                    icon: Icon(
+                      e.icon,
+                      size: e == state.menuType ? 32 : 28,
+                    ),
+                    color: e == state.menuType ? primaryColor : darkColor,
+                  );
+                }).toList()),
+          ),
+        );
+      },
     );
   }
 }
+
+// class LoversPage extends StatefulWidget {
+//   const LoversPage({super.key});
+
+//   @override
+//   State<LoversPage> createState() => _LoversPageState();
+// }
+
+// class _LoversPageState extends State<LoversPage>
+//     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+//   List<String> users = [];
+
+//   bool menuOpen = false;
+
+//   late AnimationController menuAnimationController;
+//   late Tween<double> tweenScaleCard = Tween<double>(begin: 1, end: 1);
+//   late Animation<double> animationScale;
+
+//   late Tween<double> tweenBlurCard = Tween<double>(
+//     begin: 0.0,
+//     end: 0.0,
+//   );
+//   late Animation<double> animationBlur;
+
+//   late Tween<double> tweenShowMenu = Tween<double>(
+//     begin: -100.0,
+//     end: -100.0,
+//   );
+//   late Animation<double> animationShowMenu;
+
+//   late DetailsCardCubit detailsCardCubit;
+
+//   @override
+//   void initState() {
+//     detailsCardCubit = context.read<DetailsCardCubit>();
+
+//     detailsCardCubit.initializeDetailAnimations(sync: this);
+//     menuAnimationController = AnimationController(
+//       vsync: this,
+//       duration: const Duration(milliseconds: 500),
+//     );
+//     animationScale = tweenScaleCard.animate(
+//       CurvedAnimation(
+//         parent: menuAnimationController,
+//         curve: Curves.easeInOutCubicEmphasized,
+//       ),
+//     );
+//     animationBlur = tweenBlurCard.animate(
+//       CurvedAnimation(
+//         parent: menuAnimationController,
+//         curve: Curves.easeInOutCubicEmphasized,
+//       ),
+//     );
+//     animationShowMenu = tweenShowMenu.animate(
+//       CurvedAnimation(
+//         parent: menuAnimationController,
+//         curve: Curves.easeInOutCubicEmphasized,
+//       ),
+//     );
+
+//     users = dummyUsers;
+//     super.initState();
+//   }
+
+//   void menuOnPressed() {
+//     if (menuOpen == false) {
+//       onOpenMenu();
+//     } else {
+//       onCloseMenu();
+//     }
+
+//     setState(() {
+//       menuOpen = !menuOpen;
+//     });
+//   }
+
+//   void onOpenMenu() {
+//     final curve = CurvedAnimation(
+//       parent: menuAnimationController,
+//       curve: Curves.easeInOutCubicEmphasized,
+//     );
+//     tweenScaleCard = Tween(begin: 1.0, end: 0.85);
+//     animationScale = tweenScaleCard.animate(curve);
+
+//     tweenBlurCard = Tween(
+//       begin: 0,
+//       end: 5,
+//     );
+//     animationBlur = tweenBlurCard.animate(curve);
+
+//     tweenShowMenu = Tween(begin: -100, end: 50);
+//     animationShowMenu = tweenShowMenu.animate(
+//       CurvedAnimation(
+//         parent: menuAnimationController,
+//         curve: Curves.fastEaseInToSlowEaseOut,
+//       ),
+//     );
+
+//     menuAnimationController
+//       ..reset()
+//       ..forward();
+//   }
+
+//   void onCloseMenu() {
+//     final curve = CurvedAnimation(
+//       parent: menuAnimationController,
+//       curve: Curves.easeInOutCubicEmphasized,
+//     );
+//     tweenScaleCard = Tween(
+//       begin: 0.85,
+//       end: 1.0,
+//     );
+//     animationScale = tweenScaleCard.animate(curve);
+//     tweenBlurCard = Tween(
+//       begin: 5,
+//       end: 0,
+//     );
+//     animationBlur = tweenBlurCard.animate(curve);
+//     tweenShowMenu = Tween(begin: 50, end: -100);
+//     animationShowMenu = tweenShowMenu.animate(
+//       CurvedAnimation(
+//         parent: menuAnimationController,
+//         curve: Curves.fastEaseInToSlowEaseOut,
+//       ),
+//     );
+
+//     menuAnimationController
+//       ..reset()
+//       ..forward().whenComplete(() {
+//         setState(() {
+//           menuOpen = false;
+//         });
+//       });
+//   }
+
+//   Future<void> callback() async {
+//     var users = this.users.toList();
+//     users.removeLast();
+
+//     if (users.isEmpty) {
+//       users = dummyUsers.reversed.toList();
+//       await Future.delayed(const Duration(seconds: 1)).whenComplete(() {
+//         setState(() {
+//           this.users = users;
+//         });
+//       });
+//       return;
+//     }
+
+//     setState(() {
+//       this.users = users;
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     print("DISPONSE LOVERS");
+//     menuAnimationController.dispose();
+//     detailsCardCubit.dispose();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final textTheme = Theme.of(context).textTheme;
+//     final size = MediaQuery.of(context).size;
+//     final bottom = MediaQuery.of(context).padding.bottom;
+//     final detailsCardCubit = context.read<DetailsCardCubit>();
+
+//     final appBar = AppBar(
+//       backgroundColor: Colors.transparent,
+//       titleTextStyle: textTheme.labelLarge,
+//       title: const Text("Hallo Dear"),
+//       centerTitle: true,
+//       leading: IconButton(
+//         onPressed: menuOnPressed,
+//         icon: const Icon(
+//           CupertinoIcons.rectangle_grid_2x2_fill,
+//           color: secondaryColor,
+//           size: 25,
+//         ),
+//       ),
+//       actions: [
+//         Stack(
+//           children: [
+//             IconButton(
+//               onPressed: () {},
+//               icon: const Icon(
+//                 CupertinoIcons.bell,
+//                 color: primaryColor,
+//                 size: 30,
+//               ),
+//             ),
+//             Positioned(
+//               top: 10,
+//               right: 10,
+//               child: Container(
+//                 padding: const EdgeInsets.all(2),
+//                 decoration: BoxDecoration(
+//                   color: primaryColor,
+//                   borderRadius: BorderRadius.circular(10),
+//                 ),
+//                 child: Text(
+//                   "9+",
+//                   style: textTheme.bodySmall?.copyWith(
+//                     color: whiteColor,
+//                     fontSize: 8,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//               ),
+//             )
+//           ],
+//         )
+//       ],
+//     );
+
+//     return Scaffold(
+//       // body: ConversationsPage.build("me"),
+//       body: AnimatedBuilder(
+//         animation: Listenable.merge([
+//           menuAnimationController,
+//           detailsCardCubit.detailCardAnimationController
+//         ]),
+//         builder: (context, child) {
+//           return Stack(
+//             children: [
+//               Transform.translate(
+//                 offset: detailsCardCubit.offsetAppbarAnimation.value,
+//                 child: appBar,
+//               ),
+//               Transform.scale(
+//                 scale: animationScale.value,
+//                 child: const SwipeCardsPage(),
+//               ),
+//               GestureDetector(
+//                 onTap: () {
+//                   if (menuOpen) {
+//                     onCloseMenu();
+//                   }
+//                 },
+//                 child: BackdropFilter(
+//                   filter: ImageFilter.blur(
+//                     sigmaX: animationBlur.value,
+//                     sigmaY: animationBlur.value,
+//                   ),
+//                   child: Visibility(
+//                     visible: menuOpen,
+//                     child: Container(
+//                       width: size.width,
+//                       height: size.height,
+//                       color: Colors.transparent,
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//               MainNavigationMenuWidget(
+//                 bottom: animationShowMenu.value,
+//               ),
+//             ],
+//           );
+//         },
+//       ),
+//     );
+//   }
+
+//   @override
+//   bool get wantKeepAlive => true;
+
+//   @override
+//   void updateKeepAlive() {
+//     print("ANJAY");
+//     // TODO: implement updateKeepAlive
+//     super.updateKeepAlive();
+//   }
+// }
 
 class CardActionsWidget extends StatelessWidget {
   const CardActionsWidget({

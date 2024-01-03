@@ -5,8 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../cubit/details_card_cubit.dart';
-import '../home_page.dart';
+import '../cubit/details_card_cubit.dart';
 
 class NearbyPeopleCardDetailView extends StatelessWidget {
   const NearbyPeopleCardDetailView({super.key});

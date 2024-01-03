@@ -1,11 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:chat_bloc/homepage/cubit/cards/control_card_enum.dart';
+import 'package:chat_bloc/nearbypeople/cubit/control_card_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../cubit/control_card_cubit.dart';
-import '../../cubit/details_card_cubit.dart';
-import '../../cubit/match_engine_cubit.dart';
+import '../cubit/control_card_cubit.dart';
+import '../cubit/details_card_cubit.dart';
+import '../cubit/match_engine_cubit.dart';
 import 'nearby_people_card_detail_view.dart';
 import 'nearby_people_card_view.dart';
 
@@ -116,15 +116,15 @@ class _NearbyPeopleCardViewAnimationState
             child: Stack(
               alignment: Alignment.topCenter,
               children: [
-                const NearbyPeopleCardDetailView(),
+                // const NearbyPeopleCardDetailView(),
                 NearbyPeopleCardView(
                   imageUrl: widget.imageUrl,
-                  options: NearbyPeopleCardViewOptions(
-                    imageHeight: detailsCardCubit.heightCardAnimation.value,
-                    imageWidth: detailsCardCubit.widthCardAnimation.value,
-                    isDetail: isDetail,
-                    radiusSize: detailsCardCubit.radiusCardAnimation.value,
-                  ),
+                  // options: NearbyPeopleCardViewOptions(
+                  //   imageHeight: detailsCardCubit.heightCardAnimation.value,
+                  //   imageWidth: detailsCardCubit.widthCardAnimation.value,
+                  //   isDetail: isDetail,
+                  //   radiusSize: detailsCardCubit.radiusCardAnimation.value,
+                  // ),
                 ),
                 Visibility(
                   visible: !isDetail,

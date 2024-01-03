@@ -5,6 +5,7 @@ const secondaryColor = Color(0xffFCC3D2);
 const secondarySoftColor = Color(0xffFFDFDF);
 const whiteColor = Colors.white;
 const darkLightColor = Color(0xffF7F7F9);
+final darkColor = const Color(0xff352F44).withOpacity(0.8);
 const softblueColor = Color(0xffAEDEFC);
 const blackColor = Color(0xff0F0F0F);
 const softyellowColor = Color(0xffFBECB2);

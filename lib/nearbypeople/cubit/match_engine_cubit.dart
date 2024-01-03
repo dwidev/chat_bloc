@@ -3,8 +3,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:chat_bloc/homepage/cubit/cards/control_card_enum.dart';
-import 'package:chat_bloc/homepage/cubit/control_card_cubit.dart';
+import 'package:chat_bloc/nearbypeople/cubit/control_card_enum.dart';
+
+import 'control_card_cubit.dart';
 
 class MatchEngineCubit extends Cubit<MatchEngineState>
     implements ControlCardCubitDelegate {
