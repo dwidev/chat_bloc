@@ -1,4 +1,7 @@
 import 'package:chat_bloc/chat/cubit/react_animation_cubit.dart';
+import 'package:chat_bloc/core/theme/colors.dart';
+import 'package:chat_bloc/homepage/pages/home_page.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../bloc/conversations_bloc/conversations_bloc.dart';
 import '../bloc/ws_connection_bloc/ws_connection_bloc.dart';
@@ -91,172 +94,241 @@ class _ConversationsPageState extends State<ConversationsPage> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Pesan kamu")),
-      body: Column(
-        children: [
-          BlocBuilder<WsConnectionBloc, WsConnectionState>(
-            builder: (context, state) {
-              if (state.connecionStatus == WSConnectionStatus.disconnected) {
-                return Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(color: Colors.amber.shade200),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "failed to connect to server, try connecting again...",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-
-              if (state.connecionStatus ==
-                  WSConnectionStatus.disconnectedWithReconnectAttempts) {
-                return Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(color: Colors.red),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        const Expanded(
-                          child: Text(
-                            "Reconnecting failed with $attemptsReconnecting attempts, try again",
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            context
-                                .read<WsConnectionBloc>()
-                                .add(ConnectToWs(token: widget.me));
-                            context
-                                .read<ConversationsBloc>()
-                                .add(GetConversations(widget.me));
-                          },
-                          child: const Text("reconnect"),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-
-              if (state.connecionStatus == WSConnectionStatus.connecting) {
-                return Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(color: Colors.green.shade200),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text("Connecting to server... "),
-                  ),
-                );
-              }
-
-              return const Offstage();
-            },
+      backgroundColor: darkLightColor,
+      appBar: AppBar(
+        title: Text(
+          "Messages",
+          style: textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold,
           ),
-          BlocConsumer<ConversationsBloc, ConversationsState>(
-            listener: (context, state) {
-              // if (state is ChatErrorConnectWS) {
-              //   final snackBar = SnackBar(
-              //     content: Text(state.error.toString()),
-              //   );
-
-              //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
-              // }
-            },
-            builder: (context, state) {
-              return Expanded(
-                child: ListView.builder(
-                  itemCount: state.conversations.length,
-                  itemBuilder: (context, index) {
-                    final conversation = state.conversations[index];
-                    final sender = conversation.user;
-
-                    return InkWell(
-                      onTap: () {
-                        _detailChat(sender.id, conversation);
-                      },
-                      child: ListTile(
-                        trailing: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.center,
+        ),
+        centerTitle: false,
+        backgroundColor: Colors.transparent,
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(
+              CupertinoIcons.exclamationmark_shield_fill,
+              color: softblueColor,
+            ),
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Container(
+          width: size.width,
+          height: size.height,
+          child: ListView(
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              BlocBuilder<WsConnectionBloc, WsConnectionState>(
+                builder: (context, state) {
+                  if (state.connecionStatus ==
+                      WSConnectionStatus.disconnected) {
+                    return Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.amber.shade200),
+                      child: const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Row(
                           children: [
-                            Text(
-                              conversation.lastMessage?.dateConv ?? '',
-                              style: textTheme.bodySmall?.copyWith(
-                                color: Colors.grey,
-                                fontSize: 10,
+                            Expanded(
+                              child: Text(
+                                "failed to connect to server, try connecting again...",
                               ),
                             ),
-                            if (conversation.unreadCount > 0) ...[
-                              Container(
-                                padding: const EdgeInsets.all(6),
-                                decoration: const BoxDecoration(
-                                  color: Colors.green,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Text(
-                                  "${conversation.unreadCount}",
-                                  textAlign: TextAlign.center,
-                                ),
-                              )
-                            ],
                           ],
                         ),
-                        leading: Stack(
+                      ),
+                    );
+                  }
+
+                  if (state.connecionStatus ==
+                      WSConnectionStatus.disconnectedWithReconnectAttempts) {
+                    return Container(
+                      width: double.infinity,
+                      decoration: const BoxDecoration(color: Colors.red),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
                           children: [
-                            const CircleAvatar(),
-                            if (conversation.user.online)
-                              Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: Container(
-                                  width: 10,
-                                  height: 10,
-                                  decoration: BoxDecoration(
-                                    color: Colors.green.shade700,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                ),
+                            const Expanded(
+                              child: Text(
+                                "Reconnecting failed with $attemptsReconnecting attempts, try again",
                               ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                context
+                                    .read<WsConnectionBloc>()
+                                    .add(ConnectToWs(token: widget.me));
+                                context
+                                    .read<ConversationsBloc>()
+                                    .add(GetConversations(widget.me));
+                              },
+                              child: const Text("reconnect"),
+                            ),
                           ],
                         ),
-                        title: Text(sender.name),
-                        subtitle: conversation.user.typing
-                            ? Text(
-                                "mengetik...",
-                                style: textTheme.bodySmall?.copyWith(
-                                  color: Colors.purpleAccent.shade100,
-                                ),
-                              )
-                            : Text(
-                                conversation.lastMessage?.content ??
-                                    "Belum ada percakapan",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      fontWeight: conversation.unread(widget.me)
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                    ),
-                              ),
+                      ),
+                    );
+                  }
+
+                  if (state.connecionStatus == WSConnectionStatus.connecting) {
+                    return Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(color: Colors.green.shade200),
+                      child: const Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Text("Connecting to server... "),
+                      ),
+                    );
+                  }
+
+                  return const Offstage();
+                },
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Text(
+                  "New Matches",
+                  style: textTheme.bodySmall,
+                ),
+              ),
+              Container(
+                // padding: EdgeInsets.all(20),
+                width: size.width,
+                height: 70,
+                // color: darkColor,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: dummyUsers.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: EdgeInsets.only(
+                          right: 10, left: index == 0 ? 10 : 0.0),
+                      child: CircleAvatar(
+                        radius: 30,
+                        backgroundImage: NetworkImage(dummyUsers[index]),
                       ),
                     );
                   },
                 ),
-              );
-            },
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Text(
+                  "Messages",
+                  style: textTheme.bodySmall,
+                ),
+              ),
+              BlocConsumer<ConversationsBloc, ConversationsState>(
+                listener: (context, state) {
+                  // if (state is ChatErrorConnectWS) {
+                  //   final snackBar = SnackBar(
+                  //     content: Text(state.error.toString()),
+                  //   );
+
+                  //   ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  // }
+                },
+                builder: (context, state) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    itemCount: state.conversations.length,
+                    itemBuilder: (context, index) {
+                      final conversation = state.conversations[index];
+                      final sender = conversation.user;
+
+                      return InkWell(
+                        onTap: () {
+                          _detailChat(sender.id, conversation);
+                        },
+                        child: ListTile(
+                          trailing: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                conversation.lastMessage?.dateConv ?? '',
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: Colors.grey,
+                                  fontSize: 10,
+                                ),
+                              ),
+                              if (conversation.unreadCount > 0) ...[
+                                Container(
+                                  padding: const EdgeInsets.all(6),
+                                  decoration: const BoxDecoration(
+                                    color: greenColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Text(
+                                    "${conversation.unreadCount}",
+                                    textAlign: TextAlign.center,
+                                  ),
+                                )
+                              ],
+                            ],
+                          ),
+                          leading: Stack(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(dummyUsers[1]),
+                              ),
+                              if (conversation.user.online)
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: Container(
+                                    width: 10,
+                                    height: 10,
+                                    decoration: BoxDecoration(
+                                      color: greenColor,
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(color: whiteColor),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          title: Text(
+                            sender.name,
+                            style: textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          subtitle: conversation.user.typing
+                              ? Text(
+                                  "mengetik...",
+                                  style: textTheme.labelSmall?.copyWith(
+                                    color: primaryColor,
+                                  ),
+                                )
+                              : Text(
+                                  conversation.lastMessage?.content ??
+                                      "Belum ada percakapan",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall
+                                      ?.copyWith(color: Colors.black),
+                                ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

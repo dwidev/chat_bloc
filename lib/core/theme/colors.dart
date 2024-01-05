@@ -9,3 +9,4 @@ final darkColor = const Color(0xff352F44).withOpacity(0.8);
 const softblueColor = Color(0xffAEDEFC);
 const blackColor = Color(0xff0F0F0F);
 const softyellowColor = Color(0xffFBECB2);
+const greenColor = Color(0xff65C18C);
