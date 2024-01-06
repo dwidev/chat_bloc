@@ -52,7 +52,7 @@ class NearbyPeopleCardView extends StatelessWidget {
               fit: options?.isDetail ?? false ? BoxFit.cover : BoxFit.cover,
             ),
           ),
-          width: options?.imageWidth ?? size.width / 1.2,
+          width: options?.imageWidth ?? size.width / 1.045,
           height: options?.imageHeight ?? size.height / 1.5,
           // child: PageView(
           //   children: dummyUsers
@@ -118,12 +118,21 @@ class NearbyPeopleCardView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Michelle Ziudith, 23",
-                          style: textTheme.bodyLarge?.copyWith(
-                            color: whiteColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              "Michelle Ziudith, 23",
+                              style: textTheme.bodyLarge?.copyWith(
+                                color: whiteColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            const Icon(
+                              CupertinoIcons.checkmark_seal_fill,
+                              color: blueLightColor,
+                            )
+                          ],
                         ),
                         Row(
                           children: [

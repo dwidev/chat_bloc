@@ -112,7 +112,7 @@ class _ConversationsPageState extends State<ConversationsPage> {
             onPressed: () {},
             icon: const Icon(
               CupertinoIcons.exclamationmark_shield_fill,
-              color: softblueColor,
+              color: blueLightColor,
             ),
           ),
         ],

@@ -7,6 +7,7 @@ import '../../chat/bloc/ws_connection_bloc/ws_connection_bloc.dart';
 import '../../chat/data/repository/chat_repository.dart';
 import '../../chat/pages/converstaions_page.dart';
 import '../../core/theme/colors.dart';
+import '../../matches/pages/matches_page.dart';
 import '../../nearbypeople/pages/swipe_cards_page.dart';
 import '../cubit/bottom_navigation_menu/bottom_navigation_menu_cubit.dart';
 
@@ -75,7 +76,7 @@ class _HomePageState extends State<HomePage> {
             controller: provider.pageController,
             children: [
               const SwipeCardsPage(),
-              const SwipeCardsPage(),
+              const MatchesPage(),
               ConversationsPage.build("dwi"),
               const Text("Profile"),
             ],
