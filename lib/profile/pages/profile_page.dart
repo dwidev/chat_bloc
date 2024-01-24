@@ -390,9 +390,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
-              const Text("Subsctions"),
               SizedBox(
-                height: 260,
+                height: 300,
                 child: PageView(
                   children: [0, 1, 2]
                       .map(
@@ -550,6 +549,46 @@ class _ProfilePageState extends State<ProfilePage> {
                                       ),
                                     ],
                                   ),
+                                  const SizedBox(height: 15),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          "See all benefite",
+                                          style: textTheme.bodySmall?.copyWith(
+                                            color: blackColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 5,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            gradient: const LinearGradient(
+                                              colors: [
+                                                blackColor,
+                                                primaryColor,
+                                              ],
+                                            ),
+                                          ),
+                                          child: Text(
+                                            "Subscribe",
+                                            style:
+                                                textTheme.bodyMedium?.copyWith(
+                                              color: whiteColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
                                 ],
                               ),
                             );
