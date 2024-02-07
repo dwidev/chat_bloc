@@ -140,40 +140,7 @@ class NearbyPeopleCardDetailView extends StatelessWidget {
               ),
             ],
           ),
-          Wrap(
-            children: ["Spotify", "Make-up", "Art", "Entertaint", "Ahtlete"]
-                .map(
-                  (e) => Container(
-                    margin: const EdgeInsets.only(right: 10, top: 10),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 3,
-                    ),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        gradient: LinearGradient(
-                          colors: e == "Spotify"
-                              ? [
-                                  primaryColor.withOpacity(0.7),
-                                  secondaryColor,
-                                ]
-                              : [
-                                  Colors.grey.shade700,
-                                  Colors.grey.shade400,
-                                ],
-                          tileMode: TileMode.mirror,
-                        )),
-                    child: Text(
-                      e,
-                      style: textTheme.bodySmall?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                )
-                .toList(),
-          ),
+          const InterstingWidget(),
           const SizedBox(height: 50),
           ElevatedButton(
             onPressed: () {},
@@ -202,6 +169,52 @@ class NearbyPeopleCardDetailView extends StatelessWidget {
           // )
         ],
       ),
+    );
+  }
+}
+
+class InterstingWidget extends StatelessWidget {
+  const InterstingWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return Wrap(
+      children: ["Spotify", "Make-up", "Art", "Entertaint", "Ahtlete"]
+          .map(
+            (e) => Container(
+              margin: const EdgeInsets.only(right: 10, top: 10),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 3,
+              ),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  gradient: LinearGradient(
+                    colors: e == "Spotify"
+                        ? [
+                            primaryColor.withOpacity(0.7),
+                            secondaryColor,
+                          ]
+                        : [
+                            Colors.grey.shade700,
+                            Colors.grey.shade400,
+                          ],
+                    tileMode: TileMode.mirror,
+                  )),
+              child: Text(
+                e,
+                style: textTheme.bodySmall?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 }

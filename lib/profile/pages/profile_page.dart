@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:ui';
 
+import 'package:chat_bloc/profile/pages/update_profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -237,16 +238,24 @@ class _ProfilePageState extends State<ProfilePage> {
                             Positioned(
                               top: 0,
                               right: 0,
-                              child: Container(
-                                padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                child: const Icon(
-                                  CupertinoIcons.pencil,
-                                  color: primaryColor,
-                                  size: 25,
+                              child: InkWell(
+                                onTap: () {
+                                  push(
+                                    context: context,
+                                    page: const UpdateProfilePage(),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(50),
+                                  ),
+                                  child: const Icon(
+                                    CupertinoIcons.pencil,
+                                    color: primaryColor,
+                                    size: 25,
+                                  ),
                                 ),
                               ),
                             ),

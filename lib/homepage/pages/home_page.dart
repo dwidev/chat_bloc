@@ -392,12 +392,12 @@ class _HomePageState extends State<HomePage> {
 class CardActionsWidget extends StatelessWidget {
   const CardActionsWidget({
     Key? key,
-    required this.onSkipPressed,
-    required this.onLovePressed,
+    this.onSkipPressed,
+    this.onLovePressed,
   }) : super(key: key);
 
-  final VoidCallback onSkipPressed;
-  final VoidCallback onLovePressed;
+  final VoidCallback? onSkipPressed;
+  final VoidCallback? onLovePressed;
 
   @override
   Widget build(BuildContext context) {
@@ -409,11 +409,13 @@ class CardActionsWidget extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
-            color: softblueColor,
+            color: onSkipPressed != null
+                ? softblueColor
+                : darkColor.withOpacity(0.3),
           ),
-          child: const Icon(
+          child: Icon(
             CupertinoIcons.refresh_bold,
-            color: blackColor,
+            color: onSkipPressed != null ? blackColor : whiteColor,
             size: 20,
           ),
         ),
@@ -424,11 +426,13 @@ class CardActionsWidget extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
-              color: secondaryColor,
+              color: onSkipPressed != null
+                  ? secondaryColor
+                  : darkColor.withOpacity(0.3),
             ),
-            child: const Icon(
+            child: Icon(
               CupertinoIcons.clear,
-              color: primaryColor,
+              color: onSkipPressed != null ? primaryColor : whiteColor,
               size: 40,
             ),
           ),
@@ -440,7 +444,9 @@ class CardActionsWidget extends StatelessWidget {
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
-              color: primaryColor,
+              color: onSkipPressed != null
+                  ? primaryColor
+                  : darkColor.withOpacity(0.3),
             ),
             child: const Icon(
               CupertinoIcons.heart_fill,
@@ -454,11 +460,13 @@ class CardActionsWidget extends StatelessWidget {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
-            color: softyellowColor,
+            color: onSkipPressed != null
+                ? softblueColor
+                : darkColor.withOpacity(0.3),
           ),
-          child: const Icon(
+          child: Icon(
             CupertinoIcons.gift_fill,
-            color: blackColor,
+            color: onSkipPressed != null ? primaryColor : whiteColor,
             size: 20,
           ),
         ),

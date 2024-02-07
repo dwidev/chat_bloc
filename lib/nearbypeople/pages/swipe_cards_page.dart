@@ -31,6 +31,7 @@ class _SwipeCardsPageState extends State<SwipeCardsPage>
     final textTheme = Theme.of(context).textTheme;
 
     final matchEngine = MatchEngineCubit(swipeItems: dummyUsers);
+
     final appBar = AppBar(
       backgroundColor: Colors.transparent,
       titleTextStyle: textTheme.labelLarge,
