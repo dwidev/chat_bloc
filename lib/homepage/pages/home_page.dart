@@ -461,12 +461,12 @@ class CardActionsWidget extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
             color: onSkipPressed != null
-                ? softblueColor
+                ? softyellowColor
                 : darkColor.withOpacity(0.3),
           ),
           child: Icon(
             CupertinoIcons.gift_fill,
-            color: onSkipPressed != null ? primaryColor : whiteColor,
+            color: onSkipPressed != null ? blackColor : whiteColor,
             size: 20,
           ),
         ),
