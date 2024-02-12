@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'auth/pages/login_page.dart';
 import 'chat/data/datasources/http_datasource.dart';
 import 'chat/data/datasources/ws_datasource.dart';
 import 'chat/data/repository/chat_repository.dart';
 import 'core/theme/theme.dart';
 import 'homepage/cubit/bottom_navigation_menu/bottom_navigation_menu_cubit.dart';
-import 'homepage/pages/home_page.dart';
 import 'nearbypeople/cubit/details_card_cubit.dart';
 
 void main() {
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             BlocProvider(create: (context) => DetailsCardCubit()),
             BlocProvider(create: (context) => BottomNavigationMenuCubit())
           ],
-          child: const HomePage(),
+          child: const LoginPage(),
         ),
       ),
     );
