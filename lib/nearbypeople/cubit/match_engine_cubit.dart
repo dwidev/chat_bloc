@@ -3,14 +3,21 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:chat_bloc/homepage/pages/home_page.dart';
 import 'package:chat_bloc/nearbypeople/cubit/control_card_enum.dart';
 
 import 'control_card_cubit.dart';
 
 class MatchEngineCubit extends Cubit<MatchEngineState>
     implements ControlCardCubitDelegate {
-  MatchEngineCubit({required List<String> swipeItems})
-      : super(MatchEngineInitial(swipeItems));
+  MatchEngineCubit() : super(const MatchEngineInitial([]));
+
+  Future<void> loadData() async {
+    emit(state.copyWith(isLoading: true));
+    await Future.delayed(const Duration(seconds: 5), () {
+      emit(state.copyWith(swipeItems: dummyUsers, isLoading: false));
+    });
+  }
 
   void cycleCard() {
     final newState = state.copyWith(
@@ -39,6 +46,7 @@ class MatchEngineCubit extends Cubit<MatchEngineState>
 
 @immutable
 class MatchEngineState extends Equatable {
+  final bool isLoading;
   final List<String> swipeItems;
   final int currentCardIndex;
   final int nextCardIndex;
@@ -48,6 +56,7 @@ class MatchEngineState extends Equatable {
   final CardSwipeType? onActionTap;
 
   const MatchEngineState({
+    required this.isLoading,
     required this.swipeItems,
     required this.currentCardIndex,
     required this.nextCardIndex,
@@ -65,6 +74,7 @@ class MatchEngineState extends Equatable {
   @override
   List<Object?> get props {
     return [
+      isLoading,
       swipeItems,
       currentCardIndex,
       nextCardIndex,
@@ -74,6 +84,7 @@ class MatchEngineState extends Equatable {
   }
 
   MatchEngineState copyWith({
+    bool? isLoading,
     List<String>? swipeItems,
     int? currentCardIndex,
     int? nextCardIndex,
@@ -81,6 +92,7 @@ class MatchEngineState extends Equatable {
     ValueGetter<CardSwipeType?>? onActionTap,
   }) {
     return MatchEngineState(
+      isLoading: isLoading ?? this.isLoading,
       swipeItems: swipeItems ?? this.swipeItems,
       currentCardIndex: currentCardIndex ?? this.currentCardIndex,
       nextCardIndex: nextCardIndex ?? this.nextCardIndex,
@@ -100,5 +112,7 @@ final class MatchEngineInitial extends MatchEngineState {
           nextCardIndex: 1,
           swipeItems: swipeItems,
           nextCardScale: 0.9,
+          isLoading: false,
+          onActionTap: CardSwipeType.initial,
         );
 }

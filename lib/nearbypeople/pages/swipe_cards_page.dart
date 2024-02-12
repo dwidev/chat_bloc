@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../core/theme/colors.dart';
 import '../../homepage/pages/home_page.dart';
@@ -21,6 +22,16 @@ class _SwipeCardsPageState extends State<SwipeCardsPage>
     with AutomaticKeepAliveClientMixin<SwipeCardsPage> {
   @override
   bool get wantKeepAlive => true;
+  late MatchEngineCubit matchEngine;
+
+  @override
+  void initState() {
+    matchEngine = MatchEngineCubit();
+    Future.microtask(() {
+      matchEngine.loadData();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +40,6 @@ class _SwipeCardsPageState extends State<SwipeCardsPage>
     final size = MediaQuery.of(context).size;
     final detailsCardCubit = context.read<DetailsCardCubit>();
     final textTheme = Theme.of(context).textTheme;
-
-    final matchEngine = MatchEngineCubit(swipeItems: dummyUsers);
 
     final appBar = AppBar(
       backgroundColor: Colors.transparent,
@@ -83,12 +92,25 @@ class _SwipeCardsPageState extends State<SwipeCardsPage>
     return Scaffold(
       // appBar: appBar,
       body: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
           appBar,
           BlocProvider<MatchEngineCubit>(
             create: (context) => matchEngine,
             child: BlocBuilder<MatchEngineCubit, MatchEngineState>(
               builder: (context, state) {
+                if (state.isLoading) {
+                  return SpinKitRipple(
+                    size: 150,
+                    duration: const Duration(seconds: 2),
+                    itemBuilder: (context, index) {
+                      return CircleAvatar(
+                        backgroundImage: NetworkImage(dummyUsers[2]),
+                        radius: 45,
+                      );
+                    },
+                  );
+                }
                 return Stack(
                   alignment: Alignment.center,
                   children: [

@@ -1,5 +1,3 @@
-import 'homepage/cubit/bottom_navigation_menu/bottom_navigation_menu_cubit.dart';
-import 'homepage/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,6 +5,8 @@ import 'chat/data/datasources/http_datasource.dart';
 import 'chat/data/datasources/ws_datasource.dart';
 import 'chat/data/repository/chat_repository.dart';
 import 'core/theme/theme.dart';
+import 'homepage/cubit/bottom_navigation_menu/bottom_navigation_menu_cubit.dart';
+import 'homepage/pages/home_page.dart';
 import 'nearbypeople/cubit/details_card_cubit.dart';
 
 void main() {
