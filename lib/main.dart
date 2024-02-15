@@ -28,13 +28,19 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Flutter Dating App animation with Bloc',
         theme: lightTheme,
-        home: MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (context) => DetailsCardCubit()),
-            BlocProvider(create: (context) => BottomNavigationMenuCubit())
-          ],
-          child: const LoginPage(),
-        ),
+        initialRoute: "/",
+        routes: {
+          "/": (context) => const LoginPage(),
+        },
+        builder: (context, child) {
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => DetailsCardCubit()),
+              BlocProvider(create: (context) => BottomNavigationMenuCubit())
+            ],
+            child: child ?? const Offstage(),
+          );
+        },
       ),
     );
   }
