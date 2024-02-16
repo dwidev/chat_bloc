@@ -1,6 +1,6 @@
-import 'package:chat_bloc/core/theme/colors.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../core/theme/colors.dart';
 
 class CompleteGenderViewPage extends StatefulWidget {
   const CompleteGenderViewPage({
@@ -12,6 +12,8 @@ class CompleteGenderViewPage extends StatefulWidget {
 }
 
 class _CompleeGendereViewPageState extends State<CompleteGenderViewPage> {
+  int? selectedGender;
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -44,31 +46,43 @@ class _CompleeGendereViewPageState extends State<CompleteGenderViewPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [0, 1]
                   .map(
-                    (e) => Container(
-                      margin: const EdgeInsets.only(bottom: 30),
-                      width: size.width / 2.5,
-                      height: size.width / 2.5,
-                      decoration: BoxDecoration(
-                        color: e == 1 ? primaryColor : darkLightColor,
-                        borderRadius: BorderRadius.circular(size.width),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            e == 0 ? Icons.male : Icons.female,
-                            size: 80,
-                            color: e == 1 ? whiteColor : blackColor,
-                          ),
-                          Text(
-                            e == 0 ? "Male" : "Female",
-                            style: textTheme.bodyLarge?.copyWith(
-                              color: e == 1 ? whiteColor : blackColor,
-                              fontSize: 20,
+                    (e) => InkWell(
+                      onTap: () {
+                        setState(() {
+                          selectedGender = e;
+                        });
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 30),
+                        width: size.width / 2.5,
+                        height: size.width / 2.5,
+                        decoration: BoxDecoration(
+                          color: e == selectedGender
+                              ? primaryColor
+                              : darkLightColor,
+                          borderRadius: BorderRadius.circular(size.width),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              e == 1 ? Icons.male : Icons.female,
+                              size: 80,
+                              color:
+                                  e == selectedGender ? whiteColor : blackColor,
                             ),
-                          ),
-                        ],
+                            Text(
+                              e == 0 ? "Male" : "Female",
+                              style: textTheme.bodyLarge?.copyWith(
+                                color: e == selectedGender
+                                    ? whiteColor
+                                    : blackColor,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   )
