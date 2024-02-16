@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/theme/colors.dart';
 
@@ -28,7 +29,10 @@ class _CompleeGendereViewPageState extends State<CompleteGenderViewPage> {
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
-        ),
+        ).animate().fade(
+              delay: const Duration(milliseconds: 200),
+              duration: const Duration(seconds: 1),
+            ),
         SizedBox(
           width: size.width / 1.2,
           child: Text(
@@ -36,7 +40,10 @@ class _CompleeGendereViewPageState extends State<CompleteGenderViewPage> {
             style: textTheme.bodySmall?.copyWith(),
             textAlign: TextAlign.center,
           ),
-        ),
+        ).animate().fade(
+              delay: const Duration(milliseconds: 200),
+              duration: const Duration(seconds: 1),
+            ),
         const SizedBox(height: 50),
         Expanded(
           child: Padding(
@@ -46,45 +53,66 @@ class _CompleeGendereViewPageState extends State<CompleteGenderViewPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [0, 1]
                   .map(
-                    (e) => InkWell(
-                      onTap: () {
-                        setState(() {
-                          selectedGender = e;
-                        });
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 30),
-                        width: size.width / 2.5,
-                        height: size.width / 2.5,
-                        decoration: BoxDecoration(
-                          color: e == selectedGender
-                              ? primaryColor
-                              : darkLightColor,
-                          borderRadius: BorderRadius.circular(size.width),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              e == 1 ? Icons.male : Icons.female,
-                              size: 80,
-                              color:
-                                  e == selectedGender ? whiteColor : blackColor,
-                            ),
-                            Text(
-                              e == 0 ? "Male" : "Female",
-                              style: textTheme.bodyLarge?.copyWith(
+                    (e) => Padding(
+                      padding: const EdgeInsets.only(bottom: 30),
+                      child: Material(
+                        borderRadius: BorderRadius.circular(size.width),
+                        child: InkWell(
+                            borderRadius: BorderRadius.circular(size.width),
+                            onTap: () {
+                              setState(() {
+                                selectedGender = e;
+                              });
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.fastEaseInToSlowEaseOut,
+                              width: size.width / 2.5,
+                              height: size.width / 2.5,
+                              decoration: BoxDecoration(
                                 color: e == selectedGender
-                                    ? whiteColor
-                                    : blackColor,
-                                fontSize: 20,
+                                    ? primaryColor
+                                    : darkLightColor,
+                                borderRadius: BorderRadius.circular(size.width),
                               ),
-                            ),
-                          ],
-                        ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    e == 1 ? Icons.male : Icons.female,
+                                    size: 80,
+                                    color: e == selectedGender
+                                        ? whiteColor
+                                        : blackColor,
+                                  ),
+                                  Text(
+                                    e == 0 ? "Male" : "Female",
+                                    style: textTheme.bodyLarge?.copyWith(
+                                      color: e == selectedGender
+                                          ? whiteColor
+                                          : blackColor,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )),
                       ),
-                    ),
+                    )
+                        .animate()
+                        .fade(
+                          delay: const Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 500),
+                        )
+                        .slide(
+                          begin: e == 0
+                              ? const Offset(-10, 0)
+                              : const Offset(10, 0),
+                          delay: const Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.fastLinearToSlowEaseIn,
+                        ),
                   )
                   .toList(),
             ),

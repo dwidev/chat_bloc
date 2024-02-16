@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 import '../../core/theme/colors.dart';
@@ -29,7 +30,10 @@ class _CompleeGendereViewPageState extends State<CompleteAgeViewPage> {
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
-        ),
+        ).animate().fade(
+              delay: const Duration(milliseconds: 200),
+              duration: const Duration(seconds: 1),
+            ),
         SizedBox(
           width: size.width / 1.2,
           child: Text(
@@ -37,7 +41,10 @@ class _CompleeGendereViewPageState extends State<CompleteAgeViewPage> {
             style: textTheme.bodySmall?.copyWith(),
             textAlign: TextAlign.center,
           ),
-        ),
+        ).animate().fade(
+              delay: const Duration(milliseconds: 200),
+              duration: const Duration(seconds: 1),
+            ),
         Expanded(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -56,7 +63,7 @@ class _CompleeGendereViewPageState extends State<CompleteAgeViewPage> {
                   },
                   infiniteLoop: true,
                   itemCount: 5,
-                  itemHeight: 80,
+                  itemHeight: 70,
                   selectedTextStyle: textTheme.labelLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 50,
@@ -68,7 +75,10 @@ class _CompleeGendereViewPageState extends State<CompleteAgeViewPage> {
                   ),
                   // selectedTextStyle: textTheme.titleLarge,
                 ),
-              ),
+              ).animate().fade(
+                    delay: const Duration(milliseconds: 200),
+                    duration: const Duration(seconds: 1),
+                  )
             ],
           ),
         ),

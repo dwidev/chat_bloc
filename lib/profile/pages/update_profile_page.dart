@@ -4,6 +4,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../core/widget/photos_widget.dart';
 import '../../homepage/pages/home_page.dart';
 import '../../nearbypeople/pages/nearby_people_card_detail_view.dart';
 
@@ -91,78 +92,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          // padding: const EdgeInsets.all(30),
-                          itemCount: dummyUsers.length - 7,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            crossAxisSpacing: 15,
-                            mainAxisSpacing: 20,
-                            childAspectRatio: 0.7,
-                          ),
-                          itemBuilder: (context, index) {
-                            if (index < 5) {
-                              return ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    // color: darkColor,
-                                    image: DecorationImage(
-                                      image: NetworkImage(dummyUsers[index]),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }
-
-                            return InkWell(
-                              onTap: () {
-                                print("UPLOAD FOTO");
-                              },
-                              child: DottedBorder(
-                                borderType: BorderType.RRect,
-                                dashPattern: const [6, 3, 6, 3],
-                                padding: EdgeInsets.zero,
-                                radius: const Radius.circular(10),
-                                color: darkColor.withOpacity(0.3),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: darkColor.withOpacity(0.04),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.max,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const Icon(
-                                          CupertinoIcons.camera,
-                                          color: blackColor,
-                                          size: 20,
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          "Upload Foto",
-                                          style: textTheme.bodySmall?.copyWith(
-                                            color: blackColor,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+                        const PhotosPickerWidget(),
                       ],
                     ),
                   ),

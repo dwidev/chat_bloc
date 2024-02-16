@@ -8,9 +8,11 @@ class GradientButton extends StatelessWidget {
     Key? key,
     required this.child,
     required this.onPressed,
+    this.width,
     this.gradient,
   }) : super(key: key);
 
+  final double? width;
   final Widget child;
   final VoidCallback onPressed;
   final Gradient? gradient;
@@ -19,8 +21,9 @@ class GradientButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Container(
-      width: size.width / 1.3,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 200),
+      width: width ?? size.width / 1.3,
       height: 48,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),

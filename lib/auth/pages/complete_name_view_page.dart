@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class CompleteNameViewPage extends StatefulWidget {
   const CompleteNameViewPage({
@@ -24,11 +25,17 @@ class _CompleteNameViewPageState extends State<CompleteNameViewPage> {
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),
-          ),
+          ).animate().fade(
+                delay: const Duration(milliseconds: 200),
+                duration: const Duration(seconds: 1),
+              ),
           Text(
             "Let's get to know each other",
             style: textTheme.bodySmall?.copyWith(),
-          ),
+          ).animate().fade(
+                delay: const Duration(milliseconds: 200),
+                duration: const Duration(seconds: 1),
+              ),
           const SizedBox(height: 50),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -42,7 +49,10 @@ class _CompleteNameViewPageState extends State<CompleteNameViewPage> {
                 decoration: const InputDecoration(hintText: "Your name...."),
               ),
             ),
-          ),
+          ).animate().fade(
+                delay: const Duration(milliseconds: 200),
+                duration: const Duration(seconds: 1),
+              ),
           const SizedBox(height: 50),
         ],
       ),

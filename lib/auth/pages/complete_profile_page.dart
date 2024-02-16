@@ -1,12 +1,17 @@
 import 'dart:math';
 
+import 'package:chat_bloc/auth/pages/complete_upload_photo_view_page.dart';
 import 'package:chat_bloc/core/theme/colors.dart';
 import 'package:chat_bloc/core/widget/gradient_button.dart';
 import 'package:chat_bloc/homepage/pages/home_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import 'complete_age_view_page.dart';
 import 'complete_gender_view_page.dart';
+import 'complete_interest_view_page.dart';
+import 'complete_looking_for_view_page.dart';
 import 'complete_name_view_page.dart';
 import 'login_page.dart';
 
@@ -23,23 +28,50 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   late Color linearColor;
   late PageController pageController;
 
+  static const pages = [
+    CompleteNameViewPage(),
+    CompleteGenderViewPage(),
+    CompleteAgeViewPage(),
+    CompleteLookingForViewPage(),
+    CompleteInterstViewPage(),
+    CompleteUploadPhotoViewPage(),
+  ];
+
+  int get pageLenth => pages.length;
+
   @override
   void initState() {
-    indicatorProgres = 1 / 5;
-    linearColor = secondaryColor;
+    indicatorProgres = 1 / pageLenth;
+    linearColor = primaryColor;
     pageController = PageController();
     super.initState();
   }
 
   void onNext() {
-    if (pageIndex == 4) {
+    if (pageIndex == pageLenth - 1) {
       push(context: context, page: const HomePage());
       return;
     }
     setState(() {
-      linearColor = linearColor.withBlue(Random().nextInt(255) + 50);
-      indicatorProgres += 1 / 5;
+      linearColor = primaryColor.withAlpha(Random().nextInt(255));
+      indicatorProgres += 1 / pageLenth;
       pageIndex = pageIndex + 1;
+    });
+    pageController.animateToPage(
+      pageIndex,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.fastEaseInToSlowEaseOut,
+    );
+  }
+
+  void onPrev() {
+    if (pageIndex == 0) {
+      return;
+    }
+    setState(() {
+      linearColor = primaryColor.withAlpha(Random().nextInt(255) + 50);
+      indicatorProgres -= 1 / pageLenth;
+      pageIndex = pageIndex - 1;
     });
     pageController.animateToPage(
       pageIndex,
@@ -79,31 +111,59 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                   margin: const EdgeInsets.symmetric(vertical: 20),
                   width: 300,
                   height: 10,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: LinearProgressIndicator(
-                      value: indicatorProgres,
-                      backgroundColor: secondaryColor.withOpacity(0.5),
-                    ),
+                  child: TweenAnimationBuilder(
+                    tween: Tween<double>(begin: 0, end: indicatorProgres),
+                    duration: const Duration(milliseconds: 500),
+                    builder: (context, value, child) {
+                      return ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        child: LinearProgressIndicator(
+                          value: value,
+                          backgroundColor: secondaryColor.withOpacity(0.5),
+                        ),
+                      );
+                    },
                   ),
                 ),
-              ),
+              ).animate().slide(
+                    duration: const Duration(milliseconds: 200),
+                  ),
               PageView(
                 controller: pageController,
                 physics: const NeverScrollableScrollPhysics(),
-                children: const [
-                  CompleteNameViewPage(),
-                  CompleteGenderViewPage(),
-                  CompleteAgeViewPage(),
-                  CompleteGenderViewPage(),
-                  CompleteNameViewPage(),
-                ],
+                children: pages,
               ),
               Positioned(
                 bottom: 20,
+                left: 30,
+                child: AnimatedOpacity(
+                  opacity: pageIndex > 0 ? 1 : 0,
+                  duration: const Duration(milliseconds: 500),
+                  child: InkWell(
+                    onTap: onPrev,
+                    child: Container(
+                      padding: const EdgeInsets.all(17),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: const Icon(CupertinoIcons.back, color: blackColor),
+                    ),
+                  ).animate().fade(
+                        delay: const Duration(milliseconds: 200),
+                        duration: const Duration(seconds: 1),
+                      ),
+                ),
+              ),
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 500),
+                right: pageIndex > 0 ? 30 : 50,
+                bottom: 20,
                 child: GradientButton(
-                  gradient: const LinearGradient(
-                    colors: [Colors.black, primaryColor],
+                  width: pageIndex > 0 ? 100 : null,
+                  gradient: LinearGradient(
+                    colors: [primaryColor, darkColor],
                   ),
                   onPressed: onNext,
                   child: Text(
@@ -112,7 +172,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                       color: Colors.white,
                     ),
                   ),
-                ),
+                ).animate().fade(
+                      delay: const Duration(milliseconds: 200),
+                      duration: const Duration(seconds: 1),
+                    ),
               )
             ],
           ),
