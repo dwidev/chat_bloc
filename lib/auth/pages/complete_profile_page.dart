@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+import 'allow_permission_location_page.dart';
 import 'complete_age_view_page.dart';
 import 'complete_gender_view_page.dart';
 import 'complete_interest_view_page.dart';
@@ -49,7 +50,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
   void onNext() {
     if (pageIndex == pageLenth - 1) {
-      push(context: context, page: const HomePage());
+      push(context: context, page: const AllowPermissionLocationPage());
       return;
     }
     setState(() {

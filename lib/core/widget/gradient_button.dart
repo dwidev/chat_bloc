@@ -6,8 +6,8 @@ import '../theme/colors.dart';
 class GradientButton extends StatelessWidget {
   const GradientButton({
     Key? key,
-    required this.child,
     required this.onPressed,
+    required this.child,
     this.width,
     this.gradient,
   }) : super(key: key);
