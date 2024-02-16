@@ -5,6 +5,7 @@ import 'package:chat_bloc/core/widget/gradient_button.dart';
 import 'package:chat_bloc/homepage/pages/home_page.dart';
 import 'package:flutter/material.dart';
 
+import 'complete_age_view_page.dart';
 import 'complete_gender_view_page.dart';
 import 'complete_name_view_page.dart';
 import 'login_page.dart';
@@ -93,7 +94,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                 children: const [
                   CompleteNameViewPage(),
                   CompleteGenderViewPage(),
-                  CompleteNameViewPage(),
+                  CompleteAgeViewPage(),
                   CompleteGenderViewPage(),
                   CompleteNameViewPage(),
                 ],
