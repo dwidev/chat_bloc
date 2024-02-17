@@ -14,7 +14,6 @@ import 'complete_gender_view_page.dart';
 import 'complete_interest_view_page.dart';
 import 'complete_looking_for_view_page.dart';
 import 'complete_name_view_page.dart';
-import 'login_page.dart';
 
 class CompleteProfilePage extends StatefulWidget {
   const CompleteProfilePage({super.key});
@@ -43,7 +42,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
   @override
   void initState() {
     indicatorProgres = 1 / pageLenth;
-    linearColor = primaryColor;
+    linearColor = softPinkColor;
     pageController = PageController();
     super.initState();
   }
@@ -127,9 +126,13 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                     },
                   ),
                 ),
-              ).animate().slide(
+              )
+                  .animate()
+                  .slide(
+                    delay: const Duration(milliseconds: 500),
                     duration: const Duration(milliseconds: 200),
-                  ),
+                  )
+                  .fade(),
               PageView(
                 controller: pageController,
                 physics: const NeverScrollableScrollPhysics(),

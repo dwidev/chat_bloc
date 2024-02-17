@@ -1,10 +1,10 @@
-import 'package:chat_bloc/homepage/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../core/constant/png_assets.dart';
+import '../../core/constant/contants.dart';
 import '../../core/theme/colors.dart';
 import '../../core/widget/gradient_button.dart';
+import '../../homepage/pages/home_page.dart';
 
 class AllowPermissionLocationPage extends StatefulWidget {
   const AllowPermissionLocationPage({super.key});
@@ -26,10 +26,10 @@ class _AllowPermissionLocationPageState
         duration: const Duration(milliseconds: 500),
         width: size.width,
         height: size.height,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              darkColor,
+              softPinkColor,
               softyellowColor,
             ],
             begin: Alignment.bottomCenter,
@@ -68,7 +68,7 @@ class _AllowPermissionLocationPageState
                     Text(
                       "Choose your location to start find people around you.",
                       textAlign: TextAlign.center,
-                      style: textTheme.bodyMedium?.copyWith(color: whiteColor),
+                      style: textTheme.bodyMedium?.copyWith(),
                     ),
                   ],
                 ),
@@ -78,6 +78,10 @@ class _AllowPermissionLocationPageState
                   ),
               const SizedBox(height: 20),
               GradientButton(
+                gradient: LinearGradient(colors: [
+                  primaryColor,
+                  darkColor,
+                ]),
                 onPressed: () {
                   push(context: context, page: const HomePage());
                 },

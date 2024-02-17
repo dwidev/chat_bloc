@@ -1,12 +1,12 @@
-import 'package:chat_bloc/auth/pages/complete_profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../core/constant/png_assets.dart';
+import '../../core/constant/contants.dart';
 import '../../core/theme/colors.dart';
 import '../../core/widget/gradient_button.dart';
 import '../../homepage/pages/home_page.dart';
+import 'complete_profile_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,7 +15,10 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
+  late AnimationController animationController =
+      AnimationController(vsync: this);
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -62,9 +65,11 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-            ),
+            ).animate().slide(delay: const Duration(milliseconds: 500)).fade(),
             const SizedBox(height: 40),
-            const IntroWidget(),
+            IntroWidget(
+              animationController: animationController,
+            ),
             const SizedBox(height: 40),
             SizedBox(
               width: size.width / 1.3,
@@ -73,7 +78,10 @@ class _LoginPageState extends State<LoginPage> {
                 style: textTheme.bodySmall?.copyWith(),
                 textAlign: TextAlign.center,
               ),
-            ),
+            )
+                .animate()
+                .slideY(begin: 2, delay: const Duration(milliseconds: 500))
+                .fade(),
             const SizedBox(height: 40),
             GradientButton(
               onPressed: () {
@@ -94,7 +102,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-            ),
+            )
+                .animate()
+                .boxShadow(borderRadius: BorderRadius.circular(20))
+                .fade(delay: const Duration(milliseconds: 600)),
             const SizedBox(height: 10),
             GradientButton(
               onPressed: () {
@@ -121,7 +132,26 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-            ),
+            )
+                .animate()
+                .boxShadow(borderRadius: BorderRadius.circular(20))
+                .fade(delay: const Duration(milliseconds: 600)),
+            const SizedBox(height: 15),
+            SizedBox(
+              width: size.width / 2,
+              child: TextButton(
+                onPressed: () {
+                  animationController
+                    ..reset()
+                    ..forward();
+                },
+                child: Text(
+                  "Register or login with Phone number dan email",
+                  style: textTheme.bodySmall?.copyWith(),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ).animate().fade(delay: const Duration(milliseconds: 600)),
           ],
         ),
       ),
@@ -132,12 +162,16 @@ class _LoginPageState extends State<LoginPage> {
 class IntroWidget extends StatelessWidget {
   const IntroWidget({
     super.key,
+    required this.animationController,
   });
+
+  final AnimationController animationController;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Stack(
+      alignment: Alignment.center,
       children: [
         Container(
           width: size.width / 1.3,
@@ -148,7 +182,14 @@ class IntroWidget extends StatelessWidget {
               500 / 2,
             ),
           ),
-        ),
+        )
+            .animate(controller: animationController)
+            .scale(
+              delay: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.fastLinearToSlowEaseIn,
+            )
+            .fade(),
         const Positioned(
           top: 100,
           left: 20,
@@ -156,7 +197,15 @@ class IntroWidget extends StatelessWidget {
             backgroundColor: softyellowColor,
             radius: 10,
           ),
-        ),
+        )
+            .animate(controller: animationController)
+            .slide(
+              begin: const Offset(5, 0.5),
+              delay: const Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.fastLinearToSlowEaseIn,
+            )
+            .fade(),
         Positioned(
           top: 0,
           right: 50,
@@ -167,66 +216,113 @@ class IntroWidget extends StatelessWidget {
               radius: 5,
             ),
           ),
-        ),
-        Positioned(
+        )
+            .animate(controller: animationController)
+            .slide(
+              begin: const Offset(-5, 15),
+              delay: const Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.fastLinearToSlowEaseIn,
+            )
+            .fade(),
+        const Positioned(
+          left: 0,
           top: 20,
           child: CircleAvatar(
-            backgroundImage: NetworkImage(
-              dummyUsers[2],
-            ),
+            backgroundImage: AssetImage(man1),
           ),
-        ),
+        )
+            .animate(controller: animationController)
+            .slide(
+              begin: const Offset(3, 2.8),
+              delay: const Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.fastLinearToSlowEaseIn,
+            )
+            .fade(),
         Positioned(
           bottom: 60,
-          right: 50,
+          right: 10,
           child: Transform.translate(
-            offset: const Offset(50, 0),
+            offset: const Offset(0, 0),
             child: const CircleAvatar(
               backgroundColor: softyellowColor,
               radius: 5,
             ),
           ),
-        ),
-        Positioned(
+        )
+            .animate(controller: animationController)
+            .slide(
+              begin: const Offset(-13, -5),
+              delay: const Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.fastLinearToSlowEaseIn,
+            )
+            .fade(),
+        const Positioned(
+          left: 0,
           bottom: 20,
           child: CircleAvatar(
-            backgroundColor: Colors.transparent,
-            backgroundImage: NetworkImage(
-              dummyUsers[8],
-            ),
+            radius: 23,
+            backgroundImage: AssetImage(woman2),
           ),
-        ).animate().fade(duration: const Duration(seconds: 1)),
-        Positioned(
+        )
+            .animate(controller: animationController)
+            .slide(
+              begin: const Offset(3, -2.8),
+              delay: const Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.fastLinearToSlowEaseIn,
+            )
+            .fade(),
+        const Positioned(
           top: 20,
           right: 0,
           child: CircleAvatar(
             radius: 25,
-            backgroundImage: NetworkImage(
-              dummyUsers[4],
-            ),
+            backgroundImage: AssetImage(woman3),
           ),
-        ),
-        Positioned(
+        )
+            .animate(controller: animationController)
+            .slide(
+              begin: const Offset(-2.5, 2.3),
+              delay: const Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.fastLinearToSlowEaseIn,
+            )
+            .fade(),
+        const Positioned(
           right: 20,
           bottom: 0,
           child: CircleAvatar(
             radius: 30,
-            backgroundImage: NetworkImage(
-              dummyUsers[6],
-            ),
+            backgroundImage: AssetImage(man2),
           ),
-        ),
-        Positioned(
+        )
+            .animate(controller: animationController)
+            .slide(
+              begin: const Offset(-1.8, -2.8),
+              delay: const Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.fastLinearToSlowEaseIn,
+            )
+            .fade(),
+        const Positioned(
           top: 0,
           bottom: 0,
           left: 50,
           right: 50,
           child: CircleAvatar(
-            backgroundImage: NetworkImage(
-              dummyUsers[3],
-            ),
+            backgroundImage: AssetImage(woman),
           ),
-        ),
+        )
+            .animate(controller: animationController)
+            .scale(
+              delay: const Duration(milliseconds: 250),
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.fastLinearToSlowEaseIn,
+            )
+            .fade(),
       ],
     );
   }

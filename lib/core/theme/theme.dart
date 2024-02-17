@@ -26,5 +26,10 @@ ThemeData get lightTheme {
       border: InputBorder.none,
       hintStyle: textTheme.bodySmall?.copyWith(fontSize: 13),
     ),
+    textButtonTheme: TextButtonThemeData(
+      style: ButtonStyle(
+        padding: MaterialStateProperty.all(EdgeInsets.zero),
+      ),
+    ),
   );
 }
