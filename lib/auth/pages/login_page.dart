@@ -186,7 +186,7 @@ class IntroWidget extends StatelessWidget {
             .animate(controller: animationController)
             .scale(
               delay: const Duration(milliseconds: 200),
-              duration: const Duration(milliseconds: 500),
+              duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
             .fade(),
@@ -202,7 +202,7 @@ class IntroWidget extends StatelessWidget {
             .slide(
               begin: const Offset(5, 0.5),
               delay: const Duration(milliseconds: 500),
-              duration: const Duration(milliseconds: 500),
+              duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
             .fade(),
@@ -221,7 +221,7 @@ class IntroWidget extends StatelessWidget {
             .slide(
               begin: const Offset(-5, 15),
               delay: const Duration(milliseconds: 500),
-              duration: const Duration(milliseconds: 500),
+              duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
             .fade(),
@@ -236,7 +236,7 @@ class IntroWidget extends StatelessWidget {
             .slide(
               begin: const Offset(3, 2.8),
               delay: const Duration(milliseconds: 500),
-              duration: const Duration(milliseconds: 500),
+              duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
             .fade(),
@@ -255,7 +255,7 @@ class IntroWidget extends StatelessWidget {
             .slide(
               begin: const Offset(-13, -5),
               delay: const Duration(milliseconds: 500),
-              duration: const Duration(milliseconds: 500),
+              duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
             .fade(),
@@ -271,7 +271,7 @@ class IntroWidget extends StatelessWidget {
             .slide(
               begin: const Offset(3, -2.8),
               delay: const Duration(milliseconds: 500),
-              duration: const Duration(milliseconds: 500),
+              duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
             .fade(),
@@ -287,7 +287,7 @@ class IntroWidget extends StatelessWidget {
             .slide(
               begin: const Offset(-2.5, 2.3),
               delay: const Duration(milliseconds: 500),
-              duration: const Duration(milliseconds: 500),
+              duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
             .fade(),
@@ -303,7 +303,7 @@ class IntroWidget extends StatelessWidget {
             .slide(
               begin: const Offset(-1.8, -2.8),
               delay: const Duration(milliseconds: 500),
-              duration: const Duration(milliseconds: 500),
+              duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
             .fade(),
@@ -319,7 +319,7 @@ class IntroWidget extends StatelessWidget {
             .animate(controller: animationController)
             .scale(
               delay: const Duration(milliseconds: 250),
-              duration: const Duration(milliseconds: 200),
+              duration: 1.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
             .fade(),
