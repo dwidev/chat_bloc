@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'auth/pages/login_page.dart';
+import 'auth/pages/spalsh_page.dart';
 import 'chat/data/datasources/http_datasource.dart';
 import 'chat/data/datasources/ws_datasource.dart';
 import 'chat/data/repository/chat_repository.dart';
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         theme: lightTheme,
         initialRoute: "/",
         routes: {
-          "/": (context) => const LoginPage(),
+          "/": (context) => const SplashPage(),
         },
         builder: (context, child) {
           return MultiBlocProvider(

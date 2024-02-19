@@ -1,3 +1,4 @@
+import 'package:chat_bloc/core/extensions/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -19,6 +20,12 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   late AnimationController animationController =
       AnimationController(vsync: this);
 
+  late AnimationController animationLogoController =
+      AnimationController(vsync: this);
+
+  late AnimationController animationDescController =
+      AnimationController(vsync: this);
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -32,40 +39,90 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            SizedBox(
-              width: size.width / 1.8,
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: TextSpan(
-                  style: textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  children: [
-                    const TextSpan(
-                      text: "Discover ",
-                    ),
-                    TextSpan(
-                      text: "Love ",
+            Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  width: size.width / 1.8,
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
                       style: textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
+                      ),
+                      children: [
+                        const TextSpan(
+                          text: "Discover ",
+                        ),
+                        TextSpan(
+                          text: "Love ",
+                          style: textTheme.bodyLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor,
+                            fontSize: 25,
+                          ),
+                        ),
+                        const TextSpan(
+                          text: "where your story",
+                        ),
+                        TextSpan(
+                          text: " begins.",
+                          style: textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                    .animate()
+                    .slide(
+                      delay: 1500.ms,
+                      curve: Curves.fastEaseInToSlowEaseOut,
+                    )
+                    .fade(duration: 1000.ms),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      CupertinoIcons.heart_circle_fill,
+                      size: 30,
+                      color: primaryColor,
+                    ),
+                    const SizedBox(width: 3),
+                    Text(
+                      "Love Match",
+                      style: context.textTheme.labelLarge?.copyWith(
                         color: primaryColor,
+                        fontWeight: FontWeight.bold,
                         fontSize: 25,
                       ),
-                    ),
-                    const TextSpan(
-                      text: "where your story",
-                    ),
-                    TextSpan(
-                      text: " begins.",
-                      style: textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: primaryColor,
-                      ),
-                    ),
+                    )
                   ],
-                ),
-              ),
-            ).animate().slide(delay: const Duration(milliseconds: 500)).fade(),
+                )
+                    .animate(
+                      onComplete: (controller) {
+                        animationLogoController.forward();
+                      },
+                    )
+                    .fade(delay: 500.ms)
+                    .then()
+                    .shimmer(duration: 500.ms)
+                    .animate(
+                      autoPlay: false,
+                      controller: animationLogoController,
+                    )
+                    .slideY(
+                      begin: 0,
+                      end: -4.5,
+                      curve: Curves.fastEaseInToSlowEaseOut,
+                      duration: 1000.ms,
+                    ),
+              ],
+            ),
             const SizedBox(height: 40),
             IntroWidget(
               animationController: animationController,
