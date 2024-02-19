@@ -1,3 +1,4 @@
+import 'package:chat_bloc/auth/pages/login_with_phone_number.dart';
 import 'package:chat_bloc/core/extensions/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -54,12 +55,22 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                         const TextSpan(
                           text: "Discover ",
                         ),
-                        TextSpan(
-                          text: "Love ",
-                          style: textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: primaryColor,
-                            fontSize: 25,
+                        WidgetSpan(
+                          child: Text(
+                            "Love ",
+                            style: textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: primaryColor,
+                              fontSize: 25,
+                            ),
+                          ).animate(
+                            onComplete: (controller) {
+                              controller.repeat();
+                            },
+                          ).shimmer(
+                            color: whiteColor,
+                            delay: 1000.ms,
+                            duration: 1000.ms,
                           ),
                         ),
                         const TextSpan(
@@ -198,9 +209,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               width: size.width / 2,
               child: TextButton(
                 onPressed: () {
-                  animationController
-                    ..reset()
-                    ..forward();
+                  animationController.reverse(from: 0.3).whenComplete(() {
+                    push(
+                      context: context,
+                      page: const LoginWithPhoneNumberPage(),
+                    ).then(
+                      (value) => animationController.forward(),
+                    );
+                  });
                 },
                 child: Text(
                   "Register or login with Phone number dan email",
