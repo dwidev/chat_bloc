@@ -154,7 +154,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                       ),
                       child: const Icon(CupertinoIcons.back, color: blackColor),
                     ),
-                  ).animate().fade(
+                  )
+                      .animate()
+                      .boxShadow(borderRadius: BorderRadius.circular(15))
+                      .fade(
                         delay: const Duration(milliseconds: 200),
                         duration: const Duration(seconds: 1),
                       ),
@@ -176,7 +179,10 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
                       color: Colors.white,
                     ),
                   ),
-                ).animate().fade(
+                )
+                    .animate()
+                    .boxShadow(borderRadius: BorderRadius.circular(20))
+                    .fade(
                       delay: const Duration(milliseconds: 200),
                       duration: const Duration(seconds: 1),
                     ),

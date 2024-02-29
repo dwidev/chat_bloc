@@ -91,6 +91,7 @@ class _AllowPermissionLocationPageState
                 ),
               )
                   .animate()
+                  .boxShadow(borderRadius: BorderRadius.circular(20))
                   .fade(
                     delay: const Duration(milliseconds: 600),
                     duration: const Duration(milliseconds: 200),

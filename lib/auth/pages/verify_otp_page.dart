@@ -1,20 +1,24 @@
-import 'package:chat_bloc/auth/pages/verify_otp_page.dart';
-import 'package:chat_bloc/homepage/pages/home_page.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+
+import 'package:chat_bloc/auth/pages/complete_profile_page.dart';
+import 'package:chat_bloc/auth/pages/spalsh_page.dart';
+import 'package:chat_bloc/core/extensions/context_extendsion.dart';
 
 import '../../core/theme/colors.dart';
 import '../../core/widget/gradient_button.dart';
+import '../widgets/otp_fields.dart';
 
-class LoginWithPhoneNumberPage extends StatefulWidget {
-  const LoginWithPhoneNumberPage({super.key});
+class VerifyOtpPage extends StatefulWidget {
+  const VerifyOtpPage({super.key});
 
   @override
-  State<LoginWithPhoneNumberPage> createState() =>
-      _LoginWithPhoneNumberPageState();
+  State<VerifyOtpPage> createState() => _VerifyOtpPageState();
 }
 
-class _LoginWithPhoneNumberPageState extends State<LoginWithPhoneNumberPage> {
+class _VerifyOtpPageState extends State<VerifyOtpPage> {
   int pageIndex = 0;
   late Color linearColor;
 
@@ -62,7 +66,7 @@ class _LoginWithPhoneNumberPageState extends State<LoginWithPhoneNumberPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     width: size.width / 1.5,
                     child: Text(
-                      "Please input your phone number!",
+                      "Verify your otp code!",
                       style: textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
@@ -76,7 +80,7 @@ class _LoginWithPhoneNumberPageState extends State<LoginWithPhoneNumberPage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Text(
-                      "Let's get to know each other",
+                      "Otp code send to your phone number +62896572636776",
                       style: textTheme.bodySmall?.copyWith(),
                     ).animate().fade(
                           delay: const Duration(milliseconds: 200),
@@ -86,17 +90,13 @@ class _LoginWithPhoneNumberPageState extends State<LoginWithPhoneNumberPage> {
                   const SizedBox(height: 40),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TextFormField(
-                        decoration: const InputDecoration(
-                          hintText: "Phone number ex:08956xxxxxx",
-                        ),
-                      ),
+                    child: OtpTextField(
+                      autoFocus: true,
+                      textStyle: context.textTheme.bodyMedium,
+                      borderColor: whiteColor,
+                      borderRadius: BorderRadius.circular(90),
+                      enabledBorderColor: whiteColor,
+                      focusedBorderColor: primaryColor,
                     ),
                   ).animate().fade(
                         delay: const Duration(milliseconds: 200),
@@ -115,10 +115,15 @@ class _LoginWithPhoneNumberPageState extends State<LoginWithPhoneNumberPage> {
                     colors: [primaryColor, darkColor],
                   ),
                   onPressed: () {
-                    push(context: context, page: const VerifyOtpPage());
+                    Navigator.pushReplacement(
+                      context,
+                      CustomPageRoute(
+                        const CompleteProfilePage(),
+                      ),
+                    );
                   },
                   child: Text(
-                    "Next",
+                    "Send",
                     style: textTheme.bodyMedium?.copyWith(
                       color: Colors.white,
                     ),
