@@ -137,7 +137,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             const SizedBox(height: 40),
             IntroWidget(
               animationController: animationController,
-            ),
+            ).animate().shimmer(
+                  color: whiteColor,
+                  delay: 1.seconds,
+                  duration: 1.seconds,
+                ),
             const SizedBox(height: 40),
             SizedBox(
               width: size.width / 1.3,
@@ -148,8 +152,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               ),
             )
                 .animate()
-                .slideY(begin: 2, delay: const Duration(milliseconds: 500))
-                .fade(),
+                .slideY(begin: 2, delay: 500.ms)
+                .fade()
+                .then(delay: 200.ms)
+                .animate()
+                .shimmer(
+                  color: whiteColor,
+                  delay: 1000.ms,
+                  duration: 1000.ms,
+                ),
             const SizedBox(height: 40),
             GradientButton(
               onPressed: () {
@@ -169,11 +180,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     style: textTheme.bodyMedium?.copyWith(color: Colors.white),
                   ),
                 ],
-              ),
+              ).animate().shimmer(
+                    color: darkColor,
+                    delay: 1000.ms,
+                    duration: 1000.ms,
+                  ),
             )
                 .animate()
                 .boxShadow(borderRadius: BorderRadius.circular(20))
-                .fade(delay: const Duration(milliseconds: 600)),
+                .fade(delay: 600.ms),
             const SizedBox(height: 10),
             GradientButton(
               onPressed: () {
@@ -199,11 +214,15 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     style: textTheme.bodyMedium?.copyWith(color: Colors.white),
                   ),
                 ],
-              ),
+              ).animate().shimmer(
+                    color: darkColor,
+                    delay: 1000.ms,
+                    duration: 1000.ms,
+                  ),
             )
                 .animate()
                 .boxShadow(borderRadius: BorderRadius.circular(20))
-                .fade(delay: const Duration(milliseconds: 600)),
+                .fade(delay: 600.ms),
             const SizedBox(height: 15),
             SizedBox(
               width: size.width / 2,
@@ -224,7 +243,16 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                   textAlign: TextAlign.center,
                 ),
               ),
-            ).animate().fade(delay: const Duration(milliseconds: 600)),
+            )
+                .animate()
+                .fade(delay: 600.ms)
+                .then(delay: 200.ms)
+                .animate()
+                .shimmer(
+                  color: whiteColor,
+                  delay: 1000.ms,
+                  duration: 1000.ms,
+                ),
           ],
         ),
       ),
@@ -258,7 +286,7 @@ class IntroWidget extends StatelessWidget {
         )
             .animate(controller: animationController)
             .scale(
-              delay: const Duration(milliseconds: 200),
+              delay: 200.ms,
               duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
@@ -274,7 +302,7 @@ class IntroWidget extends StatelessWidget {
             .animate(controller: animationController)
             .slide(
               begin: const Offset(5, 0.5),
-              delay: const Duration(milliseconds: 500),
+              delay: 500.ms,
               duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
@@ -293,7 +321,7 @@ class IntroWidget extends StatelessWidget {
             .animate(controller: animationController)
             .slide(
               begin: const Offset(-5, 15),
-              delay: const Duration(milliseconds: 500),
+              delay: 500.ms,
               duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
@@ -308,7 +336,7 @@ class IntroWidget extends StatelessWidget {
             .animate(controller: animationController)
             .slide(
               begin: const Offset(3, 2.8),
-              delay: const Duration(milliseconds: 500),
+              delay: 500.ms,
               duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
@@ -327,11 +355,13 @@ class IntroWidget extends StatelessWidget {
             .animate(controller: animationController)
             .slide(
               begin: const Offset(-13, -5),
-              delay: const Duration(milliseconds: 500),
+              delay: 500.ms,
               duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
             .fade(),
+
+        /// Left bottom image
         const Positioned(
           left: 0,
           bottom: 20,
@@ -343,11 +373,13 @@ class IntroWidget extends StatelessWidget {
             .animate(controller: animationController)
             .slide(
               begin: const Offset(3, -2.8),
-              delay: const Duration(milliseconds: 500),
+              delay: 500.ms,
               duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
             .fade(),
+
+        /// Right top image
         const Positioned(
           top: 20,
           right: 0,
@@ -359,11 +391,13 @@ class IntroWidget extends StatelessWidget {
             .animate(controller: animationController)
             .slide(
               begin: const Offset(-2.5, 2.3),
-              delay: const Duration(milliseconds: 500),
+              delay: 500.ms,
               duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
             .fade(),
+
+        /// Right bottom image
         const Positioned(
           right: 20,
           bottom: 0,
@@ -375,11 +409,13 @@ class IntroWidget extends StatelessWidget {
             .animate(controller: animationController)
             .slide(
               begin: const Offset(-1.8, -2.8),
-              delay: const Duration(milliseconds: 500),
+              delay: 500.ms,
               duration: 2.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
             .fade(),
+
+        /// Center image
         const Positioned(
           top: 0,
           bottom: 0,
@@ -388,14 +424,11 @@ class IntroWidget extends StatelessWidget {
           child: CircleAvatar(
             backgroundImage: AssetImage(woman),
           ),
-        )
-            .animate(controller: animationController)
-            .scale(
-              delay: const Duration(milliseconds: 250),
+        ).animate(controller: animationController).fade().scale(
+              delay: 250.ms,
               duration: 1.seconds,
               curve: Curves.fastLinearToSlowEaseIn,
             )
-            .fade(),
       ],
     );
   }

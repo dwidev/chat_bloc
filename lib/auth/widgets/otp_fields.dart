@@ -151,7 +151,11 @@ class _OtpTextFieldState extends State<OtpTextField> {
         textAlign: TextAlign.center,
         maxLength: 1,
         readOnly: widget.readOnly,
-        style: style ?? widget.textStyle,
+        style: style ??
+            widget.textStyle ??
+            context.textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
         autofocus: widget.autoFocus,
         cursorColor: widget.cursorColor,
         controller: _textControllers[index],

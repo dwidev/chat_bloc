@@ -24,10 +24,17 @@ class _CompleeGendereViewPageState extends State<CompleteGenderViewPage> {
       children: [
         const SizedBox(height: 25 + kToolbarHeight),
         Text(
-          "What's Your Gender?",
+          "Haiii Fahmi 👋🏻",
           style: textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 20,
+          ),
+        ).animate().fade(delay: 200.ms, duration: 1.seconds),
+        Text(
+          "What's Your Gender?",
+          style: textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
           ),
         ).animate().fade(
               delay: const Duration(milliseconds: 200),

@@ -21,7 +21,7 @@ class _SplashPageState extends State<SplashPage>
   void initState() {
     super.initState();
     animationController = AnimationController(vsync: this);
-    Future.delayed(3.seconds, () {
+    Future.delayed(1.seconds, () {
       Navigator.pushReplacement(context, CustomPageRoute(const LoginPage()));
       animationController.forward();
     });
@@ -84,7 +84,7 @@ class _SplashPageState extends State<SplashPage>
 }
 
 class CustomPageRoute<T> extends PageRoute<T> {
-  CustomPageRoute(this.child);
+  CustomPageRoute(this.child, {this.duration});
   @override
   Color get barrierColor => Colors.black;
 
@@ -92,6 +92,7 @@ class CustomPageRoute<T> extends PageRoute<T> {
   String? get barrierLabel => null;
 
   final Widget child;
+  final Duration? duration;
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
@@ -106,5 +107,5 @@ class CustomPageRoute<T> extends PageRoute<T> {
   bool get maintainState => true;
 
   @override
-  Duration get transitionDuration => 1.seconds;
+  Duration get transitionDuration => duration ?? 1.seconds;
 }

@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:chat_bloc/auth/pages/welcome_and_tnc_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -92,7 +93,6 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: OtpTextField(
                       autoFocus: true,
-                      textStyle: context.textTheme.bodyMedium,
                       borderColor: whiteColor,
                       borderRadius: BorderRadius.circular(90),
                       enabledBorderColor: whiteColor,
@@ -115,11 +115,13 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                     colors: [primaryColor, darkColor],
                   ),
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       CustomPageRoute(
-                        const CompleteProfilePage(),
+                        const WelcomeAndTncPage(),
+                        duration: 500.ms,
                       ),
+                      // (_) => false,
                     );
                   },
                   child: Text(

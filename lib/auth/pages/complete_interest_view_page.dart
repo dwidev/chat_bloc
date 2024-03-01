@@ -45,7 +45,7 @@ class _CompleeGendereViewPageState extends State<CompleteInterstViewPage> {
       children: [
         const SizedBox(height: 25 + kToolbarHeight),
         Text(
-          "I'm Looking for...",
+          "I'm Interest for...",
           style: textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -57,7 +57,7 @@ class _CompleeGendereViewPageState extends State<CompleteInterstViewPage> {
         SizedBox(
           width: size.width / 1.2,
           child: Text(
-            "Provide us with further insights into your preferences",
+            "Provide us with further insights into your interesting",
             style: textTheme.bodySmall?.copyWith(),
             textAlign: TextAlign.center,
           ),
