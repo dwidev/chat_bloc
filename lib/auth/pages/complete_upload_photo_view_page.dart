@@ -1,8 +1,9 @@
 import 'package:chat_bloc/core/theme/colors.dart';
-import 'package:chat_bloc/core/widget/photos_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+
+import '../../core/photos_picker/photos_picker.dart';
 
 class CompleteUploadPhotoViewPage extends StatefulWidget {
   const CompleteUploadPhotoViewPage({

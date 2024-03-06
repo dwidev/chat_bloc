@@ -1,12 +1,11 @@
-import 'package:chat_bloc/core/theme/colors.dart';
-import 'package:chat_bloc/profile/pages/preview_profile_page.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/widget/photos_widget.dart';
+import '../../core/photos_picker/photos_widget.dart';
+import '../../core/theme/colors.dart';
 import '../../homepage/pages/home_page.dart';
 import '../../nearbypeople/pages/nearby_people_card_detail_view.dart';
+import 'preview_profile_page.dart';
 
 class UpdateProfilePage extends StatefulWidget {
   const UpdateProfilePage({super.key});

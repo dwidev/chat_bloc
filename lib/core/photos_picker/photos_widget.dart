@@ -1,0 +1,286 @@
+import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:custom_image_crop/custom_image_crop.dart';
+import 'package:dotted_border/dotted_border.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:photo_manager/photo_manager.dart';
+import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
+
+import '../../../homepage/pages/home_page.dart';
+import '../dialog/delete_alert_dialog.dart';
+import '../dialog/loading_dialog.dart';
+import '../extensions/context_extendsion.dart';
+import '../theme/colors.dart';
+import 'photo_picker_cubit.dart';
+
+part 'gallery_view_page.dart';
+
+class PhotosPickerWidget extends StatelessWidget {
+  const PhotosPickerWidget({
+    Key? key,
+    this.backgroundColor,
+    this.dashColor,
+  }) : super(key: key);
+
+  final Color? backgroundColor;
+  final Color? dashColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<PhotoPickerCubit>(
+      create: (_) => PhotoPickerCubit(),
+      child: PhotosPickerWidgetContent(
+        backgroundColor: backgroundColor,
+        dashColor: dashColor,
+      ),
+    );
+  }
+}
+
+class PhotosPickerWidgetContent extends StatefulWidget {
+  const PhotosPickerWidgetContent({
+    super.key,
+    this.backgroundColor,
+    this.dashColor,
+  });
+
+  final Color? backgroundColor;
+  final Color? dashColor;
+
+  @override
+  State<PhotosPickerWidgetContent> createState() =>
+      _PhotosPickerWidgetContentState();
+}
+
+class _PhotosPickerWidgetContentState extends State<PhotosPickerWidgetContent> {
+  late PhotoPickerCubit photoPickerCubit;
+
+  @override
+  void initState() {
+    photoPickerCubit = context.read<PhotoPickerCubit>();
+    super.initState();
+  }
+
+  void goToGalleryView(int? index) {
+    photoPickerCubit.onPickImageAtGalleryView(null);
+    push(
+      context: context,
+      page: _GalleryViewPage(
+        index: index,
+        photoPickerCubit: photoPickerCubit,
+      ),
+    );
+  }
+
+  void onDelete(int index) {
+    showDeleteAlertDialog(
+      context: context,
+      onDelete: () {
+        Navigator.pop(context);
+        photoPickerCubit.deleteImage(index);
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
+    return BlocBuilder<PhotoPickerCubit, PhotoPickerState>(
+      builder: (context, state) {
+        return GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: 8,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            crossAxisSpacing: 15,
+            mainAxisSpacing: 20,
+            childAspectRatio: 0.7,
+          ),
+          itemBuilder: (_, index) {
+            if (photoPickerCubit.getImage(index) != null) {
+              return Stack(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      showAdaptiveActionSheet(
+                        context: context,
+                        title: const Text('Action photo'),
+                        androidBorderRadius: 30,
+                        actions: <BottomSheetAction>[
+                          BottomSheetAction(
+                            title: Text(
+                              'Delete',
+                              style: context.textTheme.bodyLarge?.copyWith(
+                                color: Colors.red,
+                              ),
+                            ),
+                            onPressed: (context) {
+                              Navigator.pop(context);
+                              onDelete(index);
+                            },
+                          ),
+                          BottomSheetAction(
+                            title: Text(
+                              'Change',
+                              style: context.textTheme.bodyLarge?.copyWith(
+                                color: Colors.lightBlue,
+                              ),
+                            ),
+                            onPressed: (context) {
+                              Navigator.pop(context);
+                              goToGalleryView(index);
+                            },
+                          ),
+                          BottomSheetAction(
+                            title: Text(
+                              'View',
+                              style: context.textTheme.bodyLarge?.copyWith(
+                                color: Colors.lightBlue,
+                              ),
+                            ),
+                            onPressed: (context) {
+                              Navigator.pop(context);
+                              showDialog(
+                                barrierColor: Colors.transparent,
+                                context: context,
+                                builder: (context) {
+                                  return Dialog(
+                                    insetPadding: EdgeInsets.zero,
+                                    child: Stack(
+                                      fit: StackFit.passthrough,
+                                      children: [
+                                        Container(
+                                          width: context.width / 2,
+                                          height: context.height / 2,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                            image: DecorationImage(
+                                              image: MemoryImage(
+                                                state.selectedPhotos[index]
+                                                    .bytes,
+                                              ),
+                                              fit: BoxFit.cover,
+                                            ),
+                                          ),
+                                        ),
+                                        Positioned(
+                                          top: 10,
+                                          right: 10,
+                                          child: IconButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            icon: const Icon(
+                                              CupertinoIcons.clear,
+                                              color: whiteColor,
+                                              size: 25,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ],
+                        cancelAction: CancelAction(
+                          title: Text(
+                            'Cancel',
+                            style: context.textTheme.bodyLarge?.copyWith(
+                              color: Colors.lightBlue,
+                            ),
+                          ),
+                        ), // onPressed parameter is optional by default will dismiss the ActionSheet
+                      );
+                      // goToGalleryView();
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          // color: darkColor,
+                          image: DecorationImage(
+                            image: MemoryImage(
+                              state.selectedPhotos[index].bytes,
+                            ),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    right: 0,
+                    child: InkWell(
+                      onTap: () => onDelete(index),
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 3, top: 3),
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: primaryColor,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: const Icon(
+                          CupertinoIcons.delete,
+                          color: whiteColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
+
+            return InkWell(
+              onTap: () {
+                goToGalleryView(null);
+              },
+              child: DottedBorder(
+                borderType: BorderType.RRect,
+                dashPattern: const [6, 3, 6, 3],
+                padding: const EdgeInsets.all(2),
+                radius: const Radius.circular(10),
+                color: widget.dashColor ?? darkColor.withOpacity(0.3),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color:
+                          widget.backgroundColor ?? darkColor.withOpacity(0.04),
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          CupertinoIcons.camera,
+                          color: blackColor,
+                          size: 20,
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          "Pick Photo",
+                          style: textTheme.bodySmall?.copyWith(
+                            color: blackColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
