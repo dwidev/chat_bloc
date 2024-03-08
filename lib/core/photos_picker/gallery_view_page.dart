@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'photos_widget.dart';
 
 class _GalleryViewPage extends StatelessWidget {
@@ -45,6 +44,8 @@ class _GalleryViewPageContentState extends State<_GalleryViewPageContent> {
 
   @override
   dispose() {
+    scrollController.removeListener(onLoadMore);
+    scrollController.dispose();
     cropController.dispose();
     super.dispose();
   }
@@ -90,32 +91,9 @@ class _GalleryViewPageContentState extends State<_GalleryViewPageContent> {
       body: Column(
         children: [
           if (pickedPhoto != null)
-            Container(
-              padding: EdgeInsets.zero,
-              width: context.width,
-              height: context.height / 3,
-              child: CustomImageCrop(
-                canRotate: false,
-                drawPath: (path, {pathPaint}) {
-                  return DottedCropPathPainter.drawPath(
-                    path,
-                    pathPaint: Paint()
-                      ..color = darkColor
-                      ..strokeWidth = 1.0
-                      ..style = PaintingStyle.stroke
-                      ..strokeJoin = StrokeJoin.round,
-                  );
-                },
-                cropController: cropController,
-                imageFit: CustomImageFit.fillVisibleHeight,
-                image: AssetEntityImageProvider(
-                  pickedPhoto,
-                  thumbnailSize: const ThumbnailSize.square(100),
-                ),
-                overlayColor: Colors.white.withOpacity(0.5),
-                ratio: Ratio(width: 9, height: 16),
-                shape: CustomCropShape.Square,
-              ),
+            CropedWidget(
+              cropController: cropController,
+              pickedPhoto: pickedPhoto,
             ),
           Expanded(
             child: BlocConsumer<PhotoPickerCubit, PhotoPickerState>(
@@ -137,92 +115,104 @@ class _GalleryViewPageContentState extends State<_GalleryViewPageContent> {
                 }
               },
               builder: (context, state) {
-                return GridView.custom(
-                  controller: scrollController,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                  ),
-                  childrenDelegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final photo = state.photos[index];
+                return NotificationListener(
+                  onNotification: (n) {
+                    if (n is ScrollStartNotification &&
+                        state.viewPhotoStatus.isFullScreen) {
+                      photoPickerCubit.changeViewPhoto();
+                    }
+                    return true;
+                  },
+                  child: GridView.custom(
+                    controller: scrollController,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 4,
+                    ),
+                    childrenDelegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                        final photo = state.photos[index];
 
-                      return Stack(
-                        key: ValueKey<int>(index),
-                        fit: StackFit.loose,
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              cropController.reset();
-                              photoPickerCubit.onPickImageAtGalleryView(photo);
-                            },
-                            child: Container(
-                              width: context.width / 2,
-                              height: context.width / 2,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  width: 0.5,
-                                  color: whiteColor,
-                                ),
-                                color: darkLightColor,
-                              ),
-                              child: AssetEntityImage(
-                                photo,
-                                thumbnailSize: const ThumbnailSize.square(500),
-                                isOriginal: false,
-                                fit: BoxFit.cover,
-                                loadingBuilder: (context, child, progress) {
-                                  if (progress == null) {
-                                    return child;
-                                  }
-                                  final double? value;
-                                  if (progress.expectedTotalBytes != null) {
-                                    value = progress.cumulativeBytesLoaded /
-                                        progress.expectedTotalBytes!;
-                                  } else {
-                                    value = null;
-                                  }
-                                  print(value);
-                                  return Center(
-                                    child: SizedBox.fromSize(
-                                      size: const Size.square(40),
-                                      child: CircularProgressIndicator(
-                                        value: value,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                          if (pickedPhoto == photo)
-                            Positioned(
-                              top: 5,
-                              right: 5,
+                        return Stack(
+                          key: ValueKey<int>(index),
+                          fit: StackFit.loose,
+                          children: [
+                            InkWell(
+                              onTap: () {
+                                cropController.reset();
+                                photoPickerCubit
+                                    .onPickImageAtGalleryView(photo);
+                              },
                               child: Container(
-                                width: 20,
-                                height: 20,
+                                width: context.width / 4,
+                                height: context.width / 4,
                                 decoration: BoxDecoration(
-                                  color: whiteColor,
-                                  border: Border.all(color: primaryColor),
-                                  borderRadius: BorderRadius.circular(29),
+                                  border: Border.all(
+                                    width: 0.5,
+                                    color: whiteColor,
+                                  ),
+                                  color: darkLightColor,
                                 ),
-                                child: const Icon(
-                                  Icons.check,
-                                  color: primaryColor,
+                                child: AssetEntityImage(
+                                  photo,
+                                  thumbnailSize:
+                                      const ThumbnailSize.square(500),
+                                  isOriginal: false,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (context, child, progress) {
+                                    if (progress == null) {
+                                      return child;
+                                    }
+                                    final double? value;
+                                    if (progress.expectedTotalBytes != null) {
+                                      value = progress.cumulativeBytesLoaded /
+                                          progress.expectedTotalBytes!;
+                                    } else {
+                                      value = null;
+                                    }
+
+                                    return Center(
+                                      child: SizedBox.fromSize(
+                                        size: const Size.square(40),
+                                        child: CircularProgressIndicator(
+                                          value: value,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                             ),
-                        ],
-                      );
-                    },
-                    childCount: state.photos.length,
-                    findChildIndexCallback: (Key key) {
-                      // Re-use elements.
-                      if (key is ValueKey<int>) {
-                        return key.value;
-                      }
-                      return null;
-                    },
+                            if (pickedPhoto == photo)
+                              Positioned(
+                                top: 5,
+                                right: 5,
+                                child: Container(
+                                  width: 20,
+                                  height: 20,
+                                  decoration: BoxDecoration(
+                                    color: whiteColor,
+                                    border: Border.all(color: primaryColor),
+                                    borderRadius: BorderRadius.circular(29),
+                                  ),
+                                  child: const Icon(
+                                    Icons.check,
+                                    color: primaryColor,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                      childCount: state.photos.length,
+                      findChildIndexCallback: (Key key) {
+                        // Re-use elements.
+                        if (key is ValueKey<int>) {
+                          return key.value;
+                        }
+                        return null;
+                      },
+                    ),
                   ),
                 );
               },
@@ -230,6 +220,116 @@ class _GalleryViewPageContentState extends State<_GalleryViewPageContent> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class CropedWidget extends StatelessWidget {
+  const CropedWidget({
+    super.key,
+    required this.cropController,
+    required this.pickedPhoto,
+  });
+
+  final CustomImageCropController cropController;
+  final AssetEntity pickedPhoto;
+
+  @override
+  Widget build(BuildContext context) {
+    final photoPickerCubit = context.read<PhotoPickerCubit>();
+
+    return BlocBuilder<PhotoPickerCubit, PhotoPickerState>(
+      buildWhen: (p, c) => p.viewPhotoStatus != c.viewPhotoStatus,
+      builder: (context, state) {
+        final height = switch (state.viewPhotoStatus) {
+          PhotoViewEnum.fullScreen => context.height / 1.4,
+          _ => (context.height / 5),
+        };
+        final borderRadius = switch (state.viewPhotoStatus) {
+          PhotoViewEnum.fullScreen => 20.0,
+          _ => 10.0,
+        };
+        final actionWidth = switch (state.viewPhotoStatus) {
+          PhotoViewEnum.fullScreen => 50.0,
+          _ => 30.0,
+        };
+        final actionSize = switch (state.viewPhotoStatus) {
+          PhotoViewEnum.fullScreen => 25.0,
+          _ => 15.0,
+        };
+
+        return GestureDetector(
+          onPanStart: (details) {
+            if (state.viewPhotoStatus.isNormal) {
+              photoPickerCubit.changeViewPhoto();
+            }
+          },
+          child: Stack(
+            children: [
+              AnimatedContainer(
+                duration: 500.ms,
+                curve: Curves.fastEaseInToSlowEaseOut,
+                padding: EdgeInsets.zero,
+                width: context.width,
+                height: height.floorToDouble(),
+                child: CustomImageCrop(
+                  borderRadius: borderRadius,
+                  cropPercentage: 0.95,
+                  canRotate: false,
+                  drawPath: (path, {pathPaint}) {
+                    return DottedCropPathPainter.drawPath(
+                      path,
+                      pathPaint: Paint()
+                        ..color = darkColor
+                        ..strokeWidth = 0.5
+                        ..style = PaintingStyle.stroke
+                        ..strokeJoin = StrokeJoin.round,
+                    );
+                  },
+                  cropController: cropController,
+                  image: AssetEntityImageProvider(pickedPhoto),
+                  overlayColor: Colors.white.withOpacity(0.5),
+                  ratio: Ratio(width: 9, height: 16),
+                  shape: CustomCropShape.Ratio,
+                ),
+              ),
+              Positioned(
+                bottom: 15,
+                right: 15,
+                child: AnimatedContainer(
+                  duration: 500.ms,
+                  curve: Curves.fastLinearToSlowEaseIn,
+                  width: actionWidth,
+                  height: actionWidth,
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      color: darkColor.withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(
+                        50,
+                      ),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x80000000),
+                          blurRadius: 8.0,
+                          offset: Offset(0.0, 4.0),
+                        )
+                      ]),
+                  child: IconButton(
+                    color: whiteColor,
+                    padding: EdgeInsets.zero,
+                    onPressed: photoPickerCubit.changeViewPhoto,
+                    icon: Icon(
+                      state.viewPhotoStatus.icon,
+                      color: whiteColor,
+                      size: actionSize,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -80,7 +79,10 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
       return;
     }
 
-    emit(state.copyWith(pickedPhoto: () => pickedPhoto));
+    emit(state.copyWith(
+      pickedPhoto: () => pickedPhoto,
+      viewPhotoStatus: PhotoViewEnum.normal,
+    ));
   }
 
   Future<void> onSaveSelectedPhotos(
@@ -111,6 +113,14 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
     images.replaceRange(index, index + 1, [croped!]);
     emit(PhotoPickerSelected(selectedPhotos: images));
   }
+
+  void changeViewPhoto() {
+    if (state.viewPhotoStatus.isFullScreen) {
+      emit(state.copyWith(viewPhotoStatus: PhotoViewEnum.normal));
+    } else {
+      emit(state.copyWith(viewPhotoStatus: PhotoViewEnum.fullScreen));
+    }
+  }
 }
 
 @immutable
@@ -125,6 +135,8 @@ class PhotoPickerState extends Equatable {
   final bool isLoading;
   final bool isLoadMore;
 
+  final PhotoViewEnum viewPhotoStatus;
+
   bool get noLoadMore => currentPage == totalPage;
 
   const PhotoPickerState({
@@ -136,6 +148,7 @@ class PhotoPickerState extends Equatable {
     this.selectedPhotos = const [],
     this.isLoading = false,
     this.isLoadMore = false,
+    this.viewPhotoStatus = PhotoViewEnum.normal,
   });
 
   PhotoPickerState copyWith({
@@ -147,6 +160,7 @@ class PhotoPickerState extends Equatable {
     List<MemoryImage>? selectedPhotos,
     bool? isLoading,
     bool? isLoadMore,
+    PhotoViewEnum? viewPhotoStatus,
   }) {
     return PhotoPickerState(
       currentPage: currentPage ?? this.currentPage,
@@ -157,6 +171,7 @@ class PhotoPickerState extends Equatable {
       selectedPhotos: selectedPhotos ?? this.selectedPhotos,
       isLoading: isLoading ?? this.isLoading,
       isLoadMore: isLoadMore ?? this.isLoadMore,
+      viewPhotoStatus: viewPhotoStatus ?? this.viewPhotoStatus,
     );
   }
 
@@ -170,6 +185,7 @@ class PhotoPickerState extends Equatable {
         selectedPhotos,
         isLoading,
         isLoadMore,
+        viewPhotoStatus,
       ];
 }
 

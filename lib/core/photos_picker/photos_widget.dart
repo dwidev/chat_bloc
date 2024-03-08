@@ -1,9 +1,9 @@
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
-import 'package:chat_bloc/core/dialog/show_image_dialog.dart';
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
@@ -11,6 +11,7 @@ import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 import '../../../homepage/pages/home_page.dart';
 import '../dialog/delete_alert_dialog.dart';
 import '../dialog/loading_dialog.dart';
+import '../dialog/show_image_dialog.dart';
 import '../extensions/context_extendsion.dart';
 import '../theme/colors.dart';
 import 'photo_picker_cubit.dart';
