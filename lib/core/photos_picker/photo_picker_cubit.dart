@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_manager/photo_manager.dart';
 
+import '../enums/photo_view_enum.dart';
+
 class PhotoPickerCubit extends Cubit<PhotoPickerState> {
   PhotoPickerCubit() : super(const PhotoPickerInitial());
 
