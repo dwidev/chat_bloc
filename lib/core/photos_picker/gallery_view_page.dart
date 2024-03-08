@@ -32,12 +32,14 @@ class _GalleryViewPageContent extends StatefulWidget {
 
 class _GalleryViewPageContentState extends State<_GalleryViewPageContent> {
   late CustomImageCropController cropController;
+  late ScrollController scrollController;
 
   @override
   void initState() {
     cropController = CustomImageCropController();
     final photoPickerCubit = context.read<PhotoPickerCubit>();
     photoPickerCubit.loadGalleryImages();
+    scrollController = ScrollController()..addListener(onLoadMore);
     super.initState();
   }
 
@@ -45,6 +47,12 @@ class _GalleryViewPageContentState extends State<_GalleryViewPageContent> {
   dispose() {
     cropController.dispose();
     super.dispose();
+  }
+
+  void onLoadMore() {
+    if (scrollController.offset >= scrollController.position.maxScrollExtent) {
+      context.read<PhotoPickerCubit>().loadMoreImage();
+    }
   }
 
   @override
@@ -129,58 +137,93 @@ class _GalleryViewPageContentState extends State<_GalleryViewPageContent> {
                 }
               },
               builder: (context, state) {
-                return GridView.builder(
+                return GridView.custom(
+                  controller: scrollController,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
                   ),
-                  itemCount: state.photos.length,
-                  itemBuilder: (context, index) {
-                    final photo = state.photos[index];
+                  childrenDelegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final photo = state.photos[index];
 
-                    return Stack(
-                      fit: StackFit.loose,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            cropController.reset();
-                            photoPickerCubit.onPickImageAtGalleryView(photo);
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(width: 0.5, color: whiteColor),
-                              image: DecorationImage(
-                                image: AssetEntityImageProvider(
-                                  photo,
-                                  thumbnailSize:
-                                      const ThumbnailSize.square(100),
-                                  thumbnailFormat: ThumbnailFormat.jpeg,
-                                ),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ),
-                        if (pickedPhoto == photo)
-                          Positioned(
-                            top: 5,
-                            right: 5,
+                      return Stack(
+                        key: ValueKey<int>(index),
+                        fit: StackFit.loose,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              cropController.reset();
+                              photoPickerCubit.onPickImageAtGalleryView(photo);
+                            },
                             child: Container(
-                              width: 20,
-                              height: 20,
+                              width: context.width / 2,
+                              height: context.width / 2,
                               decoration: BoxDecoration(
-                                color: whiteColor,
-                                border: Border.all(color: primaryColor),
-                                borderRadius: BorderRadius.circular(29),
+                                border: Border.all(
+                                  width: 0.5,
+                                  color: whiteColor,
+                                ),
+                                color: darkLightColor,
                               ),
-                              child: const Icon(
-                                Icons.check,
-                                color: primaryColor,
+                              child: AssetEntityImage(
+                                photo,
+                                thumbnailSize: const ThumbnailSize.square(500),
+                                isOriginal: false,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (context, child, progress) {
+                                  if (progress == null) {
+                                    return child;
+                                  }
+                                  final double? value;
+                                  if (progress.expectedTotalBytes != null) {
+                                    value = progress.cumulativeBytesLoaded /
+                                        progress.expectedTotalBytes!;
+                                  } else {
+                                    value = null;
+                                  }
+                                  print(value);
+                                  return Center(
+                                    child: SizedBox.fromSize(
+                                      size: const Size.square(40),
+                                      child: CircularProgressIndicator(
+                                        value: value,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ),
-                      ],
-                    );
-                  },
+                          if (pickedPhoto == photo)
+                            Positioned(
+                              top: 5,
+                              right: 5,
+                              child: Container(
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  color: whiteColor,
+                                  border: Border.all(color: primaryColor),
+                                  borderRadius: BorderRadius.circular(29),
+                                ),
+                                child: const Icon(
+                                  Icons.check,
+                                  color: primaryColor,
+                                ),
+                              ),
+                            ),
+                        ],
+                      );
+                    },
+                    childCount: state.photos.length,
+                    findChildIndexCallback: (Key key) {
+                      // Re-use elements.
+                      if (key is ValueKey<int>) {
+                        return key.value;
+                      }
+                      return null;
+                    },
+                  ),
                 );
               },
             ),

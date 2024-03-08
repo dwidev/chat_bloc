@@ -1,6 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_manager/photo_manager.dart';
@@ -33,14 +33,45 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
     if (ps.hasAccess) {
       final assets = await PhotoManager.getAssetPathList(
         type: RequestType.image,
-        hasAll: true,
+        onlyAll: true,
       );
+      final count = await assets.first.assetCountAsync;
+      final totalPage = (count / 50).ceil();
 
       if (assets.isNotEmpty) {
         final photos = await assets.first.getAssetListPaged(page: 0, size: 50);
-        emit(state.copyWith(photos: photos));
+        final newState = state.copyWith(
+          photos: photos,
+          assets: assets,
+          currentPage: 0,
+          totalPage: totalPage,
+        );
+        emit(newState);
       }
     }
+  }
+
+  Future<void> loadMoreImage() async {
+    if (state.isLoadMore || state.noLoadMore) return;
+
+    emit(state.copyWith(isLoadMore: true));
+
+    final nextPage = state.currentPage + 1;
+    final photos = await state.assets.first.getAssetListPaged(
+      page: nextPage,
+      size: 50,
+    );
+
+    final newPhotos = state.photos.toList();
+    newPhotos.addAll(photos);
+
+    final newState = state.copyWith(
+      photos: newPhotos,
+      currentPage: nextPage,
+      isLoadMore: false,
+    );
+
+    emit(newState);
   }
 
   void onPickImageAtGalleryView(AssetEntity? pickedPhoto) {
@@ -84,34 +115,62 @@ class PhotoPickerCubit extends Cubit<PhotoPickerState> {
 
 @immutable
 class PhotoPickerState extends Equatable {
+  final int currentPage, totalPage;
+  final List<AssetPathEntity> assets;
   final List<AssetEntity> photos;
+
   final AssetEntity? pickedPhoto;
   final List<MemoryImage> selectedPhotos;
+
   final bool isLoading;
+  final bool isLoadMore;
+
+  bool get noLoadMore => currentPage == totalPage;
 
   const PhotoPickerState({
+    this.currentPage = 0,
+    this.totalPage = 0,
+    this.assets = const [],
     this.photos = const [],
     this.pickedPhoto,
     this.selectedPhotos = const [],
     this.isLoading = false,
+    this.isLoadMore = false,
   });
 
   PhotoPickerState copyWith({
+    int? currentPage,
+    int? totalPage,
+    List<AssetPathEntity>? assets,
     List<AssetEntity>? photos,
     ValueGetter<AssetEntity?>? pickedPhoto,
     List<MemoryImage>? selectedPhotos,
     bool? isLoading,
+    bool? isLoadMore,
   }) {
     return PhotoPickerState(
+      currentPage: currentPage ?? this.currentPage,
+      totalPage: totalPage ?? this.totalPage,
+      assets: assets ?? this.assets,
       photos: photos ?? this.photos,
       pickedPhoto: pickedPhoto != null ? pickedPhoto.call() : this.pickedPhoto,
       selectedPhotos: selectedPhotos ?? this.selectedPhotos,
       isLoading: isLoading ?? this.isLoading,
+      isLoadMore: isLoadMore ?? this.isLoadMore,
     );
   }
 
   @override
-  List<Object?> get props => [photos, pickedPhoto, selectedPhotos, isLoading];
+  List<Object?> get props => [
+        currentPage,
+        totalPage,
+        assets,
+        photos,
+        pickedPhoto,
+        selectedPhotos,
+        isLoading,
+        isLoadMore,
+      ];
 }
 
 class PhotoPickerInitial extends PhotoPickerState {

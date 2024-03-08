@@ -1,4 +1,5 @@
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:chat_bloc/core/dialog/show_image_dialog.dart';
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
@@ -143,49 +144,11 @@ class _PhotosPickerWidgetContentState extends State<PhotosPickerWidgetContent> {
                             ),
                             onPressed: (context) {
                               Navigator.pop(context);
-                              showDialog(
-                                barrierColor: Colors.transparent,
+                              showImageDialog(
                                 context: context,
-                                builder: (context) {
-                                  return Dialog(
-                                    insetPadding: EdgeInsets.zero,
-                                    child: Stack(
-                                      fit: StackFit.passthrough,
-                                      children: [
-                                        Container(
-                                          width: context.width / 2,
-                                          height: context.height / 2,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                            image: DecorationImage(
-                                              image: MemoryImage(
-                                                state.selectedPhotos[index]
-                                                    .bytes,
-                                              ),
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 10,
-                                          right: 10,
-                                          child: IconButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            icon: const Icon(
-                                              CupertinoIcons.clear,
-                                              color: whiteColor,
-                                              size: 25,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
+                                image: MemoryImage(
+                                  state.selectedPhotos[index].bytes,
+                                ),
                               );
                             },
                           ),
