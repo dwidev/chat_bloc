@@ -1,17 +1,21 @@
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
+import 'package:chat_bloc/core/widget/circle_icon_button.dart';
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../homepage/pages/home_page.dart';
 import '../dialog/delete_alert_dialog.dart';
 import '../dialog/loading_dialog.dart';
 import '../dialog/show_image_dialog.dart';
+import '../enums/photo_view_enum.dart';
 import '../extensions/context_extendsion.dart';
 import '../theme/colors.dart';
 import 'photo_picker_cubit.dart';
@@ -106,6 +110,14 @@ class _PhotosPickerWidgetContentState extends State<PhotosPickerWidgetContent> {
               return Stack(
                 children: [
                   InkWell(
+                    onDoubleTap: () {
+                      showImageDialog(
+                        context: context,
+                        image: MemoryImage(
+                          state.selectedPhotos[index].bytes,
+                        ),
+                      );
+                    },
                     onTap: () {
                       showAdaptiveActionSheet(
                         context: context,
@@ -161,9 +173,8 @@ class _PhotosPickerWidgetContentState extends State<PhotosPickerWidgetContent> {
                               color: Colors.lightBlue,
                             ),
                           ),
-                        ), // onPressed parameter is optional by default will dismiss the ActionSheet
+                        ),
                       );
-                      // goToGalleryView();
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),

@@ -36,23 +36,41 @@ class _GalleryViewPageContentState extends State<_GalleryViewPageContent> {
   @override
   void initState() {
     cropController = CustomImageCropController();
-    final photoPickerCubit = context.read<PhotoPickerCubit>();
-    photoPickerCubit.loadGalleryImages();
-    scrollController = ScrollController()..addListener(onLoadMore);
+    context.read<PhotoPickerCubit>().loadGalleryImages();
+    scrollController = ScrollController()..addListener(onScrollListen);
     super.initState();
   }
 
   @override
   dispose() {
-    scrollController.removeListener(onLoadMore);
+    scrollController.removeListener(onScrollListen);
     scrollController.dispose();
     cropController.dispose();
     super.dispose();
   }
 
-  void onLoadMore() {
-    if (scrollController.offset >= scrollController.position.maxScrollExtent) {
-      context.read<PhotoPickerCubit>().loadMoreImage();
+  void onScrollListen() {
+    final photoPickerCubit = context.read<PhotoPickerCubit>();
+    final pixUnderNegative40 = scrollController.position.pixels < -40;
+    final isTop = scrollController.position.pixels <=
+        scrollController.position.minScrollExtent;
+    final isNormal = photoPickerCubit.state.viewPhotoStatus.isNormal;
+    final isFull = photoPickerCubit.state.viewPhotoStatus.isFullScreen;
+    final isStartScroll = scrollController.position.userScrollDirection ==
+        ScrollDirection.reverse;
+    final isLoadMore =
+        scrollController.offset >= scrollController.position.maxScrollExtent;
+
+    if (pixUnderNegative40 && isTop && isNormal) {
+      photoPickerCubit.changeViewPhoto();
+    }
+
+    if (isStartScroll && isFull) {
+      photoPickerCubit.changeViewPhoto();
+    }
+
+    if (isLoadMore) {
+      photoPickerCubit.loadMoreImage();
     }
   }
 
@@ -115,14 +133,8 @@ class _GalleryViewPageContentState extends State<_GalleryViewPageContent> {
                 }
               },
               builder: (context, state) {
-                return NotificationListener(
-                  onNotification: (n) {
-                    if (n is ScrollStartNotification &&
-                        state.viewPhotoStatus.isFullScreen) {
-                      photoPickerCubit.changeViewPhoto();
-                    }
-                    return true;
-                  },
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
                   child: GridView.custom(
                     controller: scrollController,
                     gridDelegate:
@@ -253,7 +265,7 @@ class CropedWidget extends StatelessWidget {
           PhotoViewEnum.fullScreen => 50.0,
           _ => 30.0,
         };
-        final actionSize = switch (state.viewPhotoStatus) {
+        final iconSize = switch (state.viewPhotoStatus) {
           PhotoViewEnum.fullScreen => 25.0,
           _ => 15.0,
         };
@@ -296,34 +308,11 @@ class CropedWidget extends StatelessWidget {
               Positioned(
                 bottom: 15,
                 right: 15,
-                child: AnimatedContainer(
-                  duration: 500.ms,
-                  curve: Curves.fastLinearToSlowEaseIn,
-                  width: actionWidth,
-                  height: actionWidth,
-                  padding: const EdgeInsets.all(5),
-                  decoration: BoxDecoration(
-                      color: darkColor.withOpacity(0.6),
-                      borderRadius: BorderRadius.circular(
-                        50,
-                      ),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Color(0x80000000),
-                          blurRadius: 8.0,
-                          offset: Offset(0.0, 4.0),
-                        )
-                      ]),
-                  child: IconButton(
-                    color: whiteColor,
-                    padding: EdgeInsets.zero,
-                    onPressed: photoPickerCubit.changeViewPhoto,
-                    icon: Icon(
-                      state.viewPhotoStatus.icon,
-                      color: whiteColor,
-                      size: actionSize,
-                    ),
-                  ),
+                child: CircleIconButton(
+                  size: actionWidth,
+                  onPressed: photoPickerCubit.changeViewPhoto,
+                  iconSize: iconSize,
+                  icon: state.viewPhotoStatus.icon,
                 ),
               ),
             ],
