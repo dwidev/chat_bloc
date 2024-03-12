@@ -1,14 +1,14 @@
 import 'dart:math';
 
 import 'complete_upload_photo_view_page.dart';
-import '../../core/theme/colors.dart';
-import '../../core/widget/gradient_button.dart';
-import '../../homepage/pages/home_page.dart';
+import '../../../core/theme/colors.dart';
+import '../../../core/widget/gradient_button.dart';
+import '../../../homepage/pages/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import 'allow_permission_location_page.dart';
+import '../allow_permission_location_page.dart';
 import 'complete_age_view_page.dart';
 import 'complete_distance_view_page.dart';
 import 'complete_gender_view_page.dart';

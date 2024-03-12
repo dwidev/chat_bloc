@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../core/theme/colors.dart';
+import '../../../core/theme/colors.dart';
 
 class CompleteGenderViewPage extends StatefulWidget {
   const CompleteGenderViewPage({

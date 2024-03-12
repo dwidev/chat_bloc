@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../core/theme/colors.dart';
+import '../../../core/theme/colors.dart';
 
 class CompleteLookingForViewPage extends StatefulWidget {
   const CompleteLookingForViewPage({

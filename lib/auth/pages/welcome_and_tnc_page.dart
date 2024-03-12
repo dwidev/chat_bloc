@@ -1,4 +1,4 @@
-import 'package:chat_bloc/auth/pages/complete_profile_page.dart';
+import 'package:chat_bloc/auth/pages/complete_profile/complete_profile_page.dart';
 import 'package:chat_bloc/auth/pages/spalsh_page.dart';
 import 'package:chat_bloc/core/extensions/extensions.dart';
 import 'package:chat_bloc/core/widget/gradient_button.dart';

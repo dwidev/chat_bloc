@@ -1,14 +1,14 @@
-import 'package:chat_bloc/auth/pages/login_with_phone_number.dart';
+import 'package:chat_bloc/auth/pages/login/login_with_phone_number.dart';
 import 'package:chat_bloc/core/extensions/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../../core/constant/contants.dart';
-import '../../core/theme/colors.dart';
-import '../../core/widget/gradient_button.dart';
-import '../../homepage/pages/home_page.dart';
-import 'complete_profile_page.dart';
+import '../../../core/constant/contants.dart';
+import '../../../core/theme/colors.dart';
+import '../../../core/widget/gradient_button.dart';
+import '../../../homepage/pages/home_page.dart';
+import '../complete_profile/complete_profile_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});

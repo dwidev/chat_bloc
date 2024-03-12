@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-import '../../core/theme/colors.dart';
+import '../../../core/theme/colors.dart';
 
 class CompleteAgeViewPage extends StatefulWidget {
   const CompleteAgeViewPage({

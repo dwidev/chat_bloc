@@ -4,7 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../core/extensions/extensions.dart';
 import '../../core/theme/colors.dart';
-import 'login_page.dart';
+import 'login/login_page.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
