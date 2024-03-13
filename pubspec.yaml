@@ -2,7 +2,7 @@ name: chat_bloc
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.5 <4.0.0'
+  sdk: ">=3.0.5 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -28,29 +28,32 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  adaptive_action_sheet: ^2.0.3
+  auto_route: ^7.9.0
   bloc_concurrency: ^0.2.2
   cupertino_icons: ^1.0.2
+  custom_image_crop: ^0.0.13
   dio: ^5.3.0
+  dotted_border: ^2.1.0
   equatable: ^2.0.5
   flutter:
     sdk: flutter
+  flutter_animate: ^4.3.0
   flutter_bloc: ^8.1.3
+  flutter_spinkit: ^5.2.0
   google_fonts: ^6.1.0
   intl: ^0.18.1
+  numberpicker: ^2.1.2
   path_provider: ^2.1.1
+  photo_manager: ^3.0.0
+  photo_manager_image_provider: ^2.1.1
   rxdart: ^0.27.7
   vector_math: ^2.1.4
   web_socket_channel: ^2.4.0
-  flutter_animate: ^4.3.0
-  dotted_border: ^2.1.0
-  flutter_spinkit: ^5.2.0
-  numberpicker: ^2.1.2
-  photo_manager: ^3.0.0
-  photo_manager_image_provider: ^2.1.1
-  custom_image_crop: ^0.0.13
-  adaptive_action_sheet: ^2.0.3
 
 dev_dependencies:
+  auto_route_generator: ^7.3.2
+  build_runner: ^2.4.8
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter
@@ -59,7 +62,6 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

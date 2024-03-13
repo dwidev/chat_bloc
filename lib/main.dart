@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'auth/pages/spalsh_page.dart';
-import 'chat/data/datasources/http_datasource.dart';
-import 'chat/data/datasources/ws_datasource.dart';
-import 'chat/data/repository/chat_repository.dart';
+import 'features/auth/pages/spalsh_page.dart';
+import 'features/chat/data/datasources/http_datasource.dart';
+import 'features/chat/data/datasources/ws_datasource.dart';
+import 'features/chat/data/repository/chat_repository.dart';
 import 'core/theme/theme.dart';
-import 'homepage/cubit/bottom_navigation_menu/bottom_navigation_menu_cubit.dart';
-import 'nearbypeople/cubit/details_card_cubit.dart';
+import 'features/homepage/cubit/bottom_navigation_menu/bottom_navigation_menu_cubit.dart';
+import 'features/nearbypeople/cubit/details_card_cubit.dart';
 
 void main() {
   runApp(const MyApp());
