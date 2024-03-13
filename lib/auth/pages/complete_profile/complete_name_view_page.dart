@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-class CompleteNameViewPage extends StatefulWidget {
+class CompleteNameViewPage extends StatelessWidget {
   const CompleteNameViewPage({
     super.key,
   });
 
-  @override
-  State<CompleteNameViewPage> createState() => _CompleteNameViewPageState();
-}
-
-class _CompleteNameViewPageState extends State<CompleteNameViewPage> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;

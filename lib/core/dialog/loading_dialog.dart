@@ -22,7 +22,7 @@ void showLoading(BuildContext context) {
                 )
               ],
             ),
-            child: const CircularProgressIndicator(),
+            child: const CircularProgressIndicator.adaptive(),
           ),
         ),
       );
