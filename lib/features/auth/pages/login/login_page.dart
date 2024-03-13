@@ -1,20 +1,25 @@
-import 'package:chat_bloc/features/auth/pages/login/login_with_phone_number.dart';
-import 'package:chat_bloc/core/extensions/extensions.dart';
+// import 'package:auto_route/auto_route.dart';
+import 'package:chat_bloc/core/routers/routergo.dart';
+import 'package:chat_bloc/features/auth/pages/complete_profile/complete_profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/constant/contants.dart';
+import '../../../../core/extensions/extensions.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/widget/gradient_button.dart';
 import '../../../homepage/pages/home_page.dart';
-import '../complete_profile/complete_profile_page.dart';
+import 'login_with_phone_number.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
+
+  static const path = '/login';
 }
 
 class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
@@ -26,6 +31,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
 
   late AnimationController animationDescController =
       AnimationController(vsync: this);
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    animationLogoController.dispose();
+    animationDescController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -164,7 +177,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             const SizedBox(height: 40),
             GradientButton(
               onPressed: () {
-                push(context: context, page: const CompleteProfilePage());
+                context.push(CompleteProfilePage.path);
               },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -192,7 +205,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             const SizedBox(height: 10),
             GradientButton(
               onPressed: () {
-                push(context: context, page: const CompleteProfilePage());
+                context.push('/complete-profile');
               },
               gradient: LinearGradient(
                 colors: [
@@ -229,12 +242,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
               child: TextButton(
                 onPressed: () {
                   animationController.reverse(from: 0.3).whenComplete(() {
-                    push(
-                      context: context,
-                      page: const LoginWithPhoneNumberPage(),
-                    ).then(
-                      (value) => animationController.forward(),
-                    );
+                    context.pushNamed(LoginWithPhoneNumberPage.path).then(
+                          (value) => animationController.forward(),
+                        );
                   });
                 },
                 child: Text(

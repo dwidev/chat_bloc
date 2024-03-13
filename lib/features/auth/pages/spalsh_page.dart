@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/extensions/extensions.dart';
 import '../../../core/theme/colors.dart';
@@ -11,6 +12,8 @@ class SplashPage extends StatefulWidget {
 
   @override
   State<SplashPage> createState() => _SplashPageState();
+
+  static const path = '/';
 }
 
 class _SplashPageState extends State<SplashPage>
@@ -22,9 +25,16 @@ class _SplashPageState extends State<SplashPage>
     super.initState();
     animationController = AnimationController(vsync: this);
     Future.delayed(1.seconds, () {
-      Navigator.pushReplacement(context, CustomPageRoute(const LoginPage()));
+      context.go(LoginPage.path);
+      // Navigator.pushReplacement(context, CustomPageRoute(const LoginPage()));
       animationController.forward();
     });
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
   }
 
   @override

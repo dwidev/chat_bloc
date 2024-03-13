@@ -5,6 +5,7 @@ import 'package:chat_bloc/core/widget/gradient_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/colors.dart';
 
@@ -13,6 +14,8 @@ class WelcomeAndTncPage extends StatefulWidget {
 
   @override
   State<WelcomeAndTncPage> createState() => _WelcomeAndTncPageState();
+
+  static const path = 'welcome-tnc';
 }
 
 class _WelcomeAndTncPageState extends State<WelcomeAndTncPage> {
@@ -189,12 +192,7 @@ class _WelcomeAndTncPageState extends State<WelcomeAndTncPage> {
             GradientButton(
               width: context.width,
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  CustomPageRoute(
-                    const CompleteProfilePage(),
-                  ),
-                );
+                context.go(CompleteProfilePage.path);
               },
               child: Text(
                 "I Agree",

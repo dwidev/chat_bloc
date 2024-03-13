@@ -1,5 +1,6 @@
-import 'package:chat_bloc/features/auth/pages/login/verify_otp_page.dart';
-import 'package:chat_bloc/features/homepage/pages/home_page.dart';
+import 'login_page.dart';
+import 'verify_otp_page.dart';
+import '../../../homepage/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -12,6 +13,8 @@ class LoginWithPhoneNumberPage extends StatefulWidget {
   @override
   State<LoginWithPhoneNumberPage> createState() =>
       _LoginWithPhoneNumberPageState();
+
+  static const path = 'login-with-phone';
 }
 
 class _LoginWithPhoneNumberPageState extends State<LoginWithPhoneNumberPage> {

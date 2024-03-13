@@ -1,22 +1,19 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:chat_bloc/features/auth/pages/welcome_and_tnc_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-
-import 'package:chat_bloc/features/auth/pages/complete_profile/complete_profile_page.dart';
-import 'package:chat_bloc/features/auth/pages/spalsh_page.dart';
-import 'package:chat_bloc/core/extensions/context_extendsion.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/colors.dart';
 import '../../../../core/widget/gradient_button.dart';
 import '../../widgets/otp_fields.dart';
+import '../welcome_and_tnc_page.dart';
 
 class VerifyOtpPage extends StatefulWidget {
   const VerifyOtpPage({super.key});
 
   @override
   State<VerifyOtpPage> createState() => _VerifyOtpPageState();
+
+  static const path = 'verify-otp';
 }
 
 class _VerifyOtpPageState extends State<VerifyOtpPage> {
@@ -115,14 +112,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                     colors: [primaryColor, darkColor],
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      CustomPageRoute(
-                        const WelcomeAndTncPage(),
-                        duration: 500.ms,
-                      ),
-                      // (_) => false,
-                    );
+                    context.pushNamed(WelcomeAndTncPage.path);
                   },
                   child: Text(
                     "Send",

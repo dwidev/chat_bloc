@@ -9,6 +9,7 @@ class CompleteProfileBloc
     extends Bloc<CompleteProfileEvent, CompleteProfileState> {
   CompleteProfileBloc() : super(const CompleteProfileInitial()) {
     on<CompleteProfileSetNameEvent>((event, emit) {
+      print(event.name);
       emit(state.copyWith(name: event.name));
     });
   }

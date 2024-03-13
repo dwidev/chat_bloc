@@ -1,5 +1,4 @@
 import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
-import 'package:chat_bloc/core/widget/circle_icon_button.dart';
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,20 +6,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../features/homepage/pages/home_page.dart';
 import '../dialog/delete_alert_dialog.dart';
 import '../dialog/loading_dialog.dart';
 import '../dialog/show_image_dialog.dart';
 import '../enums/photo_view_enum.dart';
-import '../extensions/context_extendsion.dart';
+import '../extensions/extensions.dart';
 import '../theme/colors.dart';
+import '../widget/circle_icon_button.dart';
 import 'photo_picker_cubit.dart';
 
 part 'gallery_view_page.dart';
+
+final photoPickerCubit = PhotoPickerCubit();
 
 class PhotosPickerWidget extends StatelessWidget {
   const PhotosPickerWidget({
@@ -35,7 +37,7 @@ class PhotosPickerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PhotoPickerCubit>(
-      create: (_) => PhotoPickerCubit(),
+      create: (_) => photoPickerCubit,
       child: PhotosPickerWidgetContent(
         backgroundColor: backgroundColor,
         dashColor: dashColor,
@@ -70,20 +72,14 @@ class _PhotosPickerWidgetContentState extends State<PhotosPickerWidgetContent> {
 
   void goToGalleryView(int? index) {
     photoPickerCubit.onPickImageAtGalleryView(null);
-    push(
-      context: context,
-      page: _GalleryViewPage(
-        index: index,
-        photoPickerCubit: photoPickerCubit,
-      ),
-    );
+    context.push(GalleryViewPage.path, extra: index);
   }
 
   void onDelete(int index) {
     showDeleteAlertDialog(
       context: context,
       onDelete: () {
-        Navigator.pop(context);
+        context.pop();
         photoPickerCubit.deleteImage(index);
       },
     );
@@ -132,7 +128,7 @@ class _PhotosPickerWidgetContentState extends State<PhotosPickerWidgetContent> {
                               ),
                             ),
                             onPressed: (context) {
-                              Navigator.pop(context);
+                              context.pop();
                               onDelete(index);
                             },
                           ),
@@ -144,7 +140,7 @@ class _PhotosPickerWidgetContentState extends State<PhotosPickerWidgetContent> {
                               ),
                             ),
                             onPressed: (context) {
-                              Navigator.pop(context);
+                              context.pop();
                               goToGalleryView(index);
                             },
                           ),
@@ -156,7 +152,7 @@ class _PhotosPickerWidgetContentState extends State<PhotosPickerWidgetContent> {
                               ),
                             ),
                             onPressed: (context) {
-                              Navigator.pop(context);
+                              context.pop();
                               showImageDialog(
                                 context: context,
                                 image: MemoryImage(

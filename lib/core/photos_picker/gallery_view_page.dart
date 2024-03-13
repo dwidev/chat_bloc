@@ -1,15 +1,14 @@
 part of 'photos_widget.dart';
 
-class _GalleryViewPage extends StatelessWidget {
+class GalleryViewPage extends StatelessWidget {
   final int? index;
 
-  const _GalleryViewPage({
+  const GalleryViewPage({
     Key? key,
     required this.index,
-    required this.photoPickerCubit,
   }) : super(key: key);
 
-  final PhotoPickerCubit photoPickerCubit;
+  static const path = "/gallery-view";
 
   @override
   Widget build(BuildContext context) {

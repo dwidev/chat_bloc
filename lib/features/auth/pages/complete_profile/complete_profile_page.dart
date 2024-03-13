@@ -1,13 +1,12 @@
 import 'dart:math';
 
-import 'complete_upload_photo_view_page.dart';
-import '../../../../core/theme/colors.dart';
-import '../../../../core/widget/gradient_button.dart';
-import '../../../homepage/pages/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
+import '../../../../core/theme/colors.dart';
+import '../../../../core/widget/gradient_button.dart';
+import '../../../homepage/pages/home_page.dart';
 import '../allow_permission_location_page.dart';
 import 'complete_age_view_page.dart';
 import 'complete_distance_view_page.dart';
@@ -15,12 +14,15 @@ import 'complete_gender_view_page.dart';
 import 'complete_interest_view_page.dart';
 import 'complete_looking_for_view_page.dart';
 import 'complete_name_view_page.dart';
+import 'complete_upload_photo_view_page.dart';
 
 class CompleteProfilePage extends StatefulWidget {
   const CompleteProfilePage({super.key});
 
   @override
   State<CompleteProfilePage> createState() => _CompleteProfilePageState();
+
+  static const path = '/complete-profile';
 }
 
 class _CompleteProfilePageState extends State<CompleteProfilePage> {
@@ -54,6 +56,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
       push(context: context, page: const AllowPermissionLocationPage());
       return;
     }
+
     setState(() {
       linearColor = primaryColor.withAlpha(Random().nextInt(255));
       indicatorProgres += 1 / pageLenth;
