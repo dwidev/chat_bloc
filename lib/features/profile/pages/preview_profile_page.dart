@@ -1,9 +1,9 @@
-import 'package:chat_bloc/features/homepage/pages/home_page.dart';
-import 'package:chat_bloc/features/nearbypeople/cubit/control_card_enum.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/extensions/context_extension.dart';
+import '../../homepage/pages/home_page.dart';
+import '../../nearbypeople/pages/nearby_people_card_detail_page.dart';
 import '../../nearbypeople/pages/nearby_people_card_view.dart';
-import '../../nearbypeople/pages/nearby_people_card_view_animation.dart';
 
 class PreviewProfilePage extends StatefulWidget {
   const PreviewProfilePage({super.key});
@@ -15,12 +15,9 @@ class PreviewProfilePage extends StatefulWidget {
 class _PreviewProfilePageState extends State<PreviewProfilePage> {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("Preview", style: textTheme.bodyMedium),
+        title: Text("Preview", style: context.textTheme.bodyMedium),
         backgroundColor: Colors.transparent,
       ),
       body: Stack(
@@ -36,13 +33,31 @@ class _PreviewProfilePageState extends State<PreviewProfilePage> {
                 child: Stack(
                   alignment: Alignment.topCenter,
                   children: [
-                    NearbyPeopleCardView(imageUrl: dummyUsers[4]),
+                    Hero(
+                      transitionOnUserGestures: true,
+                      tag: dummyUsers[4],
+                      child: Material(
+                        child: InkWell(
+                          onTap: () {
+                            push(
+                              context: context,
+                              page: NearbyPeopleCardDetailPage(
+                                imageUrl: dummyUsers[4],
+                              ),
+                            );
+                          },
+                          child: NearbyPeopleCardView(
+                            imageUrl: dummyUsers[4],
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              Positioned(
-                bottom: 50,
-                child: const CardActionsWidget(),
+              const Positioned(
+                bottom: 100,
+                child: CardActionsWidget(),
               ),
             ],
           ),
