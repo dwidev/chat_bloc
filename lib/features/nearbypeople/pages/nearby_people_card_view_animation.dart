@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:chat_bloc/features/nearbypeople/cubit/control_card_enum.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -117,14 +118,18 @@ class _NearbyPeopleCardViewAnimationState
               alignment: Alignment.topCenter,
               children: [
                 // const NearbyPeopleCardDetailView(),
-                NearbyPeopleCardView(
-                  imageUrl: widget.imageUrl,
-                  // options: NearbyPeopleCardViewOptions(
-                  //   imageHeight: detailsCardCubit.heightCardAnimation.value,
-                  //   imageWidth: detailsCardCubit.widthCardAnimation.value,
-                  //   isDetail: isDetail,
-                  //   radiusSize: detailsCardCubit.radiusCardAnimation.value,
-                  // ),
+                Hero(
+                  tag: widget.imageUrl,
+                  transitionOnUserGestures: true,
+                  child: NearbyPeopleCardView(
+                    imageUrl: widget.imageUrl,
+                    // options: NearbyPeopleCardViewOptions(
+                    //   imageHeight: detailsCardCubit.heightCardAnimation.value,
+                    //   imageWidth: detailsCardCubit.widthCardAnimation.value,
+                    //   isDetail: isDetail,
+                    //   radiusSize: detailsCardCubit.radiusCardAnimation.value,
+                    // ),
+                  ),
                 ),
                 Visibility(
                   visible: !isDetail,

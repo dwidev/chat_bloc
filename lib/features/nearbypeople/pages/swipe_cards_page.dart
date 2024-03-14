@@ -1,3 +1,4 @@
+import 'package:chat_bloc/features/nearbypeople/pages/nearby_people_card_detail_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -141,6 +142,12 @@ class _SwipeCardsPageState extends State<SwipeCardsPage>
                                 onActionTapType: state.onActionTap,
                                 imageUrl: state.currentItem ?? "",
                                 onTap: () {
+                                  push(
+                                    context: context,
+                                    page: NearbyPeopleCardDetailPage(
+                                      imageUrl: state.currentItem ?? "",
+                                    ),
+                                  );
                                   // detailsCardCubit.onClickCardToDetail(
                                   //   screnSize: size,
                                   // );
