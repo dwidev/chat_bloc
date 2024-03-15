@@ -1,10 +1,12 @@
+import 'package:chat_bloc/features/nearbypeople/pages/swipe_cards_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/constant/contants.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/widget/gradient_button.dart';
-import '../../homepage/pages/home_page.dart';
+import '../../main/pages/main_page.dart';
 
 class AllowPermissionLocationPage extends StatefulWidget {
   const AllowPermissionLocationPage({super.key});
@@ -12,6 +14,8 @@ class AllowPermissionLocationPage extends StatefulWidget {
   @override
   State<AllowPermissionLocationPage> createState() =>
       _AllowPermissionLocationPageState();
+
+  static const path = '/allow-location';
 }
 
 class _AllowPermissionLocationPageState
@@ -83,7 +87,7 @@ class _AllowPermissionLocationPageState
                   darkColor,
                 ]),
                 onPressed: () {
-                  push(context: context, page: const HomePage());
+                  context.push(SwipeCardsPage.path);
                 },
                 child: Text(
                   "Allow location access",

@@ -7,13 +7,15 @@ import 'package:flutter_animate/flutter_animate.dart';
 
 import '../../../core/theme/colors.dart';
 import '../../../core/widget/swipe_button.dart';
-import '../../homepage/pages/home_page.dart';
+import '../../main/pages/main_page.dart';
 
 class MatchesPage extends StatefulWidget {
   const MatchesPage({super.key});
 
   @override
   State<MatchesPage> createState() => _MatchesPageState();
+
+  static const path = '/matches';
 }
 
 class _MatchesPageState extends State<MatchesPage> {

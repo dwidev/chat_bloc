@@ -14,20 +14,34 @@ import '../widget/chat_last_seen_animation_widget.dart';
 import '../widget/chat_tile_widget.dart';
 import '../widget/reply_chat_widget.dart';
 
-class ChatPage extends StatefulWidget {
+class ChatPageOptions {
   final ConversationModel conversationModel;
   final String me;
   final UserModel receiver;
 
-  const ChatPage({
-    Key? key,
+  ChatPageOptions({
     required this.conversationModel,
     required this.me,
     required this.receiver,
+  });
+}
+
+class ChatPage extends StatefulWidget {
+  final ChatPageOptions options;
+
+  const ChatPage({
+    Key? key,
+    required this.options,
   }) : super(key: key);
+
+  ConversationModel get conversationModel => options.conversationModel;
+  String get me => options.me;
+  UserModel get receiver => options.receiver;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
+
+  static const path = 'room-chat';
 }
 
 class _ChatPageState extends State<ChatPage>

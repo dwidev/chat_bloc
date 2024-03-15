@@ -1,13 +1,12 @@
-import 'package:chat_bloc/features/auth/pages/complete_profile/complete_profile_page.dart';
-import 'package:chat_bloc/features/auth/pages/spalsh_page.dart';
-import 'package:chat_bloc/core/extensions/extensions.dart';
-import 'package:chat_bloc/core/widget/gradient_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/extensions/extensions.dart';
 import '../../../core/theme/colors.dart';
+import '../../../core/widget/gradient_button.dart';
+import 'complete_profile/complete_profile_page.dart';
 
 class WelcomeAndTncPage extends StatefulWidget {
   const WelcomeAndTncPage({super.key});

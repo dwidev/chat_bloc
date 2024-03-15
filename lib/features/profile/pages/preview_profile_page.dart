@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/extensions/context_extension.dart';
-import '../../homepage/pages/home_page.dart';
+import '../../main/pages/main_page.dart';
 import '../../nearbypeople/pages/nearby_people_card_detail_page.dart';
 import '../../nearbypeople/pages/nearby_people_card_view.dart';
 
@@ -10,6 +11,8 @@ class PreviewProfilePage extends StatefulWidget {
 
   @override
   State<PreviewProfilePage> createState() => _PreviewProfilePageState();
+
+  static const path = 'preview-cards-profile';
 }
 
 class _PreviewProfilePageState extends State<PreviewProfilePage> {
@@ -39,11 +42,9 @@ class _PreviewProfilePageState extends State<PreviewProfilePage> {
                       child: Material(
                         child: InkWell(
                           onTap: () {
-                            push(
-                              context: context,
-                              page: NearbyPeopleCardDetailPage(
-                                imageUrl: dummyUsers[4],
-                              ),
+                            context.pushNamed(
+                              NearbyPeopleCardDetailPage.path,
+                              extra: dummyUsers[4],
                             );
                           },
                           child: NearbyPeopleCardView(

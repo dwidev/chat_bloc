@@ -6,14 +6,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:chat_bloc/core/theme/colors.dart';
-import 'package:chat_bloc/features/homepage/pages/home_page.dart';
+import 'package:chat_bloc/features/main/pages/main_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
+
+  static const path = '/profile';
 }
 
 class RemainingsActions {
@@ -240,10 +243,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               right: 0,
                               child: InkWell(
                                 onTap: () {
-                                  push(
-                                    context: context,
-                                    page: const UpdateProfilePage(),
-                                  );
+                                  context.pushNamed(UpdateProfilePage.path);
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.all(5),

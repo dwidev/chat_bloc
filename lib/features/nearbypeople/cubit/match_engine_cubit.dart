@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:chat_bloc/features/homepage/pages/home_page.dart';
+import 'package:chat_bloc/features/main/pages/main_page.dart';
 import 'package:chat_bloc/features/nearbypeople/cubit/control_card_enum.dart';
 
 import 'control_card_cubit.dart';
@@ -14,7 +14,7 @@ class MatchEngineCubit extends Cubit<MatchEngineState>
 
   Future<void> loadData() async {
     emit(state.copyWith(isLoading: true));
-    await Future.delayed(const Duration(seconds: 5), () {
+    await Future.delayed(const Duration(seconds: 1), () {
       emit(state.copyWith(swipeItems: dummyUsers, isLoading: false));
     });
   }

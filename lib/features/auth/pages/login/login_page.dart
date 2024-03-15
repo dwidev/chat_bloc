@@ -10,7 +10,7 @@ import '../../../../core/constant/contants.dart';
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/widget/gradient_button.dart';
-import '../../../homepage/pages/home_page.dart';
+import '../../../main/pages/main_page.dart';
 import 'login_with_phone_number.dart';
 
 class LoginPage extends StatefulWidget {
@@ -205,7 +205,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             const SizedBox(height: 10),
             GradientButton(
               onPressed: () {
-                context.push('/complete-profile');
+                context.push(CompleteProfilePage.path);
               },
               gradient: LinearGradient(
                 colors: [

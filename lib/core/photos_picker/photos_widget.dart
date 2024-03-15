@@ -10,7 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
-import '../../features/homepage/pages/home_page.dart';
+import '../../features/main/pages/main_page.dart';
 import '../dialog/delete_alert_dialog.dart';
 import '../dialog/loading_dialog.dart';
 import '../dialog/show_image_dialog.dart';

@@ -3,9 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/colors.dart';
-import '../../homepage/pages/home_page.dart';
+import '../../main/pages/main_page.dart';
 import '../cubit/control_card_cubit.dart';
 import '../cubit/details_card_cubit.dart';
 import '../cubit/match_engine_cubit.dart';
@@ -17,6 +18,8 @@ class SwipeCardsPage extends StatefulWidget {
 
   @override
   State<SwipeCardsPage> createState() => _SwipeCardsPageState();
+
+  static const path = '/swipe-cards';
 }
 
 class _SwipeCardsPageState extends State<SwipeCardsPage>
@@ -142,15 +145,10 @@ class _SwipeCardsPageState extends State<SwipeCardsPage>
                                 onActionTapType: state.onActionTap,
                                 imageUrl: state.currentItem ?? "",
                                 onTap: () {
-                                  push(
-                                    context: context,
-                                    page: NearbyPeopleCardDetailPage(
-                                      imageUrl: state.currentItem ?? "",
-                                    ),
+                                  context.pushNamed(
+                                    NearbyPeopleCardDetailPage.path,
+                                    extra: state.currentItem ?? "",
                                   );
-                                  // detailsCardCubit.onClickCardToDetail(
-                                  //   screnSize: size,
-                                  // );
                                 },
                               ),
                             ),

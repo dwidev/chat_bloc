@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/photos_picker/photos_widget.dart';
 import '../../../core/theme/colors.dart';
-import '../../homepage/pages/home_page.dart';
+import '../../main/pages/main_page.dart';
 import '../../nearbypeople/pages/nearby_people_card_detail_view.dart';
 import 'preview_profile_page.dart';
 
@@ -12,6 +13,8 @@ class UpdateProfilePage extends StatefulWidget {
 
   @override
   State<UpdateProfilePage> createState() => _UpdateProfilePageState();
+
+  static const path = 'update-profile';
 }
 
 class _UpdateProfilePageState extends State<UpdateProfilePage> {
@@ -39,8 +42,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           preferredSize: const Size.fromHeight(kToolbarHeight - 15),
           child: InkWell(
             onTap: () {
-              print("PREVIEW");
-              push(context: context, page: const PreviewProfilePage());
+              context.pushNamed(PreviewProfilePage.path);
             },
             child: Container(
               width: double.infinity,

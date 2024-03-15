@@ -3,10 +3,11 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/colors.dart';
 import '../../../../core/widget/gradient_button.dart';
-import '../../../homepage/pages/home_page.dart';
+import '../../../main/pages/main_page.dart';
 import '../allow_permission_location_page.dart';
 import 'complete_age_view_page.dart';
 import 'complete_distance_view_page.dart';
@@ -53,7 +54,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
   void onNext() {
     if (pageIndex == pageLenth - 1) {
-      push(context: context, page: const AllowPermissionLocationPage());
+      context.push(AllowPermissionLocationPage.path);
       return;
     }
 

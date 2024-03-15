@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:chat_bloc/core/extensions/extensions.dart';
 import 'package:chat_bloc/core/widget/gradient_button.dart';
-import 'package:chat_bloc/features/homepage/pages/home_page.dart';
+import 'package:chat_bloc/features/main/pages/main_page.dart';
 import 'package:chat_bloc/features/nearbypeople/pages/nearby_people_card_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +24,8 @@ class NearbyPeopleCardDetailPage extends StatefulWidget {
   @override
   State<NearbyPeopleCardDetailPage> createState() =>
       _NearbyPeopleCardDetailPageState();
+
+  static const path = 'detail-card';
 }
 
 class _NearbyPeopleCardDetailPageState

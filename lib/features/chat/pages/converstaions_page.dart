@@ -1,7 +1,8 @@
 import 'package:chat_bloc/features/chat/cubit/react_animation_cubit.dart';
 import 'package:chat_bloc/core/theme/colors.dart';
-import 'package:chat_bloc/features/homepage/pages/home_page.dart';
+import 'package:chat_bloc/features/main/pages/main_page.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:go_router/go_router.dart';
 
 import '../bloc/conversations_bloc/conversations_bloc.dart';
 import '../bloc/ws_connection_bloc/ws_connection_bloc.dart';
@@ -15,22 +16,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/chat_bloc/chat_bloc.dart';
 
 class ConversationsPage extends StatefulWidget {
-  static Widget build(String me) => MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => WsConnectionBloc(
-              chatRepository: context.read<ChatRepository>(),
-            ),
-          ),
-          BlocProvider(
-            create: (context) => ConversationsBloc(
-              chatRepository: context.read<ChatRepository>(),
-            ),
-          ),
-        ],
-        child: ConversationsPage(me: me),
-      );
-
   final String me;
   const ConversationsPage({
     Key? key,
@@ -39,6 +24,8 @@ class ConversationsPage extends StatefulWidget {
 
   @override
   State<ConversationsPage> createState() => _ConversationsPageState();
+
+  static const path = '/chat';
 }
 
 class _ConversationsPageState extends State<ConversationsPage> {
@@ -65,30 +52,33 @@ class _ConversationsPageState extends State<ConversationsPage> {
 
     convBloc.add(ConversationReadMessage(conversation));
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => RepositoryProvider.value(
-          value: repo,
-          child: MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: convBloc),
-              BlocProvider(create: (context) => ReactAnimationCubit()),
-              BlocProvider(
-                create: (context) => ChatBloc(
-                  chatRepository: context.read<ChatRepository>(),
-                ),
-              ),
-            ],
-            child: ChatPage(
-              conversationModel: conversation,
-              me: widget.me,
-              receiver: conversation.user,
-            ),
-          ),
-        ),
-      ),
+    final options = ChatPageOptions(
+      conversationModel: conversation,
+      me: widget.me,
+      receiver: conversation.user,
     );
+    context.pushNamed(ChatPage.path, extra: options);
+
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => RepositoryProvider.value(
+    //       value: repo,
+    //       child: MultiBlocProvider(
+    //         providers: [
+    //           BlocProvider.value(value: convBloc),
+    //           BlocProvider(create: (context) => ReactAnimationCubit()),
+    //           BlocProvider(
+    //             create: (context) => ChatBloc(
+    //               chatRepository: context.read<ChatRepository>(),
+    //             ),
+    //           ),
+    //         ],
+    //         child: ChatPage(options: options),
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 
   @override

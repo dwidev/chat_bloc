@@ -1,6 +1,8 @@
+import 'package:go_router/go_router.dart';
+
 import 'login_page.dart';
 import 'verify_otp_page.dart';
-import '../../../homepage/pages/home_page.dart';
+import '../../../main/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -118,7 +120,7 @@ class _LoginWithPhoneNumberPageState extends State<LoginWithPhoneNumberPage> {
                     colors: [primaryColor, darkColor],
                   ),
                   onPressed: () {
-                    push(context: context, page: const VerifyOtpPage());
+                    context.pushNamed(VerifyOtpPage.path);
                   },
                   child: Text(
                     "Next",
