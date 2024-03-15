@@ -1,8 +1,7 @@
-// import 'package:auto_route/auto_route.dart';
-import 'package:chat_bloc/core/routers/routergo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'core/routers/routergo.dart';
 import 'core/theme/theme.dart';
 import 'features/chat/data/datasources/http_datasource.dart';
 import 'features/chat/data/datasources/ws_datasource.dart';
@@ -25,7 +24,7 @@ class MyApp extends StatelessWidget {
     return RepositoryProvider(
       create: (context) => chatRepository,
       child: MaterialApp.router(
-        title: 'Flutter Dating App animation with Bloc',
+        title: 'Love match',
         theme: lightTheme,
         routerConfig: AppRouter.router,
         builder: (context, child) {
