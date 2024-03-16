@@ -2,6 +2,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../data/datasources/ws_datasource.dart';
 import '../../data/repository/chat_repository.dart';
@@ -9,6 +10,7 @@ import '../../data/repository/chat_repository.dart';
 part 'ws_connection_event.dart';
 part 'ws_connection_state.dart';
 
+@Injectable()
 class WsConnectionBloc extends Bloc<WsConnectionEvent, WsConnectionState> {
   final ChatRepository chatRepository;
   WsConnectionBloc({required this.chatRepository})

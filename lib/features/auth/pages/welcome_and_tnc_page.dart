@@ -191,7 +191,7 @@ class _WelcomeAndTncPageState extends State<WelcomeAndTncPage> {
             GradientButton(
               width: context.width,
               onPressed: () {
-                context.go(CompleteProfilePage.path);
+                context.pushNamed(CompleteProfilePage.path);
               },
               child: Text(
                 "I Agree",

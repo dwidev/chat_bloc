@@ -4,19 +4,15 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
 import 'control_card_enum.dart';
 
 part 'control_card_state.dart';
 
-abstract class ControlCardCubitDelegate {
-  void onSwipeUpdate(double distance);
-}
-
+@Injectable()
 class ControlCardCubit extends Cubit<ControlCardState> {
-  ControlCardCubit(this.delegate) : super(const ControlCardInitial());
-
-  final ControlCardCubitDelegate delegate;
+  ControlCardCubit() : super(const ControlCardInitial());
 
   late AnimationController swipeAnimationController;
   late Tween<Offset> tweenPosition;
@@ -73,8 +69,6 @@ class ControlCardCubit extends Cubit<ControlCardState> {
         angle: _rotation(state.anchorBounds),
         overlay: overlayAnimation.value,
       ));
-
-      delegate.onSwipeUpdate(state.position.distance);
       return;
     }
 
@@ -85,7 +79,6 @@ class ControlCardCubit extends Cubit<ControlCardState> {
       angle: angleAnimation.value,
       overlay: overlayAnimation.value,
     ));
-    delegate.onSwipeUpdate(state.position.distance);
   }
 
   double _rotation(Rect dragBounds) {
@@ -160,8 +153,6 @@ class ControlCardCubit extends Cubit<ControlCardState> {
       var overlay = (-newPostion.dy - 50) / 100;
       newOverlay = overlay < 0.7 ? overlay : state.overlay;
     }
-
-    delegate.onSwipeUpdate(newPostion.distance);
 
     emit(state.copyWith(
       position: newPostion,

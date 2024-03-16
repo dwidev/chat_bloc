@@ -1,3 +1,4 @@
+import 'package:chat_bloc/core/depedency_injection/injection.dart';
 import 'package:chat_bloc/features/nearbypeople/pages/nearby_people_card_detail_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _SwipeCardsPageState extends State<SwipeCardsPage>
 
   @override
   void initState() {
-    matchEngine = MatchEngineCubit();
+    matchEngine = getIt<MatchEngineCubit>();
     Future.microtask(() {
       matchEngine.loadData();
     });
@@ -42,7 +43,6 @@ class _SwipeCardsPageState extends State<SwipeCardsPage>
     super.build(context);
 
     final size = MediaQuery.of(context).size;
-    final detailsCardCubit = context.read<DetailsCardCubit>();
     final textTheme = Theme.of(context).textTheme;
 
     final appBar = AppBar(
@@ -139,8 +139,7 @@ class _SwipeCardsPageState extends State<SwipeCardsPage>
                           },
                           if (state.currentItem != null) ...{
                             BlocProvider<ControlCardCubit>(
-                              create: (context) =>
-                                  ControlCardCubit(matchEngine),
+                              create: (context) => getIt<ControlCardCubit>(),
                               child: NearbyPeopleCardViewAnimation(
                                 onActionTapType: state.onActionTap,
                                 imageUrl: state.currentItem ?? "",

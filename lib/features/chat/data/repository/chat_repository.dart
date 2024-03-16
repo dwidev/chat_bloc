@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chat_bloc/features/chat/data/model/socket_event_model.dart';
+import 'package:injectable/injectable.dart';
 
 import '../datasources/http_datasource.dart';
 import '../model/chat_message_model.dart';
@@ -12,6 +13,7 @@ import '../model/conversation_model.dart';
 const reconnectDelayDuration = Duration(milliseconds: 500);
 const attemptsReconnecting = 5;
 
+@LazySingleton()
 class ChatRepository {
   final WebSocketDataSource webSocketDataSource;
   final HttpDataSource httpDataSource;

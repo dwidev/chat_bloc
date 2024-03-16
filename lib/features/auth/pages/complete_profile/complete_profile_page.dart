@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/colors.dart';
 import '../../../../core/widget/gradient_button.dart';
-import '../../../main/pages/main_page.dart';
 import '../allow_permission_location_page.dart';
 import 'complete_age_view_page.dart';
 import 'complete_distance_view_page.dart';
@@ -23,7 +22,7 @@ class CompleteProfilePage extends StatefulWidget {
   @override
   State<CompleteProfilePage> createState() => _CompleteProfilePageState();
 
-  static const path = '/complete-profile';
+  static const path = 'complete-profile';
 }
 
 class _CompleteProfilePageState extends State<CompleteProfilePage> {

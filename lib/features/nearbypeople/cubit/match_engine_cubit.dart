@@ -1,15 +1,13 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 
-import 'package:chat_bloc/features/main/pages/main_page.dart';
-import 'package:chat_bloc/features/nearbypeople/cubit/control_card_enum.dart';
+import '../../main/pages/main_page.dart';
+import 'control_card_enum.dart';
 
-import 'control_card_cubit.dart';
-
-class MatchEngineCubit extends Cubit<MatchEngineState>
-    implements ControlCardCubitDelegate {
+@Injectable()
+class MatchEngineCubit extends Cubit<MatchEngineState> {
   MatchEngineCubit() : super(const MatchEngineInitial([]));
 
   Future<void> loadData() async {
@@ -37,7 +35,6 @@ class MatchEngineCubit extends Cubit<MatchEngineState>
     emit(state.copyWith(onActionTap: () => CardSwipeType.love));
   }
 
-  @override
   void onSwipeUpdate(double distance) {
     final cardScale = 0.9 + (0.1 * (distance / 100.0)).clamp(0.0, 0.1);
     emit(state.copyWith(nextCardScale: cardScale));

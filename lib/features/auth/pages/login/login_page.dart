@@ -177,7 +177,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             const SizedBox(height: 40),
             GradientButton(
               onPressed: () {
-                context.push(CompleteProfilePage.path);
+                context.pushNamed(CompleteProfilePage.path);
               },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -205,7 +205,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             const SizedBox(height: 10),
             GradientButton(
               onPressed: () {
-                context.push(CompleteProfilePage.path);
+                context.pushNamed(CompleteProfilePage.path);
               },
               gradient: LinearGradient(
                 colors: [

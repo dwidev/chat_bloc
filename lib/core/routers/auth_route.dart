@@ -1,9 +1,13 @@
-import 'package:chat_bloc/core/extensions/go_router_state_extension.dart';
-import 'package:chat_bloc/features/auth/pages/login/login_page.dart';
-import 'package:chat_bloc/features/auth/pages/welcome_and_tnc_page.dart';
+import '../depedency_injection/injection.dart';
+import '../extensions/go_router_state_extension.dart';
+import '../../features/auth/pages/complete_profile/complete_profile_page.dart';
+import '../../features/auth/pages/login/login_page.dart';
+import '../../features/auth/pages/welcome_and_tnc_page.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/auth/bloc/complete_profile_bloc.dart';
 import '../../features/auth/pages/login/login_with_phone_number.dart';
 import '../../features/auth/pages/login/verify_otp_page.dart';
 import '../../features/auth/pages/spalsh_page.dart';
@@ -36,6 +40,16 @@ final authRoute = <RouteBase>[
           transitionDuration: 200.ms,
           child: const WelcomeAndTncPage(),
         ),
+      ),
+      GoRoute(
+        path: CompleteProfilePage.path,
+        name: CompleteProfilePage.path,
+        builder: (context, state) {
+          return BlocProvider(
+            create: (context) => getIt<CompleteProfileBloc>(),
+            child: const CompleteProfilePage(),
+          );
+        },
       ),
     ],
   ),

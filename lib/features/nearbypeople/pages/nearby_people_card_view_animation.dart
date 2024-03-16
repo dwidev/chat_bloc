@@ -72,7 +72,6 @@ class _NearbyPeopleCardViewAnimationState
     final isDetail = context.select<DetailsCardCubit, bool>(
       (p) => p.state.isDetail,
     );
-    final detailsCardCubit = context.read<DetailsCardCubit>();
 
     return GestureDetector(
       onTap: widget.onTap,
@@ -97,15 +96,17 @@ class _NearbyPeopleCardViewAnimationState
       },
       child: BlocConsumer<ControlCardCubit, ControlCardState>(
         listener: (context, state) {
+          context.read<MatchEngineCubit>().onSwipeUpdate(state.distance);
+
           if (state is ControlCardLovedState ||
               state is ControlCardSkipedState) {
             context.read<MatchEngineCubit>().cycleCard();
           }
         },
         builder: (context, state) {
-          Offset rotationOrigin(Rect dragBounds) {
-            return state.positionStart - dragBounds.topLeft;
-          }
+          // Offset rotationOrigin(Rect dragBounds) {
+          //   return state.positionStart - dragBounds.topLeft;
+          // }
 
           return Transform(
             transform: Matrix4.translationValues(
@@ -113,7 +114,7 @@ class _NearbyPeopleCardViewAnimationState
               state.position.dy,
               0.0,
             )..rotateZ(state.angle),
-            origin: rotationOrigin(state.anchorBounds),
+            // origin: rotationOrigin(state.anchorBounds),
             child: Stack(
               alignment: Alignment.topCenter,
               children: [

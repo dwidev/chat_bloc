@@ -9,6 +9,8 @@ class ControlCardState extends Equatable {
   final Offset position;
   final Offset positionStart;
 
+  double get distance => position.distance;
+
   /// anchor
   final Rect anchorBounds;
 

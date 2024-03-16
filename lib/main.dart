@@ -1,3 +1,4 @@
+import 'package:chat_bloc/core/depedency_injection/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,6 +10,7 @@ import 'features/chat/data/repository/chat_repository.dart';
 import 'features/nearbypeople/cubit/details_card_cubit.dart';
 
 void main() {
+  configureDepedencies();
   runApp(const MyApp());
 }
 

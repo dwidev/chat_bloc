@@ -52,15 +52,6 @@ abstract class AppRouter {
         ],
       ),
       GoRoute(
-        path: CompleteProfilePage.path,
-        builder: (context, state) {
-          return BlocProvider(
-            create: (context) => CompleteProfileBloc(),
-            child: const CompleteProfilePage(),
-          );
-        },
-      ),
-      GoRoute(
         parentNavigatorKey: rootNavigatorKey,
         path: GalleryViewPage.path,
         builder: (context, state) {

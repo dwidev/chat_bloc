@@ -2,10 +2,12 @@ import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:injectable/injectable.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../enums/photo_view_enum.dart';
 
+@Injectable()
 class PhotoPickerCubit extends Cubit<PhotoPickerState> {
   PhotoPickerCubit() : super(const PhotoPickerInitial());
 

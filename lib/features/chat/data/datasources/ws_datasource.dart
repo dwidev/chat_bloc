@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:chat_bloc/features/chat/data/repository/chat_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:web_socket_channel/io.dart';
@@ -24,6 +25,7 @@ enum WSConnectionStatus {
 const host = "172.20.10.4";
 // const host = "192.168.10.145";
 
+@LazySingleton()
 class WebSocketDataSource {
   late WebSocketChannel webSocketChannel;
 

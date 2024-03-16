@@ -2,9 +2,11 @@ import 'package:chat_bloc/features/chat/data/datasources/ws_datasource.dart';
 import 'package:chat_bloc/features/chat/data/model/chat_message_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:injectable/injectable.dart';
 
 import '../model/conversation_model.dart';
 
+@LazySingleton()
 class HttpDataSource {
   late Dio dio;
 
