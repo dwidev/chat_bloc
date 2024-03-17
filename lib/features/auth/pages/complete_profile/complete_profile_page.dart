@@ -53,7 +53,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
 
   void onNext() {
     if (pageIndex == pageLenth - 1) {
-      context.push(AllowPermissionLocationPage.path);
+      context.go(AllowPermissionLocationPage.path);
       return;
     }
 

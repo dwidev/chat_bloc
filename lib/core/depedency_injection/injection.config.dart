@@ -42,7 +42,10 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i4.ControlCardCubit>(() => _i4.ControlCardCubit());
     gh.lazySingleton<_i5.HttpDataSource>(() => _i5.HttpDataSource());
     gh.factory<_i6.MatchEngineCubit>(() => _i6.MatchEngineCubit());
-    gh.factory<_i7.PhotoPickerCubit>(() => _i7.PhotoPickerCubit());
+    gh.lazySingleton<_i7.PhotoPickerCubit>(
+      () => _i7.PhotoPickerCubit(),
+      dispose: (i) => i.dispose(),
+    );
     gh.lazySingleton<_i8.WebSocketDataSource>(() => _i8.WebSocketDataSource());
     gh.lazySingleton<_i9.ChatRepository>(() => _i9.ChatRepository(
           webSocketDataSource: gh<_i8.WebSocketDataSource>(),

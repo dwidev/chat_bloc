@@ -1,34 +1,20 @@
 part of 'photos_widget.dart';
 
-class GalleryViewPage extends StatelessWidget {
+class GalleryViewPage extends StatefulWidget {
   final int? index;
 
   const GalleryViewPage({
-    Key? key,
-    required this.index,
-  }) : super(key: key);
+    super.key,
+    this.index,
+  });
+
+  @override
+  State<GalleryViewPage> createState() => GalleryViewPageState();
 
   static const path = "/gallery-view";
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: photoPickerCubit,
-      child: _GalleryViewPageContent(index),
-    );
-  }
 }
 
-class _GalleryViewPageContent extends StatefulWidget {
-  final int? index;
-  const _GalleryViewPageContent(this.index);
-
-  @override
-  State<_GalleryViewPageContent> createState() =>
-      _GalleryViewPageContentState();
-}
-
-class _GalleryViewPageContentState extends State<_GalleryViewPageContent> {
+class GalleryViewPageState extends State<GalleryViewPage> {
   late CustomImageCropController cropController;
   late ScrollController scrollController;
 

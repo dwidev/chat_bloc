@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:custom_image_crop/custom_image_crop.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,14 +7,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:photo_manager/photo_manager.dart';
 
+import '../depedency_injection/auto_reseting_singleton.dart';
 import '../enums/photo_view_enum.dart';
 
-@Injectable()
-class PhotoPickerCubit extends Cubit<PhotoPickerState> {
-  PhotoPickerCubit() : super(const PhotoPickerInitial());
+@LazySingleton()
+class PhotoPickerCubit extends Cubit<PhotoPickerState>
+    with AutoResetLazySingletonBloc<PhotoPickerCubit, PhotoPickerState> {
+  PhotoPickerCubit() : super(const PhotoPickerInitial()) {
+    debugPrint("INITIALIZE $PhotoPickerCubit");
+  }
 
   void resetState() {
     emit(const PhotoPickerInitial());
+  }
+
+  @disposeMethod
+  void dispose() {
+    debugPrint("DISPOSE $PhotoPickerCubit");
   }
 
   MemoryImage? getImage(int index) {

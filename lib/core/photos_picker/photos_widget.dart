@@ -10,7 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:photo_manager_image_provider/photo_manager_image_provider.dart';
 
-import '../../features/main/pages/main_page.dart';
+import '../depedency_injection/injection.dart';
 import '../dialog/delete_alert_dialog.dart';
 import '../dialog/loading_dialog.dart';
 import '../dialog/show_image_dialog.dart';
@@ -21,8 +21,6 @@ import '../widget/circle_icon_button.dart';
 import 'photo_picker_cubit.dart';
 
 part 'gallery_view_page.dart';
-
-final photoPickerCubit = PhotoPickerCubit();
 
 class PhotosPickerWidget extends StatelessWidget {
   const PhotosPickerWidget({
@@ -37,7 +35,7 @@ class PhotosPickerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<PhotoPickerCubit>(
-      create: (_) => photoPickerCubit,
+      create: (_) => getIt<PhotoPickerCubit>(),
       child: PhotosPickerWidgetContent(
         backgroundColor: backgroundColor,
         dashColor: dashColor,
@@ -83,6 +81,12 @@ class _PhotosPickerWidgetContentState extends State<PhotosPickerWidgetContent> {
         photoPickerCubit.deleteImage(index);
       },
     );
+  }
+
+  @override
+  void dispose() {
+    // getIt<PhotoPickerCubit>()
+    super.dispose();
   }
 
   @override

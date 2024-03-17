@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/auth/bloc/complete_profile_bloc.dart';
 import '../../features/auth/pages/allow_permission_location_page.dart';
-import '../../features/auth/pages/complete_profile/complete_profile_page.dart';
 import '../../features/auth/pages/spalsh_page.dart';
 import '../../features/main/pages/main_page.dart';
+import '../depedency_injection/injection.dart';
+import '../photos_picker/photo_picker_cubit.dart';
 import '../photos_picker/photos_widget.dart';
 import 'auth_route.dart';
 import 'cards_route.dart';
@@ -57,8 +57,8 @@ abstract class AppRouter {
         builder: (context, state) {
           final index = state.extra as int?;
 
-          return BlocProvider.value(
-            value: photoPickerCubit,
+          return BlocProvider<PhotoPickerCubit>.value(
+            value: getIt<PhotoPickerCubit>(),
             child: GalleryViewPage(index: index),
           );
         },
