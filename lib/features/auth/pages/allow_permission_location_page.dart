@@ -1,4 +1,3 @@
-import 'package:chat_bloc/features/nearbypeople/pages/swipe_cards_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
@@ -6,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/constant/contants.dart';
 import '../../../core/theme/colors.dart';
 import '../../../core/widget/gradient_button.dart';
-import '../../main/pages/main_page.dart';
+import '../../nearbypeople/pages/swipe_cards_page.dart';
 
 class AllowPermissionLocationPage extends StatefulWidget {
   const AllowPermissionLocationPage({super.key});

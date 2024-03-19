@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:chat_bloc/features/chat/bloc/conversations_bloc/conversations_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,11 +19,13 @@ class ChatPageOptions {
   final ConversationModel conversationModel;
   final String me;
   final UserModel receiver;
+  final ConversationsBloc conversationsBloc;
 
   ChatPageOptions({
     required this.conversationModel,
     required this.me,
     required this.receiver,
+    required this.conversationsBloc,
   });
 }
 
@@ -95,6 +98,7 @@ class _ChatPageState extends State<ChatPage>
 
   @override
   void dispose() {
+    debugPrint("DISPOSE CHAT PAGE");
     controller.dispose();
     typingDelay?.cancel();
     super.dispose();

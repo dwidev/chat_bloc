@@ -75,8 +75,6 @@ class MainPage extends StatelessWidget {
       ),
     );
   }
-
-  static const path = '/main-page';
 }
 
 class CardActionsWidget extends StatelessWidget {

@@ -51,6 +51,12 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+    print("DISPOSING CompleteProfilePage");
+    super.dispose();
+  }
+
   void onNext() {
     if (pageIndex == pageLenth - 1) {
       context.go(AllowPermissionLocationPage.path);

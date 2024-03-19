@@ -1,13 +1,10 @@
-import 'package:go_router/go_router.dart';
-
-import 'login_page.dart';
-import 'verify_otp_page.dart';
-import '../../../main/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/colors.dart';
 import '../../../../core/widget/gradient_button.dart';
+import 'verify_otp_page.dart';
 
 class LoginWithPhoneNumberPage extends StatefulWidget {
   const LoginWithPhoneNumberPage({super.key});
@@ -27,6 +24,12 @@ class _LoginWithPhoneNumberPageState extends State<LoginWithPhoneNumberPage> {
   void initState() {
     linearColor = softPinkColor;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    print("DISPOSING LoginWithPhoneNumberPage");
+    super.dispose();
   }
 
   @override

@@ -25,6 +25,13 @@ class WsConnectionBloc extends Bloc<WsConnectionEvent, WsConnectionState> {
     );
   }
 
+  // @override
+  // Future<void> close() {
+  //   print("WsConnectionBloc closed");
+  //   chatRepository.dispose();
+  //   return super.close();
+  // }
+
   void _onConnectSocket(
     ConnectToWs event,
     Emitter<WsConnectionState> emit,

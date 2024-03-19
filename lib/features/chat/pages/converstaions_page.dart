@@ -1,19 +1,16 @@
-import 'package:chat_bloc/features/chat/cubit/react_animation_cubit.dart';
-import 'package:chat_bloc/core/theme/colors.dart';
-import 'package:chat_bloc/features/main/pages/main_page.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/theme/colors.dart';
+import '../../main/pages/main_page.dart';
 import '../bloc/conversations_bloc/conversations_bloc.dart';
 import '../bloc/ws_connection_bloc/ws_connection_bloc.dart';
 import '../data/datasources/ws_datasource.dart';
 import '../data/model/conversation_model.dart';
 import '../data/repository/chat_repository.dart';
 import 'chat_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../bloc/chat_bloc/chat_bloc.dart';
 
 class ConversationsPage extends StatefulWidget {
   final String me;
@@ -31,7 +28,6 @@ class ConversationsPage extends StatefulWidget {
 class _ConversationsPageState extends State<ConversationsPage> {
   @override
   void initState() {
-    print("INIT STATE CHAT PAGE");
     context.read<WsConnectionBloc>().add(ConnectToWs(token: widget.me));
     context.read<ConversationsBloc>()
       ..add(GetConversations(widget.me))
@@ -42,12 +38,11 @@ class _ConversationsPageState extends State<ConversationsPage> {
 
   @override
   void dispose() {
-    print("DISPONSE CONVERSATIONS");
+    debugPrint("DISPONSE CONVERSATIONS");
     super.dispose();
   }
 
   void _detailChat(String sender, ConversationModel conversation) {
-    final repo = context.read<ChatRepository>();
     final convBloc = context.read<ConversationsBloc>();
 
     convBloc.add(ConversationReadMessage(conversation));
@@ -56,29 +51,9 @@ class _ConversationsPageState extends State<ConversationsPage> {
       conversationModel: conversation,
       me: widget.me,
       receiver: conversation.user,
+      conversationsBloc: convBloc,
     );
     context.pushNamed(ChatPage.path, extra: options);
-
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => RepositoryProvider.value(
-    //       value: repo,
-    //       child: MultiBlocProvider(
-    //         providers: [
-    //           BlocProvider.value(value: convBloc),
-    //           BlocProvider(create: (context) => ReactAnimationCubit()),
-    //           BlocProvider(
-    //             create: (context) => ChatBloc(
-    //               chatRepository: context.read<ChatRepository>(),
-    //             ),
-    //           ),
-    //         ],
-    //         child: ChatPage(options: options),
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 
   @override

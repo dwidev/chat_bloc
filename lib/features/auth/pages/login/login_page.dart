@@ -1,5 +1,4 @@
 // import 'package:auto_route/auto_route.dart';
-import 'package:chat_bloc/core/routers/routergo.dart';
 import 'package:chat_bloc/features/auth/pages/complete_profile/complete_profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ import '../../../../core/constant/contants.dart';
 import '../../../../core/extensions/extensions.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/widget/gradient_button.dart';
-import '../../../main/pages/main_page.dart';
 import 'login_with_phone_number.dart';
 
 class LoginPage extends StatefulWidget {

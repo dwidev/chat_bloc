@@ -1,3 +1,5 @@
+import 'package:chat_bloc/core/routers/routergo.dart';
+
 import '../depedency_injection/injection.dart';
 import '../extensions/go_router_state_extension.dart';
 import '../../features/auth/pages/complete_profile/complete_profile_page.dart';
@@ -14,10 +16,12 @@ import '../../features/auth/pages/spalsh_page.dart';
 
 final authRoute = <RouteBase>[
   GoRoute(
+    parentNavigatorKey: AppRouter.rootNavigatorKey,
     path: SplashPage.path,
     builder: (context, state) => const SplashPage(),
   ),
   GoRoute(
+    parentNavigatorKey: AppRouter.rootNavigatorKey,
     path: LoginPage.path,
     pageBuilder: (context, state) {
       return state.fadeTransition(child: const LoginPage());

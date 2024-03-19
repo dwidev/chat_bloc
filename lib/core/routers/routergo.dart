@@ -1,3 +1,5 @@
+import 'package:chat_bloc/features/chat/bloc/ws_connection_bloc/ws_connection_bloc.dart';
+import 'package:chat_bloc/features/nearbypeople/cubit/details_card_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -30,7 +32,13 @@ abstract class AppRouter {
       ...authRoute,
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
-          return MainPage(key: UniqueKey(), navigationShell: navigationShell);
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => DetailsCardCubit()),
+              BlocProvider(create: (context) => getIt<WsConnectionBloc>()),
+            ],
+            child: MainPage(navigationShell: navigationShell),
+          );
         },
         branches: [
           StatefulShellBranch(

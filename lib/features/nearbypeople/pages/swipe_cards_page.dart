@@ -1,4 +1,5 @@
 import 'package:chat_bloc/core/depedency_injection/injection.dart';
+import 'package:chat_bloc/features/auth/pages/login/login_page.dart';
 import 'package:chat_bloc/features/nearbypeople/pages/nearby_people_card_detail_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,10 +24,9 @@ class SwipeCardsPage extends StatefulWidget {
   static const path = '/swipe-cards';
 }
 
-class _SwipeCardsPageState extends State<SwipeCardsPage>
-    with AutomaticKeepAliveClientMixin<SwipeCardsPage> {
-  @override
-  bool get wantKeepAlive => true;
+class _SwipeCardsPageState extends State<SwipeCardsPage> {
+  // @override
+  // bool get wantKeepAlive => true;
   late MatchEngineCubit matchEngine;
 
   @override
@@ -39,8 +39,14 @@ class _SwipeCardsPageState extends State<SwipeCardsPage>
   }
 
   @override
+  void dispose() {
+    print("DISPOSE");
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    super.build(context);
+    // super.build(context);
 
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
@@ -62,7 +68,9 @@ class _SwipeCardsPageState extends State<SwipeCardsPage>
         Stack(
           children: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                context.go(LoginPage.path);
+              },
               icon: const Icon(
                 CupertinoIcons.bell,
                 color: primaryColor,

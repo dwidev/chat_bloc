@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chat_bloc/features/chat/data/model/socket_event_model.dart';
+import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 
 import '../datasources/http_datasource.dart';
@@ -22,6 +23,13 @@ class ChatRepository {
     required this.webSocketDataSource,
     required this.httpDataSource,
   });
+
+  @disposeMethod
+  void dispose() {
+    debugPrint("DISPOSING ChatRepository");
+    webSocketDataSource.dispose();
+    httpDataSource.dispose();
+  }
 
   Future<void> connect(String token, {int connectAttempts = 0}) =>
       webSocketDataSource.connect(token, connectAttempts);

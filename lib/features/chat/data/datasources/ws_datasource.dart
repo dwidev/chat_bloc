@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:chat_bloc/features/chat/data/repository/chat_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
@@ -11,6 +10,7 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 
 import '../model/chat_message_model.dart';
 import '../model/socket_event_model.dart';
+import '../repository/chat_repository.dart';
 
 enum WSConnectionStatus {
   connecting,
@@ -28,11 +28,23 @@ const host = "172.20.10.4";
 @LazySingleton()
 class WebSocketDataSource {
   late WebSocketChannel webSocketChannel;
+  late PublishSubject<SocketEventModel> socketEventController;
+  late BehaviorSubject<WSConnectionStatus> wsConnectionController;
 
-  WebSocketDataSource();
+  WebSocketDataSource() {
+    debugPrint("INITIALIZE WebSocketDataSource");
+  }
 
-  final socketEventController = PublishSubject<SocketEventModel>();
-  final wsConnectionController = BehaviorSubject<WSConnectionStatus>();
+  void initializeStream() {
+    socketEventController = PublishSubject<SocketEventModel>();
+    wsConnectionController = BehaviorSubject<WSConnectionStatus>();
+  }
+
+  @disposeMethod
+  void dispose() {
+    debugPrint("DISPOSE WebSocketDataSource");
+    disconnection(); // disconnetion first
+  }
 
   Stream<SocketEventModel> get socketStream =>
       socketEventController.stream.asBroadcastStream();
@@ -41,6 +53,7 @@ class WebSocketDataSource {
 
   var counter = 0;
   Future<void> connect(String token, int connectAttempts) async {
+    initializeStream();
     wsConnectionController.add(WSConnectionStatus.connecting);
     counter++;
     debugPrint("KONEK $counter");
@@ -80,9 +93,11 @@ class WebSocketDataSource {
     }, onDone: () {
       debugPrint("DONE WS LISTENER");
       wsConnectionController.add(WSConnectionStatus.disconnected);
+      closingStream();
     }, onError: (err) {
       debugPrint("ERROR WS LISTENER : $err");
       wsConnectionController.add(WSConnectionStatus.errorListener);
+      closingStream();
     });
   }
 
@@ -103,8 +118,13 @@ class WebSocketDataSource {
   void disconnection() {
     webSocketChannel.sink.close(
       WebSocketStatus.normalClosure,
-      "saya keluar dlu",
+      "i'm logout app",
     );
+  }
+
+  void closingStream() {
+    socketEventController.close();
+    wsConnectionController.close();
   }
 
   void sendMessage({required ChatMessageModel messageModel}) {

@@ -19,6 +19,11 @@ class HttpDataSource {
     dio = Dio(options);
   }
 
+  @disposeMethod
+  void dispose() {
+    debugPrint("DISPOSING HttpDataSource");
+  }
+
   Future<List<ConversationModel>> getConversations(String userID) async {
     try {
       final res = await dio.get("chat/conversations/$userID");

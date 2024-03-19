@@ -1,13 +1,9 @@
-import 'package:chat_bloc/core/depedency_injection/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'core/depedency_injection/injection.dart';
 import 'core/routers/routergo.dart';
 import 'core/theme/theme.dart';
-import 'features/chat/data/datasources/http_datasource.dart';
-import 'features/chat/data/datasources/ws_datasource.dart';
-import 'features/chat/data/repository/chat_repository.dart';
-import 'features/nearbypeople/cubit/details_card_cubit.dart';
 
 void main() {
   configureDepedencies();
@@ -19,25 +15,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final chatRepository = ChatRepository(
-      webSocketDataSource: WebSocketDataSource(),
-      httpDataSource: HttpDataSource(),
-    );
-    return RepositoryProvider(
-      create: (context) => chatRepository,
-      child: MaterialApp.router(
-        title: 'Love match',
-        theme: lightTheme,
-        routerConfig: AppRouter.router,
-        builder: (context, child) {
-          return MultiBlocProvider(
-            providers: [
-              BlocProvider(create: (context) => DetailsCardCubit()),
-            ],
-            child: child ?? const Offstage(),
-          );
-        },
-      ),
+    return MaterialApp.router(
+      title: 'Love match',
+      theme: lightTheme,
+      routerConfig: AppRouter.router,
+      builder: (context, child) {
+        return child ?? const Offstage();
+      },
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:chat_bloc/features/chat/data/model/user_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +7,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../data/model/conversation_model.dart';
 import '../../data/model/socket_event_model.dart';
+import '../../data/model/user_model.dart';
 import '../../data/repository/chat_repository.dart';
 
 part 'conversations_event.dart';
@@ -22,6 +22,13 @@ class ConversationsBloc extends Bloc<ConversationsEvent, ConversationsState> {
     on<ConversationSubscribeMessage>(_onSubscribeMessage);
     on<ConversationReadMessage>(_onReadMessage);
     on<ConversationSubscribeUserTyping>(_onSubscribeUserTyping);
+  }
+
+  @override
+  Future<void> close() {
+    debugPrint("ON CLOSING ConversationsBloc");
+    chatRepository.dispose();
+    return super.close();
   }
 
   void _onSubscribeMessage(

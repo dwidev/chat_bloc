@@ -15,4 +15,10 @@ class CompleteProfileBloc
       emit(state.copyWith(name: event.name));
     });
   }
+
+  @override
+  Future<void> close() {
+    print("ONCLOSING $CompleteProfileBloc");
+    return super.close();
+  }
 }
