@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:numberpicker/numberpicker.dart';
 
 import '../../../../core/theme/colors.dart';
+import '../../bloc/complete_profile_bloc.dart';
 
-class CompleteAgeViewPage extends StatefulWidget {
+class CompleteAgeViewPage extends StatelessWidget {
   const CompleteAgeViewPage({
     super.key,
   });
 
   @override
-  State<CompleteAgeViewPage> createState() => _CompleeGendereViewPageState();
-}
-
-class _CompleeGendereViewPageState extends State<CompleteAgeViewPage> {
-  int selectedAge = 25;
-
-  @override
   Widget build(BuildContext context) {
+    final completeBloc = context.read<CompleteProfileBloc>();
+
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
 
@@ -52,28 +49,30 @@ class _CompleeGendereViewPageState extends State<CompleteAgeViewPage> {
             children: [
               SizedBox(
                 height: size.height / 2.5,
-                child: NumberPicker(
-                  minValue: 17,
-                  maxValue: 100,
-                  value: selectedAge,
-                  onChanged: (value) {
-                    setState(() {
-                      selectedAge = value;
-                    });
+                child: BlocBuilder<CompleteProfileBloc, CompleteProfileState>(
+                  builder: (_, s) {
+                    return NumberPicker(
+                      minValue: 17,
+                      maxValue: 100,
+                      value: s.age,
+                      onChanged: (age) {
+                        completeBloc.add(CompleteProfileSetAgeEvent(age: age));
+                      },
+                      infiniteLoop: true,
+                      itemCount: 5,
+                      itemHeight: 70,
+                      selectedTextStyle: textTheme.labelLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 50,
+                        color: primaryColor,
+                      ),
+                      textStyle: textTheme.labelLarge?.copyWith(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      // selectedTextStyle: textTheme.titleLarge,
+                    );
                   },
-                  infiniteLoop: true,
-                  itemCount: 5,
-                  itemHeight: 70,
-                  selectedTextStyle: textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 50,
-                    color: primaryColor,
-                  ),
-                  textStyle: textTheme.labelLarge?.copyWith(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  // selectedTextStyle: textTheme.titleLarge,
                 ),
               ).animate().fade(
                     delay: const Duration(milliseconds: 200),

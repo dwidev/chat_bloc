@@ -1,24 +1,18 @@
-import 'package:chat_bloc/core/extensions/extensions.dart';
-import 'package:chat_bloc/core/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class CompleteDistanceViewPage extends StatefulWidget {
+import '../../../../core/extensions/extensions.dart';
+import '../../bloc/complete_profile_bloc.dart';
+
+class CompleteDistanceViewPage extends StatelessWidget {
   const CompleteDistanceViewPage({
     super.key,
   });
 
   @override
-  State<CompleteDistanceViewPage> createState() =>
-      _CompleteDistanceViewPageState();
-}
-
-class _CompleteDistanceViewPageState extends State<CompleteDistanceViewPage> {
-  double value = 10;
-
-  @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final completeBloc = context.read<CompleteProfileBloc>();
 
     return SingleChildScrollView(
       child: Column(
@@ -26,7 +20,7 @@ class _CompleteDistanceViewPageState extends State<CompleteDistanceViewPage> {
           const SizedBox(height: 25 + kToolbarHeight),
           Text(
             "Set your distance preference!",
-            style: textTheme.bodyLarge?.copyWith(
+            style: context.textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.bold,
               fontSize: 20,
             ),
@@ -38,7 +32,7 @@ class _CompleteDistanceViewPageState extends State<CompleteDistanceViewPage> {
             width: context.width / 1.5,
             child: Text(
               "Use the slider to set the maximum distance you want yhour potential matches to be located.",
-              style: textTheme.bodySmall,
+              style: context.textTheme.bodySmall,
               textAlign: TextAlign.center,
             ),
           ).animate().fade(
@@ -48,16 +42,19 @@ class _CompleteDistanceViewPageState extends State<CompleteDistanceViewPage> {
           const SizedBox(height: 50),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Slider(
-              autofocus: true,
-              // overlayColor: const MaterialStatePropertyAll(darkLightColor),
-              min: 1,
-              max: 100,
-              value: value,
-              onChanged: (value) {
-                setState(() {
-                  this.value = value;
-                });
+            child: BlocBuilder<CompleteProfileBloc, CompleteProfileState>(
+              builder: (_, s) {
+                return Slider(
+                  autofocus: true,
+                  min: 1,
+                  max: 100,
+                  value: s.distance.toDouble(),
+                  onChanged: (d) {
+                    completeBloc.add(
+                      CompleteProfileSetDistanceEvent(distance: d.toInt()),
+                    );
+                  },
+                );
               },
             ),
           ).animate().fade(
@@ -65,12 +62,16 @@ class _CompleteDistanceViewPageState extends State<CompleteDistanceViewPage> {
                 duration: const Duration(seconds: 1),
               ),
           SizedBox(height: context.height / 7),
-          Text(
-            "${value.toInt()} km",
-            style: context.textTheme.displayLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
+          BlocBuilder<CompleteProfileBloc, CompleteProfileState>(
+            builder: (_, s) {
+              return Text(
+                "${s.distance.toInt()} km",
+                style: context.textTheme.displayLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              );
+            },
           )
         ],
       ),

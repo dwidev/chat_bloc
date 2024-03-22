@@ -1,30 +1,30 @@
+import 'package:chat_bloc/features/auth/bloc/complete_profile_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/theme/colors.dart';
 
-class CompleteLookingForViewPage extends StatefulWidget {
+class CompleteLookingForViewPage extends StatelessWidget {
   const CompleteLookingForViewPage({
     super.key,
   });
 
-  @override
-  State<CompleteLookingForViewPage> createState() =>
-      _CompleeGendereViewPageState();
-}
-
-class _CompleeGendereViewPageState extends State<CompleteLookingForViewPage> {
-  List<String> lookings = [
-    "A Long term partner 🥰💘",
-    "Looking for friends 👋🏻🤙🏻",
-    "Looking for a brother or sister 🙋🏻‍♂️🙋🏻‍♀️",
-    "Still figuring it out 🤔",
-  ];
-  String selectedLookings = '';
+  List<Map<String, dynamic>> get lookings => [
+        {"code": "LT_PARTNER", "label": "A long-term partner 🥰💘"},
+        {"code": "LOOKING_FRIENDS", "label": "Looking for friends 👋🏻🤙🏻"},
+        {
+          "code": "LOOKING_SIBLING",
+          "label": "Looking for a brother or sister 🙋🏻‍♂️🙋🏻‍♀️"
+        },
+        {"code": "FIGURING_IT_OUT", "label": "Still figuring it out 🤔"}
+      ];
 
   @override
   Widget build(BuildContext context) {
+    final completeBloc = context.read<CompleteProfileBloc>();
+
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
 
@@ -54,60 +54,68 @@ class _CompleeGendereViewPageState extends State<CompleteLookingForViewPage> {
             ),
         const SizedBox(height: 50),
         Expanded(
-          child: ListView.builder(
-            itemCount: lookings.length,
-            itemBuilder: (context, index) {
-              final item = lookings[index];
-              return InkWell(
-                onTap: () {
-                  setState(() {
-                    selectedLookings = item;
-                  });
-                },
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  margin: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 30,
-                  ),
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: whiteColor,
-                    borderRadius: BorderRadius.circular(50),
-                    border: item == selectedLookings
-                        ? Border.all(color: primaryColor, width: 2)
-                        : null,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        lookings[index],
-                        style: textTheme.bodyMedium?.copyWith(
-                          fontWeight:
-                              item == selectedLookings ? FontWeight.bold : null,
-                        ),
+          child: BlocBuilder<CompleteProfileBloc, CompleteProfileState>(
+            builder: (_, state) {
+              return ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: lookings.length,
+                itemBuilder: (context, index) {
+                  final item = lookings[index];
+                  final label = item["label"];
+                  final code = item["code"];
+                  return InkWell(
+                    onTap: () {
+                      completeBloc.add(
+                        CompleteProfileSetLookingEvent(code: code),
+                      );
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 200),
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 30,
                       ),
-                      if (item == selectedLookings)
-                        const Icon(
-                          CupertinoIcons.check_mark_circled_solid,
-                          color: primaryColor,
-                          size: 20,
-                        )
-                    ],
-                  ),
-                )
-                    .animate()
-                    .fade(
-                      delay: const Duration(milliseconds: 200),
-                      duration: const Duration(milliseconds: 500),
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: whiteColor,
+                        borderRadius: BorderRadius.circular(50),
+                        border: code == state.lookingForCode
+                            ? Border.all(color: primaryColor, width: 2)
+                            : null,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            label,
+                            style: textTheme.bodyMedium?.copyWith(
+                              fontWeight: code == state.lookingForCode
+                                  ? FontWeight.bold
+                                  : null,
+                            ),
+                          ),
+                          if (code == state.lookingForCode)
+                            const Icon(
+                              CupertinoIcons.check_mark_circled_solid,
+                              color: primaryColor,
+                              size: 20,
+                            )
+                        ],
+                      ),
                     )
-                    .slide(
-                      begin: Offset(0, index.toDouble() + 1 * 0.2),
-                      delay: const Duration(milliseconds: 200),
-                      duration: const Duration(milliseconds: 700),
-                      curve: Curves.fastLinearToSlowEaseIn,
-                    ),
+                        .animate()
+                        .fade(
+                          delay: const Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 500),
+                        )
+                        .slide(
+                          begin: Offset(0, index.toDouble() + 1 * 0.2),
+                          delay: const Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 700),
+                          curve: Curves.fastLinearToSlowEaseIn,
+                        ),
+                  );
+                },
               );
             },
           ),

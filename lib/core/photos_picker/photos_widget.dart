@@ -96,6 +96,7 @@ class _PhotosPickerWidgetContentState extends State<PhotosPickerWidgetContent> {
     return BlocBuilder<PhotoPickerCubit, PhotoPickerState>(
       builder: (context, state) {
         return GridView.builder(
+          padding: EdgeInsets.zero,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: 8,

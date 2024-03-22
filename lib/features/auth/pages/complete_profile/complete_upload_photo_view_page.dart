@@ -67,7 +67,7 @@ class _CompleeGendereViewPageState extends State<CompleteUploadPhotoViewPage> {
               delay: const Duration(milliseconds: 200),
               duration: const Duration(seconds: 1),
             ),
-        const SizedBox(height: 25),
+        const SizedBox(height: 30),
         Expanded(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
