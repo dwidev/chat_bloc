@@ -1,4 +1,5 @@
 import 'package:chat_bloc/features/auth/bloc/complete_profile_bloc.dart';
+import 'package:chat_bloc/features/masterdata/cubit/master_data_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -11,19 +12,10 @@ class CompleteLookingForViewPage extends StatelessWidget {
     super.key,
   });
 
-  List<Map<String, dynamic>> get lookings => [
-        {"code": "LT_PARTNER", "label": "A long-term partner 🥰💘"},
-        {"code": "LOOKING_FRIENDS", "label": "Looking for friends 👋🏻🤙🏻"},
-        {
-          "code": "LOOKING_SIBLING",
-          "label": "Looking for a brother or sister 🙋🏻‍♂️🙋🏻‍♀️"
-        },
-        {"code": "FIGURING_IT_OUT", "label": "Still figuring it out 🤔"}
-      ];
-
   @override
   Widget build(BuildContext context) {
     final completeBloc = context.read<CompleteProfileBloc>();
+    final masterData = context.read<MasterDataCubit>();
 
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
@@ -58,11 +50,11 @@ class CompleteLookingForViewPage extends StatelessWidget {
             builder: (_, state) {
               return ListView.builder(
                 padding: EdgeInsets.zero,
-                itemCount: lookings.length,
+                itemCount: masterData.state.lookingFors.length,
                 itemBuilder: (context, index) {
-                  final item = lookings[index];
-                  final label = item["label"];
-                  final code = item["code"];
+                  final item = masterData.state.lookingFors[index];
+                  final label = item.name;
+                  final code = item.code;
                   return InkWell(
                     onTap: () {
                       completeBloc.add(

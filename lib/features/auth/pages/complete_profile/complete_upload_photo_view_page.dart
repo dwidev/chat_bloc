@@ -31,11 +31,6 @@ class _CompleeGendereViewPageState extends State<CompleteUploadPhotoViewPage> {
     {"name": "Cooking", "icon": Icons.restaurant_rounded},
     {"name": "Sports", "icon": CupertinoIcons.sportscourt},
   ];
-  List<String> selecteInterest = [];
-
-  bool selected(String value) {
-    return selecteInterest.where((e) => e == value).isNotEmpty;
-  }
 
   @override
   Widget build(BuildContext context) {

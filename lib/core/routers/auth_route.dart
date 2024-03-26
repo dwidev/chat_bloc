@@ -1,4 +1,5 @@
 import 'package:chat_bloc/core/routers/routergo.dart';
+import 'package:chat_bloc/features/masterdata/cubit/master_data_cubit.dart';
 
 import '../depedency_injection/injection.dart';
 import '../extensions/go_router_state_extension.dart';
@@ -49,8 +50,11 @@ final authRoute = <RouteBase>[
         path: CompleteProfilePage.path,
         name: CompleteProfilePage.path,
         builder: (context, state) {
-          return BlocProvider(
-            create: (context) => getIt<CompleteProfileBloc>(),
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => getIt<CompleteProfileBloc>()),
+              BlocProvider(create: (context) => getIt<MasterDataCubit>()),
+            ],
             child: const CompleteProfilePage(),
           );
         },

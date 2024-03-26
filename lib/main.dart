@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/depedency_injection/injection.dart';
+import 'core/environtments/flavors.dart';
 import 'core/routers/routergo.dart';
 import 'core/theme/theme.dart';
 
 void main() {
-  configureDepedencies();
+  configureDepedencies(environment: EnvFlavors.mock);
   runApp(const MyApp());
 }
 

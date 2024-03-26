@@ -1,6 +1,7 @@
 import 'package:chat_bloc/core/extensions/extensions.dart';
 import 'package:chat_bloc/core/theme/colors.dart';
 import 'package:chat_bloc/features/auth/bloc/complete_profile_bloc.dart';
+import 'package:chat_bloc/features/masterdata/cubit/master_data_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -17,41 +18,10 @@ class CompleteInterstViewPage extends StatefulWidget {
 }
 
 class _CompleeGendereViewPageState extends State<CompleteInterstViewPage> {
-  List<Map<String, dynamic>> interests = [
-    {"name": "Traveling", "icon": CupertinoIcons.airplane, "code": "TRAVELING"},
-    {"name": "Foodie", "icon": Icons.local_dining, "code": "FOODIE"},
-    {
-      "name": "Outdoor Adventures",
-      "icon": CupertinoIcons.tree,
-      "code": "OUTDOOR_ADVENTURES"
-    },
-    {"name": "Fitness", "icon": CupertinoIcons.bolt, "code": "FITNESS"},
-    {"name": "Movies", "icon": CupertinoIcons.film, "code": "MOVIES"},
-    {
-      "name": "Music/Spotify",
-      "icon": CupertinoIcons.music_note,
-      "code": "MUSIC_SPOTIFY"
-    },
-    {"name": "Art", "icon": CupertinoIcons.paintbrush, "code": "ART"},
-    {"name": "Reading", "icon": CupertinoIcons.book, "code": "READING"},
-    {
-      "name": "Gaming",
-      "icon": CupertinoIcons.game_controller,
-      "code": "GAMING"
-    },
-    {
-      "name": "Technology",
-      "icon": CupertinoIcons.device_laptop,
-      "code": "TECHNOLOGY"
-    },
-    {"name": "Fashion", "icon": CupertinoIcons.star, "code": "FASHION"},
-    {"name": "Cooking", "icon": Icons.restaurant_rounded, "code": "COOKING"},
-    {"name": "Sports", "icon": CupertinoIcons.sportscourt, "code": "SPORTS"}
-  ];
-
   @override
   Widget build(BuildContext context) {
     final completeBloc = context.read<CompleteProfileBloc>();
+    final masterData = context.read<MasterDataCubit>();
 
     final textTheme = context.textTheme;
 
@@ -89,12 +59,12 @@ class _CompleeGendereViewPageState extends State<CompleteInterstViewPage> {
                 spacing: 10,
                 runSpacing: 10,
                 alignment: WrapAlignment.center,
-                children: interests
+                children: masterData.state.interests
                     .asMap()
                     .map((key, e) {
-                      final code = e["code"];
-                      final name = e["name"];
-                      final icon = e["icon"];
+                      final code = e.code;
+                      final name = e.name;
+                      final icon = IconData(e.icon);
                       final isSelect = state.interests.selected(code);
                       return MapEntry(
                         key,

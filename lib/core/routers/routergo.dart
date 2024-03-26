@@ -1,4 +1,5 @@
 import 'package:chat_bloc/features/chat/bloc/ws_connection_bloc/ws_connection_bloc.dart';
+import 'package:chat_bloc/features/masterdata/cubit/master_data_cubit.dart';
 import 'package:chat_bloc/features/nearbypeople/cubit/details_card_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,6 +37,7 @@ abstract class AppRouter {
             providers: [
               BlocProvider(create: (context) => DetailsCardCubit()),
               BlocProvider(create: (context) => getIt<WsConnectionBloc>()),
+              BlocProvider(create: (context) => getIt<MasterDataCubit>()),
             ],
             child: MainPage(navigationShell: navigationShell),
           );
