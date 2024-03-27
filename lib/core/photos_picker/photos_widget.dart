@@ -27,10 +27,14 @@ class PhotosPickerWidget extends StatelessWidget {
     Key? key,
     this.backgroundColor,
     this.dashColor,
+    this.initialImages = const [],
+    this.onSelectedImage,
   }) : super(key: key);
 
   final Color? backgroundColor;
   final Color? dashColor;
+  final List<MemoryImage> initialImages;
+  final Function(List<MemoryImage> images)? onSelectedImage;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +43,8 @@ class PhotosPickerWidget extends StatelessWidget {
       child: PhotosPickerWidgetContent(
         backgroundColor: backgroundColor,
         dashColor: dashColor,
+        initialImages: initialImages,
+        onSelectedImage: onSelectedImage,
       ),
     );
   }
@@ -49,10 +55,14 @@ class PhotosPickerWidgetContent extends StatefulWidget {
     super.key,
     this.backgroundColor,
     this.dashColor,
+    this.initialImages = const [],
+    this.onSelectedImage,
   });
 
   final Color? backgroundColor;
   final Color? dashColor;
+  final List<MemoryImage> initialImages;
+  final Function(List<MemoryImage> images)? onSelectedImage;
 
   @override
   State<PhotosPickerWidgetContent> createState() =>
@@ -65,6 +75,7 @@ class _PhotosPickerWidgetContentState extends State<PhotosPickerWidgetContent> {
   @override
   void initState() {
     photoPickerCubit = context.read<PhotoPickerCubit>();
+    photoPickerCubit.initialize(widget.initialImages);
     super.initState();
   }
 
@@ -84,16 +95,15 @@ class _PhotosPickerWidgetContentState extends State<PhotosPickerWidgetContent> {
   }
 
   @override
-  void dispose() {
-    // getIt<PhotoPickerCubit>()
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return BlocBuilder<PhotoPickerCubit, PhotoPickerState>(
+    return BlocConsumer<PhotoPickerCubit, PhotoPickerState>(
+      listener: (context, state) {
+        if (state is PhotoPickerSelected) {
+          widget.onSelectedImage?.call(state.selectedPhotos);
+        }
+      },
       builder: (context, state) {
         return GridView.builder(
           padding: EdgeInsets.zero,

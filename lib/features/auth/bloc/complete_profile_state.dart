@@ -8,6 +8,7 @@ class CompleteProfileState extends Equatable {
   final int distance;
   final String lookingForCode;
   final InterestState interests;
+  final List<MemoryImage> photoProfiles;
 
   const CompleteProfileState({
     required this.name,
@@ -16,6 +17,7 @@ class CompleteProfileState extends Equatable {
     this.distance = 10,
     required this.lookingForCode,
     required this.interests,
+    this.photoProfiles = const [],
   });
 
   @override
@@ -27,6 +29,7 @@ class CompleteProfileState extends Equatable {
       distance,
       lookingForCode,
       interests,
+      photoProfiles,
     ];
   }
 
@@ -37,6 +40,7 @@ class CompleteProfileState extends Equatable {
     int? distance,
     String? lookingForCode,
     InterestState? interests,
+    List<MemoryImage>? photoProfiles,
   }) {
     return CompleteProfileState(
       name: name ?? this.name,
@@ -45,6 +49,7 @@ class CompleteProfileState extends Equatable {
       distance: distance ?? this.distance,
       lookingForCode: lookingForCode ?? this.lookingForCode,
       interests: interests ?? this.interests,
+      photoProfiles: photoProfiles ?? this.photoProfiles,
     );
   }
 

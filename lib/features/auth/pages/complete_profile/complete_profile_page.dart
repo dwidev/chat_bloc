@@ -1,17 +1,18 @@
 import 'dart:math';
 
-import 'package:chat_bloc/core/dialog/loading_dialog.dart';
-import 'package:chat_bloc/core/extensions/extensions.dart';
-import 'package:chat_bloc/features/masterdata/cubit/master_data_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/dialog/loading_dialog.dart';
+import '../../../../core/extensions/extensions.dart';
+import '../../../../core/extensions/flushbar_extension.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/widget/gradient_button.dart';
+import '../../../masterdata/cubit/master_data_cubit.dart';
+import '../../bloc/complete_profile_bloc.dart';
 import '../allow_permission_location_page.dart';
 import 'complete_age_view_page.dart';
 import 'complete_distance_view_page.dart';
@@ -46,16 +47,16 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
       AnimationController(vsync: this, duration: 500.ms);
 
   late final pages = [
-    const CompleteNameViewPage(),
+    const CompleteNameViewPage(), // 0
     CompleteGenderViewPage(
       delegate: this,
       controller: genderController,
-    ),
-    const CompleteAgeViewPage(),
-    const CompleteDistanceViewPage(),
-    const CompleteLookingForViewPage(),
-    const CompleteInterstViewPage(),
-    const CompleteUploadPhotoViewPage(),
+    ), // 1
+    const CompleteAgeViewPage(), // 2
+    const CompleteDistanceViewPage(), // 3
+    const CompleteLookingForViewPage(), // 4
+    const CompleteInterstViewPage(), // 5
+    const CompleteUploadPhotoViewPage(), // 6
   ];
 
   int get pageLenth => pages.length;
@@ -79,6 +80,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
 
   @override
   void onNext() {
+    if (!validation) return;
+
     void goToPage() {
       setState(() {
         linearColor = softPinkColor.withAlpha(Random().nextInt(255));
@@ -121,6 +124,66 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
       duration: const Duration(milliseconds: 500),
       curve: Curves.fastEaseInToSlowEaseOut,
     );
+  }
+
+  bool get validation {
+    if (pageIndex == 0 && !validateName) return false;
+    if (pageIndex == 1 && !validateGender) return false;
+    if (pageIndex == 4 && !validateLooking) return false;
+    if (pageIndex == 5 && !validateInterest) return false;
+    if (pageIndex == 6 && !validatePhotoProfile) return false;
+
+    return true;
+  }
+
+  bool get validateName {
+    final prov = context.read<CompleteProfileBloc>();
+    if (prov.state.name.isEmpty) {
+      context.showWarningFlush(message: "Please fill name");
+      return false;
+    }
+
+    return true;
+  }
+
+  bool get validateGender {
+    final prov = context.read<CompleteProfileBloc>();
+    if (prov.state.gender == null) {
+      context.showWarningFlush(message: "Please select your gender");
+      return false;
+    }
+
+    return true;
+  }
+
+  bool get validateLooking {
+    final prov = context.read<CompleteProfileBloc>();
+    if (prov.state.lookingForCode.isEmpty) {
+      context.showWarningFlush(message: "Please select your looking for");
+      return false;
+    }
+
+    return true;
+  }
+
+  bool get validateInterest {
+    final prov = context.read<CompleteProfileBloc>();
+    if (prov.state.interests.codes.isEmpty) {
+      context.showWarningFlush(message: "Select min 1 for your interest");
+      return false;
+    }
+
+    return true;
+  }
+
+  bool get validatePhotoProfile {
+    final prov = context.read<CompleteProfileBloc>();
+    if (prov.state.photoProfiles.length < 3) {
+      context.showWarningFlush(message: "Select photo min 3 for your profile");
+      return false;
+    }
+
+    return true;
   }
 
   @override
@@ -230,10 +293,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
                             color: Colors.white,
                           ),
                         ),
-                      )
-                          .animate()
-                          .boxShadow(borderRadius: BorderRadius.circular(20))
-                          .fade(
+                      ).animate().fade(
                             delay: const Duration(milliseconds: 200),
                             duration: const Duration(seconds: 1),
                           ),

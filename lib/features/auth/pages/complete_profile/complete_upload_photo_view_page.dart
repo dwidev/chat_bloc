@@ -1,41 +1,20 @@
-import 'package:chat_bloc/core/theme/colors.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:chat_bloc/features/auth/bloc/complete_profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/extensions/extensions.dart';
 import '../../../../core/photos_picker/photos_picker.dart';
+import '../../../../core/theme/colors.dart';
 
-class CompleteUploadPhotoViewPage extends StatefulWidget {
+class CompleteUploadPhotoViewPage extends StatelessWidget {
   const CompleteUploadPhotoViewPage({
     super.key,
   });
 
   @override
-  State<CompleteUploadPhotoViewPage> createState() =>
-      _CompleeGendereViewPageState();
-}
-
-class _CompleeGendereViewPageState extends State<CompleteUploadPhotoViewPage> {
-  List<Map<String, dynamic>> interests = [
-    {"name": "Traveling", "icon": CupertinoIcons.airplane},
-    {"name": "Foodie", "icon": Icons.local_dining},
-    {"name": "Outdoor Adventures", "icon": CupertinoIcons.tree},
-    {"name": "Fitness", "icon": CupertinoIcons.bolt},
-    {"name": "Movies", "icon": CupertinoIcons.film},
-    {"name": "Music/Spotify", "icon": CupertinoIcons.music_note},
-    {"name": "Art", "icon": CupertinoIcons.paintbrush},
-    {"name": "Reading", "icon": CupertinoIcons.book},
-    {"name": "Gaming", "icon": CupertinoIcons.game_controller},
-    {"name": "Technology", "icon": CupertinoIcons.device_laptop},
-    {"name": "Fashion", "icon": CupertinoIcons.star},
-    {"name": "Cooking", "icon": Icons.restaurant_rounded},
-    {"name": "Sports", "icon": CupertinoIcons.sportscourt},
-  ];
-
-  @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final textTheme = Theme.of(context).textTheme;
+    final completeBloc = context.read<CompleteProfileBloc>();
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -43,7 +22,7 @@ class _CompleeGendereViewPageState extends State<CompleteUploadPhotoViewPage> {
         const SizedBox(height: 25 + kToolbarHeight),
         Text(
           "Upload Your Photos",
-          style: textTheme.bodyLarge?.copyWith(
+          style: context.textTheme.bodyLarge?.copyWith(
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),
@@ -52,10 +31,10 @@ class _CompleeGendereViewPageState extends State<CompleteUploadPhotoViewPage> {
               duration: const Duration(seconds: 1),
             ),
         SizedBox(
-          width: size.width / 1.2,
+          width: context.width / 1.2,
           child: Text(
             "We'd love to see you. Upload a photo for your dating journey.",
-            style: textTheme.bodySmall?.copyWith(),
+            style: context.textTheme.bodySmall,
             textAlign: TextAlign.center,
           ),
         ).animate().fade(
@@ -68,9 +47,15 @@ class _CompleeGendereViewPageState extends State<CompleteUploadPhotoViewPage> {
             physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: const PhotosPickerWidget(
+              child: PhotosPickerWidget(
                 backgroundColor: secondaryColor,
                 dashColor: primaryColor,
+                initialImages: completeBloc.state.photoProfiles,
+                onSelectedImage: (images) {
+                  completeBloc.add(
+                    CompleteProfileSetPhotoEvent(imagesPicked: images),
+                  );
+                },
               ).animate().fade(
                     delay: const Duration(milliseconds: 200),
                     duration: const Duration(seconds: 1),

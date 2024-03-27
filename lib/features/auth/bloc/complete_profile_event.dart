@@ -40,3 +40,9 @@ final class CompleteProfileSetInterestEvent extends CompleteProfileEvent {
 
   const CompleteProfileSetInterestEvent({required this.code});
 }
+
+final class CompleteProfileSetPhotoEvent extends CompleteProfileEvent {
+  final List<MemoryImage> imagesPicked;
+
+  const CompleteProfileSetPhotoEvent({required this.imagesPicked});
+}

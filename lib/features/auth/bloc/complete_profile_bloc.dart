@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:photo_manager/photo_manager.dart';
 
 part 'complete_profile_event.dart';
 part 'complete_profile_state.dart';
@@ -43,6 +44,11 @@ class CompleteProfileBloc
 
       final interest = InterestState(codes: interestsCode);
       emit(state.copyWith(interests: interest));
+    });
+
+    on<CompleteProfileSetPhotoEvent>((event, emit) {
+      final newState = state.copyWith(photoProfiles: event.imagesPicked);
+      emit(newState);
     });
   }
 

@@ -13,7 +13,7 @@ import 'masterdata_datasource.dart';
 class MasterDataMockDataSourceImpl implements MasterDataDasource {
   @override
   Future<List<MasterDataInterestModel>> getListInterests() async {
-    await Future.delayed(2.seconds);
+    await Future.delayed(1.seconds);
     final data = [
       {
         "name": "Traveling",
@@ -89,7 +89,7 @@ class MasterDataMockDataSourceImpl implements MasterDataDasource {
 
   @override
   Future<List<MasterDataModel>> getListLookingFor() async {
-    await Future.delayed(2.seconds);
+    await Future.delayed(1.seconds);
     final data = [
       {"code": "LT_PARTNER", "name": "A long-term partner 🥰💘"},
       {"code": "LOOKING_FRIENDS", "name": "Looking for friends 👋🏻🤙🏻"},
