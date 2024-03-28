@@ -8,11 +8,12 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:get_it/get_it.dart' as _i1;
+import 'package:injectable/injectable.dart' as _i2;
 import 'package:matchloves/core/photos_picker/photo_picker_cubit.dart' as _i10;
 import 'package:matchloves/features/auth/bloc/complete_profile_bloc.dart'
     as _i3;
-import 'package:matchloves/features/chat/bloc/matchloves/matchloves.dart'
-    as _i16;
+import 'package:matchloves/features/chat/bloc/chat_bloc/chat_bloc.dart' as _i16;
 import 'package:matchloves/features/chat/bloc/conversations_bloc/conversations_bloc.dart'
     as _i13;
 import 'package:matchloves/features/chat/bloc/ws_connection_bloc/ws_connection_bloc.dart'
@@ -35,8 +36,6 @@ import 'package:matchloves/features/nearbypeople/cubit/control_card_cubit.dart'
     as _i4;
 import 'package:matchloves/features/nearbypeople/cubit/match_engine_cubit.dart'
     as _i9;
-import 'package:get_it/get_it.dart' as _i1;
-import 'package:injectable/injectable.dart' as _i2;
 
 const String _mock = 'mock';
 
