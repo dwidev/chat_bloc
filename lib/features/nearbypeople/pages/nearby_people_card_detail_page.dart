@@ -1,10 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:ui';
 
-import 'package:chat_bloc/core/extensions/extensions.dart';
-import 'package:chat_bloc/core/widget/gradient_button.dart';
-import 'package:chat_bloc/features/main/pages/main_page.dart';
-import 'package:chat_bloc/features/nearbypeople/pages/nearby_people_card_view.dart';
+import 'package:matchloves/core/extensions/extensions.dart';
+import 'package:matchloves/core/widget/gradient_button.dart';
+import 'package:matchloves/features/main/pages/main_page.dart';
+import 'package:matchloves/features/nearbypeople/pages/nearby_people_card_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';

@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:chat_bloc/features/nearbypeople/cubit/control_card_enum.dart';
+import 'package:matchloves/features/nearbypeople/cubit/control_card_enum.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

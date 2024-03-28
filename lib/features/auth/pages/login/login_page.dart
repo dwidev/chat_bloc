@@ -1,5 +1,5 @@
 // import 'package:auto_route/auto_route.dart';
-import 'package:chat_bloc/features/auth/pages/complete_profile/complete_profile_page.dart';
+import 'package:matchloves/features/auth/pages/complete_profile/complete_profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';

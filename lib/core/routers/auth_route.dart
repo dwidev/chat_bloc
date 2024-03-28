@@ -1,5 +1,5 @@
-import 'package:chat_bloc/core/routers/routergo.dart';
-import 'package:chat_bloc/features/masterdata/cubit/master_data_cubit.dart';
+import 'package:matchloves/core/routers/routergo.dart';
+import 'package:matchloves/features/masterdata/cubit/master_data_cubit.dart';
 
 import '../depedency_injection/injection.dart';
 import '../extensions/go_router_state_extension.dart';

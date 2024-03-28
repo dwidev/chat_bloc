@@ -1,4 +1,4 @@
-import 'package:chat_bloc/core/flushbar/warning_flushbar.dart';
+import 'package:matchloves/core/flushbar/warning_flushbar.dart';
 import 'package:flutter/cupertino.dart';
 
 extension ContextShowFlushBarExtension on BuildContext {

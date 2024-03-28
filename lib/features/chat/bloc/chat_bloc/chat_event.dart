@@ -1,4 +1,4 @@
-part of 'chat_bloc.dart';
+part of 'matchloves.dart';
 
 @immutable
 sealed class ChatEvent {

@@ -1,4 +1,4 @@
-package com.example.chat_bloc
+package com.example.matchloves
 
 import io.flutter.embedding.android.FlutterActivity
 

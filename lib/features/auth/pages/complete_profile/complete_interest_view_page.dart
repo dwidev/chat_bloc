@@ -1,7 +1,7 @@
-import 'package:chat_bloc/core/extensions/extensions.dart';
-import 'package:chat_bloc/core/theme/colors.dart';
-import 'package:chat_bloc/features/auth/bloc/complete_profile_bloc.dart';
-import 'package:chat_bloc/features/masterdata/cubit/master_data_cubit.dart';
+import 'package:matchloves/core/extensions/extensions.dart';
+import 'package:matchloves/core/theme/colors.dart';
+import 'package:matchloves/features/auth/bloc/complete_profile_bloc.dart';
+import 'package:matchloves/features/masterdata/cubit/master_data_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';

@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:chat_bloc/core/extensions/extensions.dart';
+import 'package:matchloves/core/extensions/extensions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

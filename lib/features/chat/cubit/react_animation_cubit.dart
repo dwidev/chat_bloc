@@ -1,5 +1,5 @@
-import 'package:chat_bloc/features/chat/cubit/react_chat_animation_value.dart';
-import 'package:chat_bloc/features/chat/data/model/chat_message_model.dart';
+import 'package:matchloves/features/chat/cubit/react_chat_animation_value.dart';
+import 'package:matchloves/features/chat/data/model/chat_message_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

@@ -8,30 +8,32 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:chat_bloc/core/photos_picker/photo_picker_cubit.dart' as _i10;
-import 'package:chat_bloc/features/auth/bloc/complete_profile_bloc.dart' as _i3;
-import 'package:chat_bloc/features/chat/bloc/chat_bloc/chat_bloc.dart' as _i16;
-import 'package:chat_bloc/features/chat/bloc/conversations_bloc/conversations_bloc.dart'
+import 'package:matchloves/core/photos_picker/photo_picker_cubit.dart' as _i10;
+import 'package:matchloves/features/auth/bloc/complete_profile_bloc.dart'
+    as _i3;
+import 'package:matchloves/features/chat/bloc/matchloves/matchloves.dart'
+    as _i16;
+import 'package:matchloves/features/chat/bloc/conversations_bloc/conversations_bloc.dart'
     as _i13;
-import 'package:chat_bloc/features/chat/bloc/ws_connection_bloc/ws_connection_bloc.dart'
+import 'package:matchloves/features/chat/bloc/ws_connection_bloc/ws_connection_bloc.dart'
     as _i15;
-import 'package:chat_bloc/features/chat/data/datasources/http_datasource.dart'
+import 'package:matchloves/features/chat/data/datasources/http_datasource.dart'
     as _i5;
-import 'package:chat_bloc/features/chat/data/datasources/ws_datasource.dart'
+import 'package:matchloves/features/chat/data/datasources/ws_datasource.dart'
     as _i11;
-import 'package:chat_bloc/features/chat/data/repository/chat_repository.dart'
+import 'package:matchloves/features/chat/data/repository/chat_repository.dart'
     as _i12;
-import 'package:chat_bloc/features/masterdata/cubit/master_data_cubit.dart'
+import 'package:matchloves/features/masterdata/cubit/master_data_cubit.dart'
     as _i14;
-import 'package:chat_bloc/features/masterdata/data/datasource/masterdata_datasource.dart'
+import 'package:matchloves/features/masterdata/data/datasource/masterdata_datasource.dart'
     as _i6;
-import 'package:chat_bloc/features/masterdata/data/datasource/masterdata_mock_datasource.dart'
+import 'package:matchloves/features/masterdata/data/datasource/masterdata_mock_datasource.dart'
     as _i7;
-import 'package:chat_bloc/features/masterdata/data/repository/masterdata_repository.dart'
+import 'package:matchloves/features/masterdata/data/repository/masterdata_repository.dart'
     as _i8;
-import 'package:chat_bloc/features/nearbypeople/cubit/control_card_cubit.dart'
+import 'package:matchloves/features/nearbypeople/cubit/control_card_cubit.dart'
     as _i4;
-import 'package:chat_bloc/features/nearbypeople/cubit/match_engine_cubit.dart'
+import 'package:matchloves/features/nearbypeople/cubit/match_engine_cubit.dart'
     as _i9;
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;

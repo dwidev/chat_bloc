@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:chat_bloc/features/chat/data/model/socket_event_model.dart';
+import 'package:matchloves/features/chat/data/model/socket_event_model.dart';
 import 'package:flutter/material.dart';
 import 'package:injectable/injectable.dart';
 

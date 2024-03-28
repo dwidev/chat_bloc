@@ -1,6 +1,6 @@
-import 'package:chat_bloc/features/chat/bloc/ws_connection_bloc/ws_connection_bloc.dart';
-import 'package:chat_bloc/features/masterdata/cubit/master_data_cubit.dart';
-import 'package:chat_bloc/features/nearbypeople/cubit/details_card_cubit.dart';
+import 'package:matchloves/features/chat/bloc/ws_connection_bloc/ws_connection_bloc.dart';
+import 'package:matchloves/features/masterdata/cubit/master_data_cubit.dart';
+import 'package:matchloves/features/nearbypeople/cubit/details_card_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';

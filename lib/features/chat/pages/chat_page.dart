@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:chat_bloc/features/chat/bloc/conversations_bloc/conversations_bloc.dart';
+import 'package:matchloves/features/chat/bloc/conversations_bloc/conversations_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/theme/colors.dart';
-import '../bloc/chat_bloc/chat_bloc.dart';
+import '../bloc/matchloves/matchloves.dart';
 import '../cubit/react_animation_cubit.dart';
 import '../data/model/conversation_model.dart';
 import '../data/model/user_model.dart';

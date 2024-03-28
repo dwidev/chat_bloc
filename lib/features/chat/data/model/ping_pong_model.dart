@@ -1,7 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:chat_bloc/features/chat/data/model/socket_event_model.dart';
+import 'package:matchloves/features/chat/data/model/socket_event_model.dart';
 
 class PingPongModel {
   final SocketEvent eventType;

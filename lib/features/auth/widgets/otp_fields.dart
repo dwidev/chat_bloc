@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:chat_bloc/core/extensions/extensions.dart';
+import 'package:matchloves/core/extensions/extensions.dart';
 
 import '../../../core/theme/colors.dart';
 

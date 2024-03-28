@@ -1,5 +1,5 @@
-import 'package:chat_bloc/core/routers/routergo.dart';
-import 'package:chat_bloc/features/profile/pages/profile_page.dart';
+import 'package:matchloves/core/routers/routergo.dart';
+import 'package:matchloves/features/profile/pages/profile_page.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/profile/pages/preview_profile_page.dart';

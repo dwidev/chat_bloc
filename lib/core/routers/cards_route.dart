@@ -1,4 +1,4 @@
-import 'package:chat_bloc/core/routers/routergo.dart';
+import 'package:matchloves/core/routers/routergo.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/nearbypeople/pages/nearby_people_card_detail_page.dart';
