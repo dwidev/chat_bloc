@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/theme/colors.dart';
-import '../bloc/matchloves/matchloves.dart';
+import '../bloc/chat_bloc/chat_bloc.dart';
 import '../cubit/react_animation_cubit.dart';
 import '../data/model/conversation_model.dart';
 import '../data/model/user_model.dart';

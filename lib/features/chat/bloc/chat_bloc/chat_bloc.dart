@@ -1,10 +1,10 @@
-import 'package:matchloves/features/chat/data/model/socket_event_model.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../data/model/chat_message_model.dart';
+import '../../data/model/socket_event_model.dart';
 import '../../data/repository/chat_repository.dart';
 
 part 'chat_event.dart';

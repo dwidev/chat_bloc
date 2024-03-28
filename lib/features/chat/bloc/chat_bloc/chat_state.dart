@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-part of 'matchloves.dart';
+part of 'chat_bloc.dart';
 
 @immutable
 class ChatState extends Equatable {
