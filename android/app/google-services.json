@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "727333796551",
+    "project_id": "matchloves",
+    "storage_bucket": "matchloves.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727333796551:android:18fb4be64ff8975a819ce2",
+        "android_client_info": {
+          "package_name": "com.dwidev.matchlove"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnmD30n9Z9oFFJvqm4iQmSEV8FiXSM9eg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
