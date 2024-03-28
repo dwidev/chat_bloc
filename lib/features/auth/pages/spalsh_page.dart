@@ -64,7 +64,7 @@ class _SplashPageState extends State<SplashPage>
                 ),
                 const SizedBox(width: 3),
                 Text(
-                  "Love Match",
+                  "Match loves",
                   style: context.textTheme.labelLarge?.copyWith(
                     color: whiteColor,
                     fontWeight: FontWeight.bold,

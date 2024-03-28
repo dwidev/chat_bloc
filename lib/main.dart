@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Love match',
+      title: 'Match loves',
       theme: lightTheme,
       routerConfig: AppRouter.router,
       builder: (context, child) {

@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                     ),
                     const SizedBox(width: 3),
                     Text(
-                      "Love Match",
+                      "Match loves",
                       style: context.textTheme.labelLarge?.copyWith(
                         color: primaryColor,
                         fontWeight: FontWeight.bold,
