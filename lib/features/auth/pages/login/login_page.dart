@@ -1,4 +1,7 @@
 // import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:matchloves/core/dialog/loading_dialog.dart';
 import 'package:matchloves/features/auth/pages/complete_profile/complete_profile_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +40,36 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     animationDescController.dispose();
     super.dispose();
   }
+
+  Future<void> signWithGoogle() async {
+    showLoading(context);
+
+    final googleUser = await GoogleSignIn(scopes: ['email']).signIn();
+
+    final googleAuth = await googleUser?.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      idToken: googleAuth?.idToken,
+      accessToken: googleAuth?.accessToken,
+    );
+
+    final success =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+
+    context.pop();
+    context.pushNamed(CompleteProfilePage.path);
+  }
+
+  // Future<void> signInApple() async {
+  //   final credential = await SignInWithApple.getAppleIDCredential(
+  //     scopes: [
+  //       AppleIDAuthorizationScopes.email,
+  //       AppleIDAuthorizationScopes.fullName,
+  //     ],
+  //   );
+
+  //   print(credential);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -175,7 +208,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
             const SizedBox(height: 40),
             GradientButton(
               onPressed: () {
-                context.pushNamed(CompleteProfilePage.path);
+                signWithGoogle();
               },
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,

@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '727333796551',
     projectId: 'matchloves',
     storageBucket: 'matchloves.appspot.com',
+    iosClientId: '727333796551-nppmvgvnqeivjcg757anen2q4ume7n4r.apps.googleusercontent.com',
     iosBundleId: 'com.dwidev.matchlove',
   );
 }
