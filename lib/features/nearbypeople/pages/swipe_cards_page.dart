@@ -1,5 +1,5 @@
 import 'package:matchloves/core/depedency_injection/injection.dart';
-import 'package:matchloves/features/auth/pages/login/login_page.dart';
+import 'package:matchloves/features/auth/presentation/pages/login/login_page.dart';
 import 'package:matchloves/features/nearbypeople/pages/nearby_people_card_detail_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

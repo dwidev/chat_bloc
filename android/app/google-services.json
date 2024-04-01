@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "727333796551",
+    "project_id": "matchloves",
+    "storage_bucket": "matchloves.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727333796551:android:18fb4be64ff8975a819ce2",
+        "android_client_info": {
+          "package_name": "com.dwidev.matchlove"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "727333796551-r1k29tdhdcqngk2mpe9uokcr2kn18puc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dwidev.matchlove",
+            "certificate_hash": "d228b345228c02cf0352b11b42bdb743263119e2"
+          }
+        },
+        {
+          "client_id": "727333796551-i63nj20c5gtpkib8mdtes28212kmr8h9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnmD30n9Z9oFFJvqm4iQmSEV8FiXSM9eg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "727333796551-i63nj20c5gtpkib8mdtes28212kmr8h9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "727333796551-nppmvgvnqeivjcg757anen2q4ume7n4r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dwidev.matchlove"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

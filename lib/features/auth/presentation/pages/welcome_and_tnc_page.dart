@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/extensions/extensions.dart';
-import '../../../core/theme/colors.dart';
-import '../../../core/widget/gradient_button.dart';
+import '../../../../core/extensions/extensions.dart';
+import '../../../../core/theme/colors.dart';
+import '../../../../core/widget/gradient_button.dart';
 import 'complete_profile/complete_profile_page.dart';
 
 class WelcomeAndTncPage extends StatefulWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/extensions/extensions.dart';
+import '../../../../../core/extensions/extensions.dart';
 import '../../bloc/complete_profile_bloc.dart';
 
 class CompleteDistanceViewPage extends StatelessWidget {

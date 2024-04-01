@@ -1,6 +1,6 @@
 import 'package:matchloves/core/extensions/extensions.dart';
 import 'package:matchloves/core/theme/colors.dart';
-import 'package:matchloves/features/auth/bloc/complete_profile_bloc.dart';
+import 'package:matchloves/features/auth/presentation/bloc/complete_profile_bloc.dart';
 import 'package:matchloves/features/masterdata/cubit/master_data_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

@@ -1,11 +1,11 @@
-import 'package:matchloves/features/auth/bloc/complete_profile_bloc.dart';
+import 'package:matchloves/features/auth/presentation/bloc/complete_profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/extensions/extensions.dart';
-import '../../../../core/photos_picker/photos_picker.dart';
-import '../../../../core/theme/colors.dart';
+import '../../../../../core/extensions/extensions.dart';
+import '../../../../../core/photos_picker/photos_picker.dart';
+import '../../../../../core/theme/colors.dart';
 
 class CompleteUploadPhotoViewPage extends StatelessWidget {
   const CompleteUploadPhotoViewPage({

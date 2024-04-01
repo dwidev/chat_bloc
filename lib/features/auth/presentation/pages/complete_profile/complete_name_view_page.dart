@@ -1,4 +1,4 @@
-import 'package:matchloves/features/auth/bloc/complete_profile_bloc.dart';
+import 'package:matchloves/features/auth/presentation/bloc/complete_profile_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

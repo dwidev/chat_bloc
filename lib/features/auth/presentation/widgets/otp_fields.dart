@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 import 'package:matchloves/core/extensions/extensions.dart';
 
-import '../../../core/theme/colors.dart';
+import '../../../../core/theme/colors.dart';
 
 typedef OnCodeEnteredCompletion = void Function(String value);
 typedef OnCodeChanged = void Function(String value);

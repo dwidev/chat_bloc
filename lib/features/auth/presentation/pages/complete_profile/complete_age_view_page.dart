@@ -3,7 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:numberpicker/numberpicker.dart';
 
-import '../../../../core/theme/colors.dart';
+import '../../../../../core/theme/colors.dart';
 import '../../bloc/complete_profile_bloc.dart';
 
 class CompleteAgeViewPage extends StatelessWidget {

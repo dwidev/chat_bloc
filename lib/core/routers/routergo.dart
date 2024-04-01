@@ -5,8 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/auth/pages/allow_permission_location_page.dart';
-import '../../features/auth/pages/spalsh_page.dart';
+import '../../features/auth/presentation/pages/allow_permission_location_page.dart';
+import '../../features/auth/presentation/pages/spalsh_page.dart';
 import '../../features/main/pages/main_page.dart';
 import '../depedency_injection/injection.dart';
 import '../photos_picker/photo_picker_cubit.dart';

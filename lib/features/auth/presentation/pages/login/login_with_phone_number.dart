@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/theme/colors.dart';
-import '../../../../core/widget/gradient_button.dart';
-import '../../widgets/otp_fields.dart';
-import '../welcome_and_tnc_page.dart';
+import '../../../../../core/theme/colors.dart';
+import '../../../../../core/widget/gradient_button.dart';
+import 'verify_otp_page.dart';
 
-class VerifyOtpPage extends StatefulWidget {
-  const VerifyOtpPage({super.key});
+class LoginWithPhoneNumberPage extends StatefulWidget {
+  const LoginWithPhoneNumberPage({super.key});
 
   @override
-  State<VerifyOtpPage> createState() => _VerifyOtpPageState();
+  State<LoginWithPhoneNumberPage> createState() =>
+      _LoginWithPhoneNumberPageState();
 
-  static const path = 'verify-otp';
+  static const path = 'login-with-phone';
 }
 
-class _VerifyOtpPageState extends State<VerifyOtpPage> {
+class _LoginWithPhoneNumberPageState extends State<LoginWithPhoneNumberPage> {
   int pageIndex = 0;
   late Color linearColor;
 
@@ -24,6 +24,12 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
   void initState() {
     linearColor = softPinkColor;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    print("DISPOSING LoginWithPhoneNumberPage");
+    super.dispose();
   }
 
   @override
@@ -64,7 +70,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     width: size.width / 1.5,
                     child: Text(
-                      "Verify your otp code!",
+                      "Please input your phone number!",
                       style: textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
@@ -78,7 +84,7 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Text(
-                      "Otp code send to your phone number +62896572636776",
+                      "Let's get to know each other",
                       style: textTheme.bodySmall?.copyWith(),
                     ).animate().fade(
                           delay: const Duration(milliseconds: 200),
@@ -88,12 +94,17 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                   const SizedBox(height: 40),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: OtpTextField(
-                      autoFocus: true,
-                      borderColor: whiteColor,
-                      borderRadius: BorderRadius.circular(90),
-                      enabledBorderColor: whiteColor,
-                      focusedBorderColor: primaryColor,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          hintText: "Phone number ex:08956xxxxxx",
+                        ),
+                      ),
                     ),
                   ).animate().fade(
                         delay: const Duration(milliseconds: 200),
@@ -112,10 +123,10 @@ class _VerifyOtpPageState extends State<VerifyOtpPage> {
                     colors: [primaryColor, darkColor],
                   ),
                   onPressed: () {
-                    context.pushNamed(WelcomeAndTncPage.path);
+                    context.pushNamed(VerifyOtpPage.path);
                   },
                   child: Text(
-                    "Send",
+                    "Next",
                     style: textTheme.bodyMedium?.copyWith(
                       color: Colors.white,
                     ),
