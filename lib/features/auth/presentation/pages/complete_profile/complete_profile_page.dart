@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:matchloves/features/auth/presentation/bloc/authentication_bloc.dart';
 
 import '../../../../../core/dialog/loading_dialog.dart';
 import '../../../../../core/extensions/extensions.dart';
@@ -12,7 +13,6 @@ import '../../../../../core/extensions/flushbar_extension.dart';
 import '../../../../../core/theme/colors.dart';
 import '../../../../../core/widget/gradient_button.dart';
 import '../../../../masterdata/cubit/master_data_cubit.dart';
-import '../../bloc/authentication_bloc.dart';
 import '../../bloc/complete_profile_bloc.dart';
 import '../allow_permission_location_page.dart';
 import 'complete_age_view_page.dart';
@@ -41,35 +41,33 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
     with TickerProviderStateMixin
     implements CompleteProfilePageDelegate {
   int pageIndex = 0;
-  late double indicatorProgres;
-  late Color linearColor;
+  double indicatorProgres = 0.0;
+  Color linearColor = softPinkColor;
+
   late final PageController pageController;
   late final AnimationController genderController =
       AnimationController(vsync: this, duration: 500.ms);
 
-  late final pages = [
-    const CompleteNameViewPage(), // 0
-    CompleteGenderViewPage(
-      delegate: this,
-      controller: genderController,
-    ), // 1
-    const CompleteAgeViewPage(), // 2
-    const CompleteDistanceViewPage(), // 3
-    const CompleteLookingForViewPage(), // 4
-    const CompleteInterstViewPage(), // 5
-    const CompleteUploadPhotoViewPage(), // 6
-  ];
+  final pages = <Widget>[];
 
   int get pageLenth => pages.length;
 
   @override
   void initState() {
-    indicatorProgres = 1 / pageLenth;
-    linearColor = softPinkColor;
     pageController = PageController();
+    final authBloc = context.read<AuthenticationBloc>();
+    final userData = authBloc.state.userData;
+
+    setupPage();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<MasterDataCubit>().getCompleteProfileMaster();
+      if (userData != null) {
+        final prov = context.read<CompleteProfileBloc>();
+        prov.add(CompleteProfileAutopopulated(userData: userData));
+      }
     });
+
     super.initState();
   }
 
@@ -77,6 +75,22 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
   void dispose() {
     debugPrint("DISPOSING CompleteProfilePage");
     super.dispose();
+  }
+
+  void setupPage() {
+    pages.addAll([
+      const CompleteNameViewPage(), // 0
+      CompleteGenderViewPage(
+        delegate: this,
+        controller: genderController,
+      ), // 1
+      const CompleteAgeViewPage(), // 2
+      const CompleteDistanceViewPage(), // 3
+      const CompleteLookingForViewPage(), // 4
+      const CompleteInterstViewPage(), // 5
+      const CompleteUploadPhotoViewPage(), // 6
+    ]);
+    indicatorProgres = 1 / pageLenth;
   }
 
   @override
@@ -189,6 +203,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
 
   @override
   Widget build(BuildContext context) {
+    print("build");
     final appBar = AppBar(
       backgroundColor: Colors.transparent,
       title: Container(

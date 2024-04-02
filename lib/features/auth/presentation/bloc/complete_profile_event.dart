@@ -5,6 +5,12 @@ sealed class CompleteProfileEvent {
   const CompleteProfileEvent();
 }
 
+final class CompleteProfileAutopopulated extends CompleteProfileEvent {
+  final UserData userData;
+
+  const CompleteProfileAutopopulated({required this.userData});
+}
+
 final class CompleteProfileSetNameEvent extends CompleteProfileEvent {
   final String name;
 

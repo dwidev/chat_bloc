@@ -15,8 +15,8 @@ class CompleteProfileState extends Equatable {
     this.gender,
     this.age = 25,
     this.distance = 10,
-    required this.lookingForCode,
-    required this.interests,
+    this.lookingForCode = '',
+    this.interests = const InterestState(),
     this.photoProfiles = const [],
   });
 
