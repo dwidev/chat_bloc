@@ -2,6 +2,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../domain/entities/user_data.dart';
 import '../../domain/repository/authentication_repository.dart';
+import '../datasources/auth_localstorage_datasource.dart';
 import '../datasources/firebase_datasource.dart';
 import '../datasources/http_datasource.dart';
 
@@ -9,10 +10,12 @@ import '../datasources/http_datasource.dart';
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final AuthFirebaseDataSource authFirebaseDataSource;
   final AuthHTTPDataSource authHTTPDataSource;
+  final AuthLocalStorageDataSource authLocalStorageDataSource;
 
   AuthenticationRepositoryImpl({
     required this.authFirebaseDataSource,
     required this.authHTTPDataSource,
+    required this.authLocalStorageDataSource,
   });
 
   @override
