@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:matchloves/core/flushbar/warning_flushbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:matchloves/features/auth/presentation/dialogs/confirm_back_regis.dart';
@@ -10,6 +11,7 @@ extension ContextShowFlushBarExtension on BuildContext {
 
   void loading() => showLoading(this);
 
-  Future<void> completeBackConfirm() async =>
-      await confirmBackCompleteProfileDialog(this);
+  Future<void> completeBackConfirm(
+          {required Future<void> Function() onClose}) async =>
+      await confirmBackCompleteProfileDialog(this, onClose: onClose);
 }

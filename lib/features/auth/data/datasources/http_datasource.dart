@@ -1,13 +1,11 @@
-import 'dart:math';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:injectable/injectable.dart';
 
-import '../../domain/entities/auth_token.dart';
+import '../model/token_model.dart';
 
 abstract class AuthHTTPDataSource {
-  Future<AuthToken> signWithEmail({required String email});
+  Future<TokenModel> signWithEmail({required String email});
 }
 
 @LazySingleton(as: AuthHTTPDataSource)
@@ -17,11 +15,11 @@ class AuthHTTPDataSourceImpl implements AuthHTTPDataSource {
   AuthHTTPDataSourceImpl({required this.dio});
 
   @override
-  Future<AuthToken> signWithEmail({required String email}) async {
+  Future<TokenModel> signWithEmail({required String email}) async {
     await Future.delayed(500.ms);
-    final rand = Random().nextInt(1000);
-    final result = AuthToken(
-      isRegistered: rand % 2 == 0,
+
+    final result = TokenModel(
+      isRegistered: false,
       accessToken: "accessToken",
       refreshToken: "refreshToken",
     );

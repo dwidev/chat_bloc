@@ -28,4 +28,9 @@ class SharedPreferenceManager implements LocalStorageAdapter {
   Future<void> clear() async {
     await sharedPreferences.clear();
   }
+
+  @override
+  Future<void> remove(String key) async {
+    await sharedPreferences.remove(key);
+  }
 }

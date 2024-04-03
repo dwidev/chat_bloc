@@ -7,9 +7,14 @@ sealed class AuthenticationEvent extends Equatable {
   List<Object> get props => [];
 }
 
+final class AuthorizedCheckingEvent extends AuthenticationEvent {
+  const AuthorizedCheckingEvent();
+}
+
+final class ClearAuthLocalStorageEvent extends AuthenticationEvent {
+  const ClearAuthLocalStorageEvent();
+}
+
 final class SignWithGoogleEvent extends AuthenticationEvent {
   const SignWithGoogleEvent();
-
-  @override
-  List<Object> get props => [];
 }

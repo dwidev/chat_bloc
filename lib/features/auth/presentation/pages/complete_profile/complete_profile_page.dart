@@ -203,6 +203,8 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
 
   @override
   Widget build(BuildContext context) {
+    final authBloc = context.read<AuthenticationBloc>();
+
     final appBar = AppBar(
       backgroundColor: Colors.transparent,
       title: Container(
@@ -244,8 +246,11 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
       child: PopScope(
         canPop: false,
         onPopInvoked: (didPop) {
-          print("ON POP $didPop");
-          context.completeBackConfirm();
+          context.completeBackConfirm(
+            onClose: () async {
+              authBloc.add(const ClearAuthLocalStorageEvent());
+            },
+          );
           return;
         },
         child: Scaffold(

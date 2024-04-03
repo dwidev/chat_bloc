@@ -15,7 +15,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  configureDepedencies(environment: EnvFlavors.mock);
+  await configureDepedencies(environment: EnvFlavors.mock);
 
   runApp(const MyApp());
 }

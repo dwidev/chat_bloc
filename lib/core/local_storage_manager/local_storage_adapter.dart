@@ -7,4 +7,5 @@ abstract class LocalStorageAdapter {
   Future<Object?> getData(String key);
   Future<void> storeData(String key, Object value);
   Future<void> clear();
+  Future<void> remove(String key);
 }

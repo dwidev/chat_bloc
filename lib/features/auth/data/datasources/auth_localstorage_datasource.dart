@@ -1,16 +1,19 @@
 import 'package:injectable/injectable.dart';
-import 'package:matchloves/features/auth/domain/entities/auth_token.dart';
 
 import '../../../../core/local_storage_manager/local_storage_adapter.dart';
+import '../model/token_model.dart';
 
-const completeRegisKey = 'complete_regis_key';
-const accessTokenKey = 'access_token';
-const refreshTokenKey = 'refresh_token';
+enum AuthStorageKey {
+  complete,
+  accessToken,
+  refreshtoken;
+}
 
 abstract class AuthLocalStorageDataSource {
   Future<void> setCompleteRegis(bool value);
   Future<bool> completeRegis();
-  Future<void> setToken(AuthToken authToken);
+  Future<void> setToken(TokenModel authToken);
+  Future<TokenModel> getToken();
   Future<void> clear();
 }
 
@@ -18,25 +21,48 @@ abstract class AuthLocalStorageDataSource {
 class AuthLocalStorageDataSourceImpl implements AuthLocalStorageDataSource {
   final LocalStorageAdapter adapter;
 
-  AuthLocalStorageDataSourceImpl({@mockStorage required this.adapter});
+  AuthLocalStorageDataSourceImpl({@sharedPref required this.adapter});
 
   @override
   Future<void> setCompleteRegis(bool value) async {
-    await adapter.storeData(completeRegisKey, value);
+    await adapter.storeData(AuthStorageKey.complete.name, value);
   }
 
   @override
   Future<bool> completeRegis() async {
-    final result = await adapter.getData(completeRegisKey);
+    final result = await adapter.getData(AuthStorageKey.complete.name);
     return (result as bool?) ?? false;
   }
 
   @override
-  Future<void> clear() {
-    // TODO: implement clear
-    throw UnimplementedError();
+  Future<void> clear() async {
+    final req = AuthStorageKey.values.map((e) => adapter.remove(e.name));
+    await Future.wait(req);
   }
 
   @override
-  Future<void> setToken() {}
+  Future<void> setToken(TokenModel authToken) async {
+    final accessToken = authToken.accessToken;
+    final refreshToken = authToken.refreshToken;
+    await Future.wait([
+      adapter.storeData(AuthStorageKey.accessToken.name, accessToken),
+      adapter.storeData(AuthStorageKey.refreshtoken.name, refreshToken),
+    ]);
+  }
+
+  @override
+  Future<TokenModel> getToken() async {
+    final req = await Future.wait([
+      adapter.getData(AuthStorageKey.accessToken.name),
+      adapter.getData(AuthStorageKey.refreshtoken.name),
+    ]);
+
+    final accessToken = (req[0] as String?) ?? "";
+    final refreshToken = (req[1] as String?) ?? "";
+
+    return TokenModel(
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    );
+  }
 }

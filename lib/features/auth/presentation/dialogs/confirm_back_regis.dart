@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -6,7 +8,10 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/widget/gradient_button.dart';
 import '../pages/login/login_page.dart';
 
-Future<void> confirmBackCompleteProfileDialog(BuildContext context) async {
+Future<void> confirmBackCompleteProfileDialog(
+  BuildContext context, {
+  required Future<void> Function() onClose,
+}) async {
   await showGeneralDialog(
     barrierDismissible: true,
     barrierLabel: 'Exit',
@@ -45,7 +50,8 @@ Future<void> confirmBackCompleteProfileDialog(BuildContext context) async {
                 GradientButton(
                   width: context.width / 2,
                   noShadow: true,
-                  onPressed: () {
+                  onPressed: () async {
+                    await onClose();
                     context.replace(LoginPage.path);
                   },
                   child: Text(

@@ -7,6 +7,7 @@ import 'injection.config.dart';
 final getIt = GetIt.instance;
 
 @InjectableInit()
-void configureDepedencies({required EnvFlavors environment}) => getIt.init(
+Future<void> configureDepedencies({required EnvFlavors environment}) =>
+    getIt.init(
       environment: environment.name,
     );

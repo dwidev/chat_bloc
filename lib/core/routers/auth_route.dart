@@ -20,7 +20,11 @@ final authRoute = <RouteBase>[
   GoRoute(
     parentNavigatorKey: AppRouter.rootNavigatorKey,
     path: SplashPage.path,
-    builder: (context, state) => const SplashPage(),
+    builder: (context, state) => BlocProvider(
+      create: (context) =>
+          getIt<AuthenticationBloc>()..add(const AuthorizedCheckingEvent()),
+      child: const SplashPage(),
+    ),
   ),
   GoRoute(
     parentNavigatorKey: AppRouter.rootNavigatorKey,

@@ -19,4 +19,9 @@ class MockStorageManager implements LocalStorageAdapter {
   Future<void> clear() async {
     debugPrint("clear mock");
   }
+
+  @override
+  Future<void> remove(String key) async {
+    debugPrint("remove by key $key");
+  }
 }
