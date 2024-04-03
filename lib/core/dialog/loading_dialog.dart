@@ -16,7 +16,7 @@ void showLoading(BuildContext context) {
               color: Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: darkColor.withOpacity(0.5),
+                  color: darkColor.withOpacity(0.1),
                   blurRadius: 10,
                   spreadRadius: 2,
                 )

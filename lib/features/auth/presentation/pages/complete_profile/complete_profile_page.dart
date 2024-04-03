@@ -203,7 +203,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    print("build");
     final appBar = AppBar(
       backgroundColor: Colors.transparent,
       title: Container(
@@ -242,82 +241,91 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
           context.pop();
         }
       },
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: appBar,
-        body: AnimatedContainer(
-          duration: 2.seconds,
-          width: context.width,
-          height: context.height,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [linearColor, whiteColor],
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
+      child: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          print("ON POP $didPop");
+          context.completeBackConfirm();
+          return;
+        },
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          appBar: appBar,
+          body: AnimatedContainer(
+            duration: 2.seconds,
+            width: context.width,
+            height: context.height,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [linearColor, whiteColor],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+              ),
             ),
-          ),
-          child: Column(
-            children: [
-              SizedBox(height: appBar.preferredSize.height),
-              Expanded(
-                child: Stack(
-                  children: [
-                    PageView(
-                      controller: pageController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: pages,
-                    ),
-                    Positioned(
-                      bottom: 20 + context.padBot,
-                      left: 30,
-                      child: AnimatedOpacity(
-                        opacity: pageIndex > 0 ? 1 : 0,
-                        duration: const Duration(milliseconds: 500),
-                        child: InkWell(
-                          onTap: onPrev,
-                          child: Container(
-                            padding: const EdgeInsets.all(17),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15),
+            child: Column(
+              children: [
+                SizedBox(height: appBar.preferredSize.height),
+                Expanded(
+                  child: Stack(
+                    children: [
+                      PageView(
+                        controller: pageController,
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: pages,
+                      ),
+                      Positioned(
+                        bottom: 20 + context.padBot,
+                        left: 30,
+                        child: AnimatedOpacity(
+                          opacity: pageIndex > 0 ? 1 : 0,
+                          duration: const Duration(milliseconds: 500),
+                          child: InkWell(
+                            onTap: onPrev,
+                            child: Container(
+                              padding: const EdgeInsets.all(17),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: const Icon(CupertinoIcons.back,
+                                  color: blackColor),
                             ),
-                            child: const Icon(CupertinoIcons.back,
-                                color: blackColor),
+                          )
+                              .animate()
+                              .boxShadow(
+                                  borderRadius: BorderRadius.circular(15))
+                              .fade(
+                                delay: const Duration(milliseconds: 200),
+                                duration: const Duration(seconds: 1),
+                              ),
+                        ),
+                      ),
+                      AnimatedPositioned(
+                        duration: const Duration(milliseconds: 500),
+                        right: pageIndex > 0 ? 30 : 50,
+                        bottom: 20 + context.padBot,
+                        child: GradientButton(
+                          width: pageIndex > 0 ? 100 : null,
+                          gradient: LinearGradient(
+                            colors: [primaryColor, darkColor],
                           ),
-                        )
-                            .animate()
-                            .boxShadow(borderRadius: BorderRadius.circular(15))
-                            .fade(
+                          onPressed: onNext,
+                          child: Text(
+                            "Next",
+                            style: context.textTheme.bodyMedium?.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ).animate().fade(
                               delay: const Duration(milliseconds: 200),
                               duration: const Duration(seconds: 1),
                             ),
-                      ),
-                    ),
-                    AnimatedPositioned(
-                      duration: const Duration(milliseconds: 500),
-                      right: pageIndex > 0 ? 30 : 50,
-                      bottom: 20 + context.padBot,
-                      child: GradientButton(
-                        width: pageIndex > 0 ? 100 : null,
-                        gradient: LinearGradient(
-                          colors: [primaryColor, darkColor],
-                        ),
-                        onPressed: onNext,
-                        child: Text(
-                          "Next",
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: Colors.white,
-                          ),
-                        ),
-                      ).animate().fade(
-                            delay: const Duration(milliseconds: 200),
-                            duration: const Duration(seconds: 1),
-                          ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

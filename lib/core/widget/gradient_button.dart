@@ -9,13 +9,17 @@ class GradientButton extends StatelessWidget {
     required this.onPressed,
     required this.child,
     this.width,
+    this.height,
     this.gradient,
+    this.noShadow = false,
   }) : super(key: key);
 
   final double? width;
+  final double? height;
   final Widget child;
   final VoidCallback onPressed;
   final Gradient? gradient;
+  final bool noShadow;
 
   @override
   Widget build(BuildContext context) {
@@ -24,16 +28,18 @@ class GradientButton extends StatelessWidget {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       width: width ?? size.width / 1.3,
-      height: 48,
+      height: height ?? 48,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x80000000),
-            blurRadius: 8.0,
-            offset: Offset(0.0, 4.0),
-          )
-        ],
+        boxShadow: !noShadow
+            ? const [
+                BoxShadow(
+                  color: Color(0x80000000),
+                  blurRadius: 8.0,
+                  offset: Offset(0.0, 4.0),
+                )
+              ]
+            : null,
         gradient: gradient ??
             LinearGradient(
               colors: [primaryColor, darkColor],

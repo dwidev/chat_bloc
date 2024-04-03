@@ -26,7 +26,6 @@ class _SplashPageState extends State<SplashPage>
     animationController = AnimationController(vsync: this);
     Future.delayed(1.seconds, () {
       context.go(LoginPage.path);
-      // Navigator.pushReplacement(context, CustomPageRoute(const LoginPage()));
       animationController.forward();
     });
   }
