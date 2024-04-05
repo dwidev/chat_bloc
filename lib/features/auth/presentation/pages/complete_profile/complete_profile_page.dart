@@ -40,6 +40,9 @@ class CompleteProfilePage extends StatefulWidget {
 class _CompleteProfilePageState extends State<CompleteProfilePage>
     with TickerProviderStateMixin
     implements CompleteProfilePageDelegate {
+  late final AppLifecycleListener appLifecycleListener;
+  late CompleteProfileBloc prov;
+
   int pageIndex = 0;
   double indicatorProgres = 0.0;
   Color linearColor = softPinkColor;
@@ -54,18 +57,25 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
 
   @override
   void initState() {
+    prov = context.read<CompleteProfileBloc>();
+    appLifecycleListener = AppLifecycleListener(
+      onHide: () {
+        prov.add(const SetDraftCompleteRegisEvent());
+      },
+      onInactive: () {
+        prov.add(const SetDraftCompleteRegisEvent());
+      },
+      onDetach: () {
+        prov.add(const SetDraftCompleteRegisEvent());
+      },
+    );
     pageController = PageController();
-    final authBloc = context.read<AuthenticationBloc>();
-    final userData = authBloc.state.userData;
 
     setupPage();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<MasterDataCubit>().getCompleteProfileMaster();
-      if (userData != null) {
-        final prov = context.read<CompleteProfileBloc>();
-        prov.add(CompleteProfileAutopopulated(userData: userData));
-      }
+      prov.add(const FirstGetDataCompleteRegisEvent());
     });
 
     super.initState();
@@ -74,6 +84,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
   @override
   void dispose() {
     debugPrint("DISPOSING CompleteProfilePage");
+    appLifecycleListener.dispose();
     super.dispose();
   }
 
@@ -203,8 +214,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
 
   @override
   Widget build(BuildContext context) {
-    final authBloc = context.read<AuthenticationBloc>();
-
     final appBar = AppBar(
       backgroundColor: Colors.transparent,
       title: Container(
@@ -233,7 +242,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
           .fade(),
     );
 
-    return BlocListener<MasterDataCubit, MasterDataState>(
+    return BlocListener<CompleteProfileBloc, CompleteProfileState>(
       listenWhen: (previous, current) =>
           previous.isLoading != current.isLoading,
       listener: (context, state) {
@@ -248,7 +257,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
         onPopInvoked: (didPop) {
           context.completeBackConfirm(
             onClose: () async {
-              authBloc.add(const ClearAuthLocalStorageEvent());
+              prov.add(const DeleteDraftCompleteRegisEvent());
             },
           );
           return;

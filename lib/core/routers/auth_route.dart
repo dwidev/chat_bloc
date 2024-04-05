@@ -64,10 +64,8 @@ final authRoute = <RouteBase>[
         path: CompleteProfilePage.path,
         name: CompleteProfilePage.path,
         builder: (context, state) {
-          final authBloc = state.extra as AuthenticationBloc;
           return MultiBlocProvider(
             providers: [
-              BlocProvider.value(value: authBloc),
               BlocProvider(create: (context) => getIt<CompleteProfileBloc>()),
               BlocProvider(create: (context) => getIt<MasterDataCubit>()),
             ],

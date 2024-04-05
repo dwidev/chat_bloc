@@ -1,7 +1,10 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'complete_profile_bloc.dart';
 
 @immutable
 class CompleteProfileState extends Equatable {
+  final bool isLoading;
+
   final String name;
   final Gender? gender;
   final int age;
@@ -18,11 +21,13 @@ class CompleteProfileState extends Equatable {
     this.lookingForCode = '',
     this.interests = const InterestState(),
     this.photoProfiles = const [],
+    this.isLoading = false,
   });
 
   @override
   List<Object?> get props {
     return [
+      isLoading,
       name,
       gender,
       age,
@@ -34,6 +39,7 @@ class CompleteProfileState extends Equatable {
   }
 
   CompleteProfileState copyWith({
+    bool? isLoading,
     String? name,
     Gender? gender,
     int? age,
@@ -43,6 +49,7 @@ class CompleteProfileState extends Equatable {
     List<MemoryImage>? photoProfiles,
   }) {
     return CompleteProfileState(
+      isLoading: isLoading ?? this.isLoading,
       name: name ?? this.name,
       gender: gender ?? this.gender,
       age: age ?? this.age,

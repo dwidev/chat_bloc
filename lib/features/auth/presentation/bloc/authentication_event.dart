@@ -11,10 +11,6 @@ final class AuthorizedCheckingEvent extends AuthenticationEvent {
   const AuthorizedCheckingEvent();
 }
 
-final class ClearAuthLocalStorageEvent extends AuthenticationEvent {
-  const ClearAuthLocalStorageEvent();
-}
-
 final class SignWithGoogleEvent extends AuthenticationEvent {
   const SignWithGoogleEvent();
 }

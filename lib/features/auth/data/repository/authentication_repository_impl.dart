@@ -1,5 +1,6 @@
 import 'package:injectable/injectable.dart';
 import 'package:matchloves/features/auth/data/model/token_model.dart';
+import 'package:matchloves/features/auth/data/model/user_complete_regis_model.dart';
 import 'package:matchloves/features/auth/domain/entities/authorize.dart';
 
 import '../../domain/entities/user_data.dart';
@@ -32,9 +33,14 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     final email = credential.user?.email ?? "";
     final sign = await authHTTPDataSource.signWithEmail(email: email);
 
+    final draftModel = DraftCompleteProfileModel(
+      name: credential.user?.displayName ?? "",
+    );
+
     await Future.wait([
       authLocalStorageDataSource.setToken(sign),
       authLocalStorageDataSource.setCompleteRegis(sign.isRegistered),
+      authLocalStorageDataSource.saveDraftCompleteRegis(draftModel)
     ]);
 
     return UserData(
@@ -75,5 +81,18 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
   Future<void> clearAuthStorage() async {
     await authLocalStorageDataSource.clear();
+  }
+
+  @override
+  Future<void> saveAsDraftCompleteRegister({
+    required DraftCompleteProfileModel model,
+  }) async {
+    await authLocalStorageDataSource.saveDraftCompleteRegis(model);
+  }
+
+  @override
+  Future<DraftCompleteProfileModel?> getDraftCompleteRegister() async {
+    final response = await authLocalStorageDataSource.getDraftCompleteRegis();
+    return response;
   }
 }

@@ -1,10 +1,12 @@
 import 'package:injectable/injectable.dart';
+import 'package:matchloves/features/auth/data/model/user_complete_regis_model.dart';
 
 import '../../../../core/local_storage_manager/local_storage_adapter.dart';
 import '../model/token_model.dart';
 
 enum AuthStorageKey {
   complete,
+  draftCompleteProfile,
   accessToken,
   refreshtoken;
 }
@@ -15,6 +17,8 @@ abstract class AuthLocalStorageDataSource {
   Future<void> setToken(TokenModel authToken);
   Future<TokenModel> getToken();
   Future<void> clear();
+  Future<void> saveDraftCompleteRegis(DraftCompleteProfileModel model);
+  Future<DraftCompleteProfileModel?> getDraftCompleteRegis();
 }
 
 @LazySingleton(as: AuthLocalStorageDataSource)
@@ -64,5 +68,22 @@ class AuthLocalStorageDataSourceImpl implements AuthLocalStorageDataSource {
       accessToken: accessToken,
       refreshToken: refreshToken,
     );
+  }
+
+  @override
+  Future<void> saveDraftCompleteRegis(DraftCompleteProfileModel model) async {
+    final data = model.toJson();
+    final key = AuthStorageKey.draftCompleteProfile.name;
+    await adapter.storeData(key, data);
+  }
+
+  @override
+  Future<DraftCompleteProfileModel?> getDraftCompleteRegis() async {
+    final key = AuthStorageKey.draftCompleteProfile.name;
+    final data = await adapter.getData(key) as String?;
+    if (data == null) return null;
+
+    final model = DraftCompleteProfileModel.fromJson(data);
+    return model;
   }
 }

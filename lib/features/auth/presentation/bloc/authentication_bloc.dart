@@ -3,10 +3,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+
 import '../../domain/entities/authorize.dart';
-import '../../domain/usecase/authorized_checking.dart';
-import '../../domain/usecase/clear_auth_storage.dart';
 import '../../domain/entities/user_data.dart';
+import '../../domain/usecase/authorized_checking.dart';
 import '../../domain/usecase/sign_with_google.dart';
 
 part 'authentication_event.dart';
@@ -18,18 +18,13 @@ class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   final SignWithGoogle signWithGoogle;
   final AuthorizedChecking authorizedChecking;
-  final ClearAuthStorage clearAuthStorage;
 
   AuthenticationBloc({
     required this.signWithGoogle,
     required this.authorizedChecking,
-    required this.clearAuthStorage,
   }) : super(AuthenticationInitial()) {
     on<SignWithGoogleEvent>(_doSignWithGoogle);
     on<AuthorizedCheckingEvent>(_doAuthorizeChecking);
-    on<ClearAuthLocalStorageEvent>(
-      (event, emit) => clearAuthStorage(null),
-    );
   }
 
   Future<void> _doAuthorizeChecking(

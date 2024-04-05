@@ -12,7 +12,7 @@ class ClearAuthStorage extends BaseUsecase<void, void> {
   ClearAuthStorage({required this.authenticationRepository});
 
   @override
-  Future<Either<Failure, void>> calling(void paramsType) async {
+  Future<Either<Failure, void>> calling(void params) async {
     await authenticationRepository.clearAuthStorage();
     return const Right(null);
   }

@@ -52,3 +52,15 @@ final class CompleteProfileSetPhotoEvent extends CompleteProfileEvent {
 
   const CompleteProfileSetPhotoEvent({required this.imagesPicked});
 }
+
+final class DeleteDraftCompleteRegisEvent extends CompleteProfileEvent {
+  const DeleteDraftCompleteRegisEvent();
+}
+
+final class SetDraftCompleteRegisEvent extends CompleteProfileEvent {
+  const SetDraftCompleteRegisEvent();
+}
+
+final class FirstGetDataCompleteRegisEvent extends CompleteProfileEvent {
+  const FirstGetDataCompleteRegisEvent();
+}

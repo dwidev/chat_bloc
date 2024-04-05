@@ -10,6 +10,7 @@ abstract class BaseUsecase<ReturnType, ParamsType> {
         (right) => Right(right),
       );
     } catch (e) {
+      print(e);
       if (e is Failure) {
         return Left(e);
       }
@@ -18,5 +19,5 @@ abstract class BaseUsecase<ReturnType, ParamsType> {
     }
   }
 
-  Future<Either<Failure, ReturnType>> calling(ParamsType paramsType);
+  Future<Either<Failure, ReturnType>> calling(ParamsType params);
 }

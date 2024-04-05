@@ -4,7 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/enums/gender_enum.dart';
+import '../../../masterdata/cubit/master_data_cubit.dart';
 import '../../domain/entities/user_data.dart';
+import '../../domain/usecase/clear_auth_storage.dart';
+import '../../domain/usecase/get_draft_complete_regis.dart';
+import '../../domain/usecase/save_draft_complete_regis.dart';
 
 part 'complete_profile_event.dart';
 part 'complete_profile_state.dart';
@@ -12,7 +16,46 @@ part 'complete_profile_state.dart';
 @Injectable()
 class CompleteProfileBloc
     extends Bloc<CompleteProfileEvent, CompleteProfileState> {
-  CompleteProfileBloc() : super(const CompleteProfileInitial()) {
+  final ClearAuthStorage clearAuthStorage;
+  final MasterDataCubit masterDataCubit;
+  final GetAsDraftCompleteRegis getAsDraftCompleteRegis;
+  final SaveAsDraftCompleteRegis saveAsDraftCompleteRegis;
+
+  CompleteProfileBloc({
+    required this.clearAuthStorage,
+    required this.getAsDraftCompleteRegis,
+    required this.saveAsDraftCompleteRegis,
+    required this.masterDataCubit,
+  }) : super(const CompleteProfileInitial()) {
+    on<FirstGetDataCompleteRegisEvent>((event, emit) async {
+      emit(state.copyWith(isLoading: true));
+
+      final request = await Future.wait([
+        getAsDraftCompleteRegis(null),
+        // another request
+      ]);
+
+      final response = request[0];
+
+      late CompleteProfileState newState;
+
+      await response.fold((left) {
+        newState = state;
+      }, (data) async {
+        if (data != null) {
+          newState = data;
+        } else {
+          newState = state;
+        }
+      });
+
+      emit(newState.copyWith(isLoading: false));
+    });
+
+    on<SetDraftCompleteRegisEvent>((event, emit) async {
+      await saveAsDraftCompleteRegis(state);
+    });
+
     on<CompleteProfileAutopopulated>((event, emit) {
       emit(event.userData.toCompleteProfileData);
     });
@@ -54,6 +97,12 @@ class CompleteProfileBloc
     on<CompleteProfileSetPhotoEvent>((event, emit) {
       final newState = state.copyWith(photoProfiles: event.imagesPicked);
       emit(newState);
+    });
+
+    on<DeleteDraftCompleteRegisEvent>((event, emit) async {
+      /// draft data complete profile at regis page this include
+      /// deleted with this usecase
+      await clearAuthStorage(null);
     });
   }
 
