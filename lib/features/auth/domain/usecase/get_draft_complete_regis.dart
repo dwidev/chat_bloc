@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:either_dart/either.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../../core/enums/gender_enum.dart';

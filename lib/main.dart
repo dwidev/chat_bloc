@@ -1,11 +1,11 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/depedency_injection/injection.dart';
 import 'core/environtments/flavors.dart';
 import 'core/routers/routergo.dart';
 import 'core/theme/theme.dart';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -15,6 +15,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  await dotenv.load(fileName: '.env');
   await configureDepedencies(environment: EnvFlavors.mock);
 
   runApp(const MyApp());

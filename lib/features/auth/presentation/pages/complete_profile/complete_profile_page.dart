@@ -74,6 +74,7 @@ class _CompleteProfilePageState extends State<CompleteProfilePage>
     setupPage();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print("KESINI GA");
       context.read<MasterDataCubit>().getCompleteProfileMaster();
       prov.add(const FirstGetDataCompleteRegisEvent());
     });

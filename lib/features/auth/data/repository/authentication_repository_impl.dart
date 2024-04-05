@@ -37,10 +37,11 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       name: credential.user?.displayName ?? "",
     );
 
+    await authLocalStorageDataSource.saveDraftCompleteRegis(draftModel);
+
     await Future.wait([
       authLocalStorageDataSource.setToken(sign),
-      authLocalStorageDataSource.setCompleteRegis(sign.isRegistered),
-      authLocalStorageDataSource.saveDraftCompleteRegis(draftModel)
+      authLocalStorageDataSource.setCompleteRegisStatus(sign.isRegistered),
     ]);
 
     return UserData(
