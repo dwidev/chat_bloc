@@ -12,7 +12,7 @@ class SignWithGoogle extends BaseUsecase<UserData, void> {
   SignWithGoogle({required this.authenticationRepository});
 
   @override
-  Future<Either<Failure, UserData>> calling(void paramsType) async {
+  Future<Either<Failure, UserData>> calling(void params) async {
     final response = await authenticationRepository.signWithGoogle();
     return Right(response);
   }

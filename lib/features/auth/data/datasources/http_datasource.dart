@@ -6,6 +6,7 @@ import '../model/token_model.dart';
 
 abstract class AuthHTTPDataSource {
   Future<TokenModel> signWithEmail({required String email});
+  Future<TokenModel> signWithPhoneNumber({required String phoneNumber});
 }
 
 @LazySingleton(as: AuthHTTPDataSource)
@@ -16,6 +17,18 @@ class AuthHTTPDataSourceImpl implements AuthHTTPDataSource {
 
   @override
   Future<TokenModel> signWithEmail({required String email}) async {
+    await Future.delayed(500.ms);
+
+    final result = TokenModel(
+      isRegistered: false,
+      accessToken: "accessToken",
+      refreshToken: "refreshToken",
+    );
+    return result;
+  }
+
+  @override
+  Future<TokenModel> signWithPhoneNumber({required String phoneNumber}) async {
     await Future.delayed(500.ms);
 
     final result = TokenModel(

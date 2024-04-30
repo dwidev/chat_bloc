@@ -2,6 +2,7 @@ import 'package:injectable/injectable.dart';
 import 'package:matchloves/features/auth/data/model/token_model.dart';
 import 'package:matchloves/features/auth/data/model/user_complete_regis_model.dart';
 import 'package:matchloves/features/auth/domain/entities/authorize.dart';
+import 'package:matchloves/features/auth/domain/entities/sign_type.dart';
 
 import '../../domain/entities/user_data.dart';
 import '../../domain/repository/authentication_repository.dart';
@@ -53,8 +54,27 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<UserData> signWithPhoneOrEmail() {
-    throw UnimplementedError();
+  Future<UserData> signWithPhoneOrEmail({
+    required String data,
+    required SignType signType,
+  }) async {
+    late TokenModel tokenModel;
+    if (signType == SignType.email) {
+      final response = await authHTTPDataSource.signWithEmail(email: data);
+      tokenModel = response;
+    } else {
+      final response = await authHTTPDataSource.signWithPhoneNumber(
+        phoneNumber: data,
+      );
+      tokenModel = response;
+    }
+
+    return UserData(
+      userId: "userId",
+      username: "username",
+      email: "email",
+      authToken: tokenModel.toAuth(),
+    );
   }
 
   @override

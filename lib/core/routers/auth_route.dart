@@ -1,6 +1,6 @@
-import 'package:matchloves/core/routers/routergo.dart';
-import 'package:matchloves/features/auth/presentation/bloc/authentication_bloc.dart';
-import 'package:matchloves/features/masterdata/cubit/master_data_cubit.dart';
+import 'routergo.dart';
+import '../../features/auth/presentation/bloc/authentication_bloc.dart';
+import '../../features/masterdata/cubit/master_data_cubit.dart';
 
 import '../depedency_injection/injection.dart';
 import '../extensions/go_router_state_extension.dart';
@@ -12,7 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/auth/presentation/bloc/complete_profile_bloc.dart';
-import '../../features/auth/presentation/pages/login/login_with_phone_number.dart';
+import '../../features/auth/presentation/pages/login/login_with_phone_number_page.dart';
 import '../../features/auth/presentation/pages/login/verify_otp_page.dart';
 import '../../features/auth/presentation/pages/spalsh_page.dart';
 
@@ -42,13 +42,19 @@ final authRoute = <RouteBase>[
         parentNavigatorKey: AppRouter.rootNavigatorKey,
         name: LoginWithPhoneNumberPage.path,
         path: LoginWithPhoneNumberPage.path,
-        builder: (context, state) => const LoginWithPhoneNumberPage(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => getIt<AuthenticationBloc>(),
+          child: const LoginWithPhoneNumberPage(),
+        ),
       ),
       GoRoute(
         parentNavigatorKey: AppRouter.rootNavigatorKey,
         name: VerifyOtpPage.path,
         path: VerifyOtpPage.path,
-        builder: (context, state) => const VerifyOtpPage(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => getIt<AuthenticationBloc>(),
+          child: const VerifyOtpPage(),
+        ),
       ),
       GoRoute(
         parentNavigatorKey: AppRouter.rootNavigatorKey,
@@ -56,7 +62,10 @@ final authRoute = <RouteBase>[
         path: WelcomeAndTncPage.path,
         pageBuilder: (context, state) => state.fadeTransition(
           transitionDuration: 200.ms,
-          child: const WelcomeAndTncPage(),
+          child: BlocProvider(
+            create: (context) => getIt<AuthenticationBloc>(),
+            child: const VerifyOtpPage(),
+          ),
         ),
       ),
       GoRoute(

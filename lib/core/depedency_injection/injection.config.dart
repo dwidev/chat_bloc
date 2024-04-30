@@ -13,7 +13,7 @@ import 'package:firebase_auth/firebase_auth.dart' as _i5;
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
 import 'package:matchloves/core/depedency_injection/register_module.dart'
-    as _i32;
+    as _i34;
 import 'package:matchloves/core/local_storage_manager/local_storage_adapter.dart'
     as _i17;
 import 'package:matchloves/core/local_storage_manager/local_storage_manager.dart'
@@ -37,17 +37,21 @@ import 'package:matchloves/features/auth/domain/usecase/get_draft_complete_regis
     as _i24;
 import 'package:matchloves/features/auth/domain/usecase/save_draft_complete_regis.dart'
     as _i26;
-import 'package:matchloves/features/auth/domain/usecase/sign_with_google.dart'
+import 'package:matchloves/features/auth/domain/usecase/sign_with_email.dart'
     as _i27;
-import 'package:matchloves/features/auth/presentation/bloc/authentication_bloc.dart'
+import 'package:matchloves/features/auth/domain/usecase/sign_with_google.dart'
+    as _i28;
+import 'package:matchloves/features/auth/domain/usecase/sign_with_phonenumber.dart'
     as _i29;
-import 'package:matchloves/features/auth/presentation/bloc/complete_profile_bloc.dart'
+import 'package:matchloves/features/auth/presentation/bloc/authentication_bloc.dart'
     as _i31;
-import 'package:matchloves/features/chat/bloc/chat_bloc/chat_bloc.dart' as _i30;
+import 'package:matchloves/features/auth/presentation/bloc/complete_profile_bloc.dart'
+    as _i33;
+import 'package:matchloves/features/chat/bloc/chat_bloc/chat_bloc.dart' as _i32;
 import 'package:matchloves/features/chat/bloc/conversations_bloc/conversations_bloc.dart'
     as _i23;
 import 'package:matchloves/features/chat/bloc/ws_connection_bloc/ws_connection_bloc.dart'
-    as _i28;
+    as _i30;
 import 'package:matchloves/features/chat/data/datasources/http_datasource.dart'
     as _i6;
 import 'package:matchloves/features/chat/data/datasources/ws_datasource.dart'
@@ -152,17 +156,23 @@ extension GetItInjectableX on _i1.GetIt {
     gh.lazySingleton<_i26.SaveAsDraftCompleteRegis>(() =>
         _i26.SaveAsDraftCompleteRegis(
             authenticationRepository: gh<_i18.AuthenticationRepository>()));
-    gh.lazySingleton<_i27.SignWithGoogle>(() => _i27.SignWithGoogle(
+    gh.lazySingleton<_i27.SignWithEmail>(() => _i27.SignWithEmail(
         authenticationRepository: gh<_i18.AuthenticationRepository>()));
-    gh.factory<_i28.WsConnectionBloc>(
-        () => _i28.WsConnectionBloc(chatRepository: gh<_i21.ChatRepository>()));
-    gh.factory<_i29.AuthenticationBloc>(() => _i29.AuthenticationBloc(
-          signWithGoogle: gh<_i27.SignWithGoogle>(),
+    gh.lazySingleton<_i28.SignWithGoogle>(() => _i28.SignWithGoogle(
+        authenticationRepository: gh<_i18.AuthenticationRepository>()));
+    gh.lazySingleton<_i29.SignWithPhoneNumber>(() => _i29.SignWithPhoneNumber(
+        authenticationRepository: gh<_i18.AuthenticationRepository>()));
+    gh.factory<_i30.WsConnectionBloc>(
+        () => _i30.WsConnectionBloc(chatRepository: gh<_i21.ChatRepository>()));
+    gh.factory<_i31.AuthenticationBloc>(() => _i31.AuthenticationBloc(
+          signWithGoogle: gh<_i28.SignWithGoogle>(),
           authorizedChecking: gh<_i20.AuthorizedChecking>(),
+          signWithPhoneNumber: gh<_i29.SignWithPhoneNumber>(),
+          signWithEmail: gh<_i27.SignWithEmail>(),
         ));
-    gh.factory<_i30.ChatBloc>(
-        () => _i30.ChatBloc(chatRepository: gh<_i21.ChatRepository>()));
-    gh.factory<_i31.CompleteProfileBloc>(() => _i31.CompleteProfileBloc(
+    gh.factory<_i32.ChatBloc>(
+        () => _i32.ChatBloc(chatRepository: gh<_i21.ChatRepository>()));
+    gh.factory<_i33.CompleteProfileBloc>(() => _i33.CompleteProfileBloc(
           clearAuthStorage: gh<_i22.ClearAuthStorage>(),
           getAsDraftCompleteRegis: gh<_i24.GetAsDraftCompleteRegis>(),
           saveAsDraftCompleteRegis: gh<_i26.SaveAsDraftCompleteRegis>(),
@@ -172,4 +182,4 @@ extension GetItInjectableX on _i1.GetIt {
   }
 }
 
-class _$RegisterModule extends _i32.RegisterModule {}
+class _$RegisterModule extends _i34.RegisterModule {}

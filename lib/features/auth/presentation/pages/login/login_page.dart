@@ -1,20 +1,19 @@
-// import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:matchloves/core/dialog/loading_dialog.dart';
 import 'package:matchloves/core/extensions/flushbar_extension.dart';
 import 'package:matchloves/features/auth/presentation/bloc/authentication_bloc.dart';
 import 'package:matchloves/features/auth/presentation/pages/complete_profile/complete_profile_page.dart';
+import 'package:matchloves/features/auth/presentation/pages/login/auth_page_listener.dart';
 import 'package:matchloves/features/nearbypeople/pages/swipe_cards_page.dart';
 
 import '../../../../../core/constant/contants.dart';
 import '../../../../../core/extensions/extensions.dart';
 import '../../../../../core/theme/colors.dart';
 import '../../../../../core/widget/gradient_button.dart';
-import 'login_with_phone_number.dart';
+import 'login_with_phone_number_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -49,24 +48,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
 
-    return BlocListener<AuthenticationBloc, AuthenticationState>(
-      listener: (context, state) {
-        if (state.isLoading) {
-          context.loading();
-        } else if (!state.isLoading) {
-          context.pop();
-        }
-
-        if (state is AuthenticationSignSuccess) {
-          context.go(SwipeCardsPage.path);
-        } else if (state is AuthenticationSignSuccessNotRegistered) {
-          context.goNamed(CompleteProfilePage.path, extra: authBloc);
-        }
-
-        if (state is AuthenticationSignError) {
-          context.showWarningFlush(message: state.error.toString());
-        }
-      },
+    return AuthPageListener(
       child: Scaffold(
         body: SizedBox(
           width: size.width,

@@ -14,3 +14,15 @@ final class AuthorizedCheckingEvent extends AuthenticationEvent {
 final class SignWithGoogleEvent extends AuthenticationEvent {
   const SignWithGoogleEvent();
 }
+
+final class SignWithPhoneNumberEvent extends AuthenticationEvent {
+  final String phoneNumber;
+
+  const SignWithPhoneNumberEvent({required this.phoneNumber});
+}
+
+final class SignWithEmailEvent extends AuthenticationEvent {
+  final String email;
+
+  const SignWithEmailEvent({required this.email});
+}
