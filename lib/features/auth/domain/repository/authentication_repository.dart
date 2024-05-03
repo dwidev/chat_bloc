@@ -12,6 +12,7 @@ abstract class AuthenticationRepository {
     required String data,
     required SignType signType,
   });
+  Future<UserData> verifyOTP({required String otp});
   Future<void> clearAuthStorage();
   Future<void> saveAsDraftCompleteRegister({
     required DraftCompleteProfileModel model,

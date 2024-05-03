@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
+import 'package:matchloves/features/auth/domain/usecase/verify_otp.dart';
 import '../../domain/usecase/sign_with_email.dart';
 
 import '../../domain/entities/authorize.dart';
@@ -14,6 +15,7 @@ import '../../domain/usecase/sign_with_phonenumber.dart';
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 part 'authorize_state.dart';
+part 'authentication_otp_bloc.dart';
 
 @Injectable()
 class AuthenticationBloc

@@ -1,29 +1,27 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:matchloves/core/extensions/flushbar_extension.dart';
-import 'package:matchloves/features/auth/presentation/bloc/authentication_bloc.dart';
-
+import '../../../../../core/extensions/flushbar_extension.dart';
 import '../../../../nearbypeople/pages/swipe_cards_page.dart';
+import '../../bloc/authentication_bloc.dart';
 import '../complete_profile/complete_profile_page.dart';
 
-class AuthPageListener extends StatelessWidget {
+class AuthPageListener<T extends AuthenticationBloc> extends StatelessWidget {
   const AuthPageListener({
     Key? key,
-    required this.child,
+    required this.builder,
     this.onSuccess,
   }) : super(key: key);
 
-  final Widget child;
+  final Function(BuildContext context, AuthenticationBloc prov) builder;
   final Function(BuildContext context, AuthenticationState state)? onSuccess;
 
   @override
   Widget build(BuildContext context) {
-    final authBloc = context.read<AuthenticationBloc>();
+    final authBloc = context.read<T>();
 
-    return BlocListener<AuthenticationBloc, AuthenticationState>(
+    return BlocListener<T, AuthenticationState>(
       listener: (context, state) {
         if (state.isLoading) {
           context.loading();
@@ -45,7 +43,7 @@ class AuthPageListener extends StatelessWidget {
           context.showWarningFlush(message: state.error.toString());
         }
       },
-      child: child,
+      child: builder(context, authBloc),
     );
   }
 }

@@ -52,7 +52,7 @@ final authRoute = <RouteBase>[
         name: VerifyOtpPage.path,
         path: VerifyOtpPage.path,
         builder: (context, state) => BlocProvider(
-          create: (context) => getIt<AuthenticationBloc>(),
+          create: (context) => getIt<AuthenticationOTPBloc>(),
           child: const VerifyOtpPage(),
         ),
       ),

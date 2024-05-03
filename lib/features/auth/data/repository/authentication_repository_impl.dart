@@ -116,4 +116,15 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     final response = await authLocalStorageDataSource.getDraftCompleteRegis();
     return response;
   }
+
+  @override
+  Future<UserData> verifyOTP({required String otp}) async {
+    final response = await authHTTPDataSource.verifyOTP(otp: otp);
+    return UserData(
+      userId: "userId",
+      username: "username",
+      email: "email",
+      authToken: response.toAuth(),
+    );
+  }
 }

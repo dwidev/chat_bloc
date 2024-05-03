@@ -26,3 +26,9 @@ final class SignWithEmailEvent extends AuthenticationEvent {
 
   const SignWithEmailEvent({required this.email});
 }
+
+final class VerifyOTPEvent extends AuthenticationEvent {
+  final String otp;
+
+  const VerifyOTPEvent({required this.otp});
+}
